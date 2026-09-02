@@ -102,9 +102,9 @@ export function Gallery({ fotos }: { fotos: Foto[] }) {
                 onClick={() => cambiarFiltro(e.id as EventoId | null)}
                 className={cn(
                   'rounded-full border px-3 py-1.5 text-xs transition duration-200',
-                  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold)]',
+                  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
                   activo
-                    ? 'border-[var(--stroke)] bg-[rgb(217_182_92_/_0.14)] text-[var(--gold-bright)]'
+                    ? 'border-[var(--stroke)] bg-[rgb(139_92_246_/_0.14)] text-[var(--accent-bright)]'
                     : 'border-[var(--stroke-soft)] text-[var(--ink-muted)] hover:border-[var(--stroke)] hover:text-[var(--ink)]',
                 )}
               >
@@ -133,7 +133,7 @@ export function Gallery({ fotos }: { fotos: Foto[] }) {
               ultimoDisparador.current = i
               setAbierta(i)
             }}
-            className="group relative block w-full overflow-hidden rounded-xl border border-[var(--stroke-soft)] bg-[var(--felt-deep)] transition duration-300 hover:border-[var(--stroke)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold)]"
+            className="group relative block w-full overflow-hidden rounded-xl border border-[var(--stroke-soft)] bg-[var(--ground-deep)] transition duration-300 hover:border-[var(--stroke)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
           >
             <Image
               src={f.src}
@@ -159,13 +159,13 @@ export function Gallery({ fotos }: { fotos: Foto[] }) {
           aria-label={foto.pie}
           tabIndex={-1}
           onClick={cerrar}
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-3 bg-[rgb(2_10_7_/_0.94)] p-4 backdrop-blur-sm focus:outline-none"
+          className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-3 bg-[rgb(10_10_12_/_0.94)] p-4 backdrop-blur-sm focus:outline-none"
         >
           <button
             type="button"
             onClick={cerrar}
             aria-label="Cerrar"
-            className="absolute right-4 top-4 grid size-10 place-items-center rounded-full border border-[var(--stroke-soft)] text-[var(--ink)] transition hover:border-[var(--stroke)] hover:text-[var(--gold-bright)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold)]"
+            className="absolute right-4 top-4 grid size-10 place-items-center rounded-full border border-[var(--stroke-soft)] text-[var(--ink)] transition hover:border-[var(--stroke)] hover:text-[var(--accent-bright)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
           >
             <X className="size-5" aria-hidden />
           </button>
@@ -179,7 +179,7 @@ export function Gallery({ fotos }: { fotos: Foto[] }) {
                   e.stopPropagation()
                   mover(-1)
                 }}
-                className="absolute left-2 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full border border-[var(--stroke-soft)] bg-[rgb(2_10_7_/_0.6)] text-[var(--ink)] transition hover:border-[var(--stroke)] hover:text-[var(--gold-bright)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold)] sm:left-6"
+                className="absolute left-2 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full border border-[var(--stroke-soft)] bg-[rgb(10_10_12_/_0.6)] text-[var(--ink)] transition hover:border-[var(--stroke)] hover:text-[var(--accent-bright)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:left-6"
               >
                 <ChevronLeft className="size-6" aria-hidden />
               </button>
@@ -190,7 +190,7 @@ export function Gallery({ fotos }: { fotos: Foto[] }) {
                   e.stopPropagation()
                   mover(1)
                 }}
-                className="absolute right-2 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full border border-[var(--stroke-soft)] bg-[rgb(2_10_7_/_0.6)] text-[var(--ink)] transition hover:border-[var(--stroke)] hover:text-[var(--gold-bright)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold)] sm:right-6"
+                className="absolute right-2 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full border border-[var(--stroke-soft)] bg-[rgb(10_10_12_/_0.6)] text-[var(--ink)] transition hover:border-[var(--stroke)] hover:text-[var(--accent-bright)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:right-6"
               >
                 <ChevronRight className="size-6" aria-hidden />
               </button>

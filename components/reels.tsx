@@ -97,16 +97,16 @@ export function Reels({ reels }: { reels: Reel[] }) {
                 <button
                   type="button"
                   onClick={() => reproducir(i)}
-                  className="group/play absolute inset-0 grid place-items-center bg-[rgb(2_10_7_/_0.35)] transition-colors hover:bg-[rgb(2_10_7_/_0.15)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold)]"
+                  className="group/play absolute inset-0 grid place-items-center bg-[rgb(10_10_12_/_0.35)] transition-colors hover:bg-[rgb(10_10_12_/_0.15)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
                 >
                   <span className="sr-only">Reproducir: {reel.titulo}</span>
-                  <span className="grid size-14 place-items-center rounded-full border border-[var(--stroke)] bg-[rgb(2_10_7_/_0.6)] backdrop-blur-sm transition-transform duration-200 group-hover/play:scale-105">
+                  <span className="grid size-14 place-items-center rounded-full border border-[var(--stroke)] bg-[rgb(10_10_12_/_0.6)] backdrop-blur-sm transition-transform duration-200 group-hover/play:scale-105">
                     <Play
                       aria-hidden
-                      className="size-6 translate-x-px fill-[var(--gold-bright)] text-[var(--gold-bright)]"
+                      className="size-6 translate-x-px fill-[var(--accent-bright)] text-[var(--accent-bright)]"
                     />
                   </span>
-                  <span className="absolute bottom-2 right-2 rounded-full bg-[rgb(2_10_7_/_0.75)] px-2 py-0.5 text-[0.65rem] tabular-nums text-[var(--ink)]">
+                  <span className="absolute bottom-2 right-2 rounded-full bg-[rgb(10_10_12_/_0.75)] px-2 py-0.5 text-[0.65rem] tabular-nums text-[var(--ink)]">
                     {duracion(reel.seg)}
                   </span>
                 </button>

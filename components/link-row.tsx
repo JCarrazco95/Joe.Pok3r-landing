@@ -15,7 +15,7 @@ export function LinkRow({ enlace }: { enlace: Enlace }) {
         className={cn(
           'grid size-10 shrink-0 place-items-center rounded-full border transition-colors',
           enlace.destacado
-            ? 'border-[var(--stroke)] bg-[rgb(217_182_92_/_0.12)] text-[var(--gold-bright)]'
+            ? 'border-[var(--stroke)] bg-[rgb(139_92_246_/_0.12)] text-[var(--accent-bright)]'
             : 'border-[var(--stroke-soft)] bg-[rgb(255_255_255_/_0.04)] text-[var(--ink)]',
         )}
       >
@@ -34,7 +34,7 @@ export function LinkRow({ enlace }: { enlace: Enlace }) {
       {enlace.url ? (
         <ArrowUpRight
           aria-hidden
-          className="size-4 shrink-0 text-[var(--ink-muted)] transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--gold-bright)]"
+          className="size-4 shrink-0 text-[var(--ink-muted)] transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--accent-bright)]"
         />
       ) : (
         <span className="shrink-0 rounded-full border border-[var(--stroke-soft)] px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.08em] text-[var(--ink-muted)]">
@@ -61,8 +61,8 @@ export function LinkRow({ enlace }: { enlace: Enlace }) {
       className={cn(
         clases,
         'joe-link group transition duration-200',
-        'hover:-translate-y-0.5 hover:border-[var(--stroke)] hover:bg-[rgb(4_21_15_/_0.75)]',
-        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--gold)]',
+        'hover:-translate-y-0.5 hover:border-[var(--stroke)] hover:bg-[rgb(19_19_22_/_0.75)]',
+        'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
       )}
     >
       {contenido}

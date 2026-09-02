@@ -27,7 +27,7 @@ function Cenefa() {
   return (
     <div
       aria-hidden
-      className="flex items-center justify-center gap-3 text-[var(--gold)]/45"
+      className="flex items-center justify-center gap-3 text-[var(--accent)]/45"
     >
       <span className="h-px w-12 bg-gradient-to-r from-transparent to-[var(--stroke)]" />
       <Palo palo="spade" className="size-3" />
@@ -82,7 +82,7 @@ export default function JoePokerPage() {
             height={640}
             sizes="128px"
             priority
-            className="size-28 rounded-full border-2 border-[var(--felt-deep)] object-cover sm:size-32"
+            className="size-28 rounded-full border-2 border-[var(--ground-deep)] object-cover sm:size-32"
           />
         </div>
 
@@ -92,7 +92,7 @@ export default function JoePokerPage() {
           {joe.rol}
         </p>
 
-        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-[var(--stroke)] bg-[rgb(217_182_92_/_0.08)] px-3 py-1 text-xs text-[var(--gold-bright)]">
+        <p className="mt-3 inline-flex items-center gap-1.5 rounded-full border border-[var(--stroke)] bg-[rgb(139_92_246_/_0.08)] px-3 py-1 text-xs text-[var(--accent-bright)]">
           <MapPin aria-hidden className="size-3.5" />
           {joe.ubicacion}
         </p>
@@ -114,7 +114,7 @@ export default function JoePokerPage() {
               key={s.etiqueta}
               className="joe-panel flex flex-col items-center rounded-xl px-2 py-4 text-center"
             >
-              <dd className="font-[family-name:var(--font-display)] text-3xl leading-none text-[var(--gold-bright)] sm:text-4xl">
+              <dd className="font-[family-name:var(--font-display)] text-3xl leading-none text-[var(--accent-bright)] sm:text-4xl">
                 {s.valor}
               </dd>
               <dt className="mt-2 text-[0.7rem] uppercase tracking-[0.14em] text-[var(--ink)]">
@@ -161,7 +161,7 @@ export default function JoePokerPage() {
             {joe.plataformas.map((plataforma) => (
               <span
                 key={plataforma}
-                className="rounded-full border border-[var(--stroke)] bg-[rgb(217_182_92_/_0.08)] px-2.5 py-0.5 text-xs text-[var(--gold-bright)]"
+                className="rounded-full border border-[var(--stroke)] bg-[rgb(139_92_246_/_0.08)] px-2.5 py-0.5 text-xs text-[var(--accent-bright)]"
               >
                 {plataforma}
               </span>
