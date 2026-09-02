@@ -31,6 +31,32 @@ que sea con sus palabras: el tono es parte del punto.
 Los enlaces con `url: null` se pintan deshabilitados con la etiqueta
 "Próximamente". En cuanto se pega la URL real, el botón se activa solo.
 
+## Encender el aviso de "jugando ahora"
+
+Arriba del todo en [`lib/joe-poker.ts`](lib/joe-poker.ts) está el bloque
+`enVivo`. Es lo único de la landing que cambia en horas y no en semanas, por eso
+vive suelto al principio del archivo.
+
+```ts
+export const enVivo = {
+  activo: true,                                    // el interruptor
+  evento: 'WSOP Circuit México · #2 Mini Main Event',
+  detalle: 'Day 1A · mesa 22 · 64.2K (80 BB)',     // opcional
+  url: null,                                       // enlace a la cobertura
+}
+```
+
+Pon `activo: true`, empuja el commit y Vercel redespliega solo — un par de
+minutos. Se puede editar desde github.com en el teléfono, que es la idea: que
+funcione estando en el casino.
+
+Apágalo cuando Joe salga del torneo. Con `activo: false` el aviso no se
+renderiza: no queda hueco ni marcado en el HTML.
+
+`detalle` y `url` son opcionales. Si no hay una página pública que seguir, deja
+`url: null` y el aviso sale sin enlace, que es preferible a mandar a nadie a una
+URL que no dice nada.
+
 ## Agregar fotos
 
 1. Optimiza a `.webp` (máximo 1400 px de lado) y déjala en `public/`.

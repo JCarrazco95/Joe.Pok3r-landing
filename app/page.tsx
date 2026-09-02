@@ -1,6 +1,7 @@
 import { MapPin } from 'lucide-react'
 import Image from 'next/image'
 
+import { EnVivo } from '@/components/en-vivo'
 import { Gallery } from '@/components/gallery'
 import { Palo } from '@/components/icons'
 import { LinkRow } from '@/components/link-row'
@@ -56,6 +57,8 @@ export default function JoePokerPage() {
       />
 
       {/* ---------- Hero ---------- */}
+      <EnVivo />
+
       <header className="mx-auto flex max-w-lg flex-col items-center text-center">
         {/*
           El logo ES el titular: por eso va dentro del h1 y su texto accesible

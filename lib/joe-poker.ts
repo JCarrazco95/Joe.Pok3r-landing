@@ -61,6 +61,34 @@ export type Foto = {
   evento: EventoId
 }
 
+/**
+ * Aviso de "jugando ahora".
+ *
+ * Se enciende cuando Joe entra a un torneo y se apaga cuando sale. Es lo único
+ * de la landing que cambia en horas y no en semanas: por eso vive suelto arriba
+ * del todo, para encontrarlo rápido desde el teléfono en el casino.
+ *
+ * Cambiar `activo` y empujar el commit basta — Vercel redespliega solo. Si algún
+ * día hace falta encenderlo sin desplegar, habría que mover esto a una fuente
+ * que la página consulte en caliente; hoy no compensa.
+ */
+export const enVivo = {
+  /** El interruptor. En false el aviso no se renderiza. */
+  activo: false,
+
+  /** Qué está jugando. Sale tal cual, así que escríbelo como quieres leerlo. */
+  evento: 'WSOP Circuit México · #2 Mini Main Event',
+
+  /** Detalle opcional: nivel, stack, mesa. Vacío se omite. */
+  detalle: '',
+
+  /**
+   * Enlace a la cobertura en vivo. `null` deja el aviso sin enlace, que es lo
+   * correcto cuando no hay una página pública que seguir.
+   */
+  url: null as string | null,
+} as const
+
 export const joe = {
   alias: 'Joe.Pok3r',
   nombre: 'Mariano Vega',
