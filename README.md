@@ -53,9 +53,16 @@ funcione estando en el casino.
 Apágalo cuando Joe salga del torneo. Con `activo: false` el aviso no se
 renderiza: no queda hueco ni marcado en el HTML.
 
-`detalle` y `url` son opcionales. Si no hay una página pública que seguir, deja
-`url: null` y el aviso sale sin enlace, que es preferible a mandar a nadie a una
-URL que no dice nada.
+`detalle` y `url` son opcionales.
+
+**`url` está en `null` a propósito.** Para el WSOP Circuit CDMX 2026 no existe
+una página pública donde se vea el stack de un jugador: wsop.com sólo publica el
+calendario, WSOP LIVE es app móvil sin web, PokerNews no cubrió esta parada, y
+Código Poker —el aliado oficial— no abrió liveblog, sino que cubrió por redes y
+por el stream de PokerGO en Español.
+
+Si en otra serie sí hay liveblog público, se pega la URL ahí y el aviso se
+convierte en enlace solo.
 
 ## Agregar fotos
 

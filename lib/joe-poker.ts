@@ -83,8 +83,21 @@ export const enVivo = {
   detalle: '',
 
   /**
-   * Enlace a la cobertura en vivo. `null` deja el aviso sin enlace, que es lo
-   * correcto cuando no hay una página pública que seguir.
+   * Enlace a la cobertura en vivo. `null` deja el aviso sin enlace.
+   *
+   * Se queda en null a propósito, y no por pereza: para el WSOP Circuit CDMX
+   * 2026 no existe una página pública donde se vea el stack de un jugador.
+   * Lo comprobado en septiembre de 2026:
+   *
+   *   · wsop.com — la página del evento sólo trae el calendario y remite a la app
+   *   · WSOP LIVE — gratis, pero sólo app móvil: sin web ni URL por jugador
+   *   · PokerNews — no cubrió esta parada
+   *   · Código Poker — aliado oficial, pero no abrió liveblog para el Circuit CDMX;
+   *     su cobertura salió por redes y por el stream de PokerGO en Español
+   *
+   * Un aviso sin enlace que dice la verdad vale más que un enlace que promete
+   * seguimiento y lleva a un calendario. Si en otra serie sí hay liveblog
+   * público, se pega aquí y el aviso se vuelve enlace solo.
    */
   url: null as string | null,
 } as const
