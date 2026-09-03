@@ -178,9 +178,24 @@ export const enlaces: Enlace[] = [
     url: 'https://www.twitch.tv/joe_pok3r',
   },
   {
+    /*
+     * El destino natural es su ficha en The Hendon Mob: es el registro
+     * estándar de cobros en torneos y se actualiza solo, sin que nadie toque
+     * esta landing.
+     *
+     * Buscado en septiembre de 2026 y NO encontrado. Dos cosas que saber antes
+     * de volver a intentarlo: pokerdb.thehendonmob.com está detrás de
+     * protección anti-bots, así que hay que consultarlo a mano desde un
+     * navegador; y una ficha sólo nace cuando el jugador registra un cobro en
+     * un torneo reportado. El 6.º lugar del High Roller del Jubilee puede no
+     * estarlo; los eventos del WSOP Circuit sí.
+     *
+     * O sea: si Joe cobra en el Circuit CDMX, la ficha aparece sola. Ese es el
+     * momento de pegar la URL aquí.
+     */
     id: 'resultados',
-    etiqueta: 'Resultados en vivo',
-    detalle: 'Historial de premios y cobertura',
+    etiqueta: 'Resultados',
+    detalle: 'Historial de premios en torneos',
     icono: 'trofeo',
     url: null,
   },
