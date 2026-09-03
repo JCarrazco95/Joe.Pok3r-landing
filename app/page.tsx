@@ -3,6 +3,7 @@ import Image from 'next/image'
 
 import { EnVivo } from '@/components/en-vivo'
 import { Gallery } from '@/components/gallery'
+import { Resultados } from '@/components/resultados'
 import { Palo } from '@/components/icons'
 import { LinkRow } from '@/components/link-row'
 import { Reels } from '@/components/reels'
@@ -106,8 +107,8 @@ export default function JoePokerPage() {
       </header>
 
       {/* ---------- Resultados ---------- */}
-      <section aria-labelledby="resultados" className="mx-auto mt-10 max-w-lg">
-        <h2 id="resultados" className="sr-only">
+      <section aria-labelledby="destacados" className="mx-auto mt-10 max-w-lg">
+        <h2 id="destacados" className="sr-only">
           Resultados destacados
         </h2>
 
@@ -135,6 +136,19 @@ export default function JoePokerPage() {
           <span className="mx-2 text-[var(--sep)]">·</span>
           {joe.logroSede}
         </p>
+      </section>
+
+      <div className="my-10">
+        <Cenefa />
+      </div>
+
+      {/* ---------- Historial de resultados ---------- */}
+      <section aria-labelledby="resultados" className="mx-auto max-w-lg scroll-mt-6">
+        <Titulo>
+          <span id="resultados">Resultados</span>
+        </Titulo>
+
+        <Resultados />
       </section>
 
       <div className="my-10">

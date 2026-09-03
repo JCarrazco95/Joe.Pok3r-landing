@@ -45,6 +45,52 @@ export type Reel = {
  * Los torneos que cubre la galería. El orden es el del filtro, de más reciente
  * a más viejo; `corto` es lo que cabe en el chip en un teléfono.
  */
+/**
+ * Historial de resultados, del más reciente al más viejo.
+ *
+ * Sólo entran torneos con participación comprobada. Un `puesto: null` es
+ * deliberado: significa que jugó y todavía no se registró dónde quedó, no que
+ * se fue sin cobrar. Rellenarlo es de las pocas cosas de esta landing que hay
+ * que hacer a mano, y vale la pena hacerla bien: es el respaldo de todo lo
+ * demás que dice la página.
+ */
+export const resultados: Resultado[] = [
+  {
+    fecha: '2026-09-02',
+    torneo: '#2 Mini Main Event',
+    serie: 'WSOP Circuit México',
+    sede: 'Big Bola Casinos · CDMX',
+    puesto: null,
+    field: 184,
+    nota: 'Cerró el Day 1A 5.º del field con 296,000 en fichas',
+  },
+  {
+    fecha: '2026-09-01',
+    torneo: '#1 The Opener Mystery Bounty',
+    serie: 'WSOP Circuit México',
+    sede: 'Big Bola Casinos · CDMX',
+    puesto: null,
+    nota: 'Jugó el Day 1C',
+  },
+  {
+    fecha: '2026-08-31',
+    torneo: 'High Roller 2.5M GTD',
+    sede: 'Jubilee Poker Room · CDMX',
+    puesto: 6,
+    field: 112,
+    premio: '$160,000 MXN',
+    nota: 'Llegó a la mesa final con 615,000 en fichas',
+  },
+  {
+    fecha: '2023-07-03',
+    torneo: 'Main Event · Evento #76',
+    serie: 'World Series of Poker',
+    sede: 'Horseshoe & Paris · Las Vegas',
+    buyIn: '$10,000 USD',
+    puesto: null,
+  },
+]
+
 export const eventos = [
   { id: 'wsop-circuit', corto: 'WSOP Circuit', nombre: 'WSOP Circuit CDMX · Big Bola Casinos' },
   { id: 'wsop-vegas', corto: 'WSOP Las Vegas', nombre: 'World Series of Poker · Las Vegas' },
@@ -52,6 +98,26 @@ export const eventos = [
 ] as const
 
 export type EventoId = (typeof eventos)[number]['id']
+
+export type Resultado = {
+  /** Cierre del torneo, en ISO. Se usa para ordenar, no se muestra crudo. */
+  fecha: string
+  torneo: string
+  /** La serie a la que pertenece, si es parte de una. */
+  serie?: string
+  sede: string
+  buyIn?: string
+  /**
+   * Puesto final. `null` significa "jugado, resultado sin registrar" — no
+   * significa que no cobró. Es la diferencia entre no saber y saber que no.
+   */
+  puesto: number | null
+  /** Cuántos entraron. Sin esto un puesto no dice gran cosa. */
+  field?: number
+  /** Premio ya formateado, con su moneda. Las monedas no se mezclan solas. */
+  premio?: string
+  nota?: string
+}
 
 export type Foto = {
   src: string
@@ -196,9 +262,10 @@ export const enlaces: Enlace[] = [
      */
     id: 'resultados',
     etiqueta: 'Resultados',
-    detalle: 'Historial de premios en torneos',
+    detalle: 'Historial de torneos y premios',
     icono: 'trofeo',
-    url: null,
+    // Ancla a la sección de esta misma página, no un sitio externo.
+    url: '#resultados',
   },
   {
     id: 'codigo-poker',

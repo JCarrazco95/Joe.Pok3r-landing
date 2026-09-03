@@ -1,4 +1,4 @@
-import { ArrowUpRight } from 'lucide-react'
+import { ArrowDown, ArrowUpRight } from 'lucide-react'
 
 import { IconoRed } from '@/components/icons'
 import type { Enlace } from '@/lib/joe-poker'
@@ -9,6 +9,10 @@ import { cn } from '@/lib/utils'
  * <div> inerte con la etiqueta "Próximamente": nunca un <a> a ningún lado.
  */
 export function LinkRow({ enlace }: { enlace: Enlace }) {
+  // Un ancla lleva a otro punto de esta página: ni se abre en pestaña nueva ni
+  // merece la flecha de "sales del sitio". La flecha hacia abajo dice a dónde va.
+  const interno = enlace.url?.startsWith('#') ?? false
+
   const contenido = (
     <>
       <span
@@ -32,10 +36,17 @@ export function LinkRow({ enlace }: { enlace: Enlace }) {
       </span>
 
       {enlace.url ? (
-        <ArrowUpRight
-          aria-hidden
-          className="size-4 shrink-0 text-[var(--ink-muted)] transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--accent-bright)]"
-        />
+        interno ? (
+          <ArrowDown
+            aria-hidden
+            className="size-4 shrink-0 text-[var(--ink-muted)] transition-transform duration-200 group-hover:translate-y-0.5 group-hover:text-[var(--accent-bright)]"
+          />
+        ) : (
+          <ArrowUpRight
+            aria-hidden
+            className="size-4 shrink-0 text-[var(--ink-muted)] transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5 group-hover:text-[var(--accent-bright)]"
+          />
+        )
       ) : (
         <span className="shrink-0 rounded-full border border-[var(--stroke-soft)] px-2 py-0.5 text-[0.65rem] uppercase tracking-[0.08em] text-[var(--ink-muted)]">
           Próximamente
@@ -56,8 +67,7 @@ export function LinkRow({ enlace }: { enlace: Enlace }) {
   return (
     <a
       href={enlace.url}
-      target="_blank"
-      rel="me noopener noreferrer"
+      {...(interno ? {} : { target: '_blank', rel: 'me noopener noreferrer' })}
       className={cn(
         clases,
         'joe-link group transition duration-200',

@@ -94,107 +94,113 @@
   background: radial-gradient(80% 60% at 50% 40%, transparent 35%, rgb(0 0 0 / 0.5) 100%);
 }
 
-/* ---------- Piezas reutilizables ---------- */
-
-/* Panel de vidrio oscuro sobre el paño. */
-.joe-panel {
-  background: var(--panel);
-  border: 1px solid var(--stroke-soft);
-  backdrop-filter: blur(8px);
-}
-
-/* Borde del avatar, imitando el canto de una ficha. */
-.joe-chip-ring {
-  background:
-    conic-gradient(
-      from 0deg,
-      var(--accent) 0 6deg, transparent 6deg 24deg,
-      var(--accent) 24deg 30deg, transparent 30deg 48deg,
-      var(--accent) 48deg 54deg, transparent 54deg 72deg,
-      var(--accent) 72deg 78deg, transparent 78deg 96deg,
-      var(--accent) 96deg 102deg, transparent 102deg 120deg,
-      var(--accent) 120deg 126deg, transparent 126deg 144deg,
-      var(--accent) 144deg 150deg, transparent 150deg 168deg,
-      var(--accent) 168deg 174deg, transparent 174deg 192deg,
-      var(--accent) 192deg 198deg, transparent 198deg 216deg,
-      var(--accent) 216deg 222deg, transparent 222deg 240deg,
-      var(--accent) 240deg 246deg, transparent 246deg 264deg,
-      var(--accent) 264deg 270deg, transparent 270deg 288deg,
-      var(--accent) 288deg 294deg, transparent 294deg 312deg,
-      var(--accent) 312deg 318deg, transparent 318deg 336deg,
-      var(--accent) 336deg 342deg, transparent 342deg 360deg
-    ),
-    radial-gradient(closest-side, transparent 88%, rgb(217 182 92 / 0.35) 88%);
-}
-
 /*
-  Barrido de luz al pasar el cursor sobre un enlace.
+  Piezas reutilizables, dentro de `@layer components`.
 
-  `position` va con :where() para que tenga especificidad 0 y cualquier utilidad
-  de Tailwind (`absolute`, `fixed`…) le gane pese a que joe.css se carga después.
-  Sin esto, poner `joe-link` sobre un elemento con `absolute inset-0` lo
-  devolvía a `relative` y el elemento colapsaba a su contenido.
+  La capa no es decorativa. Tailwind v4 mete sus utilidades en `@layer utilities`,
+  y en la cascada de CSS **lo que no está en ninguna capa gana sobre lo que sí
+  está**, sin importar la especificidad. Con estas reglas sueltas, un
+  `border-[var(--accent)]` de Tailwind sobre un `.joe-panel` no hacía nada: el
+  borde de la clase ganaba siempre. Así se veían iguales las filas destacadas y
+  las normales, y los enlaces marcados como destacados nunca se distinguieron.
+
+  Metidas en `components`, que va antes de `utilities`, las utilidades vuelven a
+  poder pisar lo que necesiten.
 */
-:where(.joe-link) {
-  position: relative;
-}
+@layer components {
+  /* ---------- Piezas reutilizables ---------- */
 
-.joe-link {
-  overflow: hidden;
-}
-
-.joe-link::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  transform: translateX(-110%);
-  background: linear-gradient(
-    100deg,
-    transparent 35%,
-    rgb(243 220 158 / 0.14) 50%,
-    transparent 65%
-  );
-}
-
-@media (hover: hover) {
-  .joe-link:hover::after {
-    transform: translateX(110%);
-    transition: transform 750ms cubic-bezier(0.22, 1, 0.36, 1);
+  /* Panel de vidrio oscuro. */
+  .joe-panel {
+    background: var(--panel);
+    border: 1px solid var(--stroke-soft);
+    backdrop-filter: blur(8px);
   }
-}
 
-/* La galería usa columnas CSS: masonry real sin JS ni librerías. */
-.joe-masonry {
-  column-count: 2;
-  column-gap: 0.75rem;
-}
+  /* Borde del avatar, imitando el canto de una ficha. */
+  .joe-chip-ring {
+    background:
+      conic-gradient(
+        from 0deg,
+        var(--accent) 0 6deg, transparent 6deg 24deg,
+        var(--accent) 24deg 30deg, transparent 30deg 48deg,
+        var(--accent) 48deg 54deg, transparent 54deg 72deg,
+        var(--accent) 72deg 78deg, transparent 78deg 96deg,
+        var(--accent) 96deg 102deg, transparent 102deg 120deg,
+        var(--accent) 120deg 126deg, transparent 126deg 144deg,
+        var(--accent) 144deg 150deg, transparent 150deg 168deg,
+        var(--accent) 168deg 174deg, transparent 174deg 192deg,
+        var(--accent) 192deg 198deg, transparent 198deg 216deg,
+        var(--accent) 216deg 222deg, transparent 222deg 240deg,
+        var(--accent) 240deg 246deg, transparent 246deg 264deg,
+        var(--accent) 264deg 270deg, transparent 270deg 288deg,
+        var(--accent) 288deg 294deg, transparent 294deg 312deg,
+        var(--accent) 312deg 318deg, transparent 318deg 336deg,
+        var(--accent) 336deg 342deg, transparent 342deg 360deg
+      ),
+      radial-gradient(closest-side, transparent 88%, rgb(217 182 92 / 0.35) 88%);
+  }
 
-@media (min-width: 768px) {
+  /* Barrido de luz al pasar el cursor sobre un enlace. */
+  .joe-link {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .joe-link::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    transform: translateX(-110%);
+    background: linear-gradient(
+      100deg,
+      transparent 35%,
+      rgb(243 220 158 / 0.14) 50%,
+      transparent 65%
+    );
+  }
+
+  @media (hover: hover) {
+    .joe-link:hover::after {
+      transform: translateX(110%);
+      transition: transform 750ms cubic-bezier(0.22, 1, 0.36, 1);
+    }
+  }
+
+  /* La galería usa columnas CSS: masonry real sin JS ni librerías. */
   .joe-masonry {
-    column-count: 3;
-    column-gap: 1rem;
-  }
-
-  /*
-    Con pocas fotos, tres columnas nunca cierran parejo: una carga dos piezas y
-    las demás una, así que siempre queda un escalón del alto de una foto. Dos
-    columnas reparten mejor. El umbral lo marca el componente con `data-pocas`.
-  */
-  .joe-masonry[data-pocas='true'] {
     column-count: 2;
+    column-gap: 0.75rem;
   }
-}
 
-.joe-masonry > * {
-  break-inside: avoid;
-  margin-bottom: 0.75rem;
-}
+  @media (min-width: 768px) {
+    .joe-masonry {
+      column-count: 3;
+      column-gap: 1rem;
+    }
 
-@media (min-width: 768px) {
+    /*
+      Con pocas fotos, tres columnas nunca cierran parejo: una carga dos piezas y
+      las demás una, así que siempre queda un escalón del alto de una foto. Dos
+      columnas reparten mejor. El umbral lo marca el componente con `data-pocas`.
+    */
+    .joe-masonry[data-pocas='true'] {
+      column-count: 2;
+    }
+  }
+
   .joe-masonry > * {
-    margin-bottom: 1rem;
+    break-inside: avoid;
+    margin-bottom: 0.75rem;
   }
+
+  @media (min-width: 768px) {
+    .joe-masonry > * {
+      margin-bottom: 1rem;
+    }
+  }
+
 }
 
 @media (prefers-reduced-motion: reduce) {
