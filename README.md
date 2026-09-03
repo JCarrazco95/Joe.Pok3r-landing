@@ -1,6 +1,6 @@
 # Landing de Joe.Pok3r
 
-Sitio público de Mariano Vega (Joe.Pok3r), operado por Analy·sys.
+Sitio público de Joe Vega (Joe.Pok3r), operado por Analy·sys.
 
 Vivía dentro del HUB privado, en la ruta `/joe`. Se separó porque no compartía
 nada con él: cero Supabase, cero sesión, cero middleware. Lo único que

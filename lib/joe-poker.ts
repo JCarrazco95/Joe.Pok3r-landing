@@ -171,7 +171,7 @@ export const enVivo = {
 
 export const joe = {
   alias: 'Joe.Pok3r',
-  nombre: 'Mariano Vega',
+  nombre: 'Joe Vega',
   rol: 'Jugador recreativo de Texas Hold’em',
   ubicacion: 'México',
   avatar: '/avatar.webp',
@@ -515,7 +515,8 @@ export const galeria: Foto[] = [
   },
   {
     src: '/sexto-lugar.webp',
-    alt: 'Placa oficial: Mariano Vega, 6.º lugar, premio de $160,000',
+    // El alt conserva "Mariano Vega" porque es lo que está impreso en la placa.
+    alt: 'Placa oficial del torneo, a nombre de Mariano Vega: 6.º lugar, premio de $160,000',
     pie: '6.º lugar · $160,000',
     ancho: 475,
     alto: 794,
