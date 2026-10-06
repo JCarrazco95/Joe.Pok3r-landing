@@ -1,5 +1,5 @@
 /**
- * Contenido de la landing pública de Joe.Pok3r (/joe).
+ * Contenido de la landing pública de Joe.Pok3r.
  *
  * Este archivo es la ÚNICA fuente de verdad de la página: textos, enlaces,
  * estadísticas y galería. Para actualizar la landing no hace falta tocar JSX.
@@ -245,21 +245,13 @@ export const enlaces: Enlace[] = [
     url: 'https://www.twitch.tv/joe_pok3r',
   },
   {
-    /*
-     * El destino natural es su ficha en The Hendon Mob: es el registro
-     * estándar de cobros en torneos y se actualiza solo, sin que nadie toque
-     * esta landing.
-     *
-     * Buscado en septiembre de 2026 y NO encontrado. Dos cosas que saber antes
-     * de volver a intentarlo: pokerdb.thehendonmob.com está detrás de
-     * protección anti-bots, así que hay que consultarlo a mano desde un
-     * navegador; y una ficha sólo nace cuando el jugador registra un cobro en
-     * un torneo reportado. El 6.º lugar del High Roller del Jubilee puede no
-     * estarlo; los eventos del WSOP Circuit sí.
-     *
-     * O sea: si Joe cobra en el Circuit CDMX, la ficha aparece sola. Ese es el
-     * momento de pegar la URL aquí.
-     */
+    id: 'hendon-mob',
+    etiqueta: 'The Hendon Mob',
+    detalle: 'Registro oficial de cobros en torneos',
+    icono: 'trofeo',
+    url: 'https://pokerdb.thehendonmob.com/player.php?a=r&n=541062',
+  },
+  {
     id: 'resultados',
     etiqueta: 'Resultados',
     detalle: 'Historial de torneos y premios',
