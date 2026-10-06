@@ -2,7 +2,7 @@
   "name": "joe-pok3r-landing",
   "version": "0.1.0",
   "private": true,
-  "description": "Landing pública de Joe.Pok3r (Mariano Vega), operada por Analy·sys.",
+  "description": "Landing pública de Joe.Pok3r (Joe Vega), operada por Analy·sys.",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build --turbopack",

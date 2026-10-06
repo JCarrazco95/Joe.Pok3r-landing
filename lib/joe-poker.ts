@@ -515,8 +515,7 @@ export const galeria: Foto[] = [
   },
   {
     src: '/sexto-lugar.webp',
-    // El alt conserva "Mariano Vega" porque es lo que está impreso en la placa.
-    alt: 'Placa oficial del torneo, a nombre de Mariano Vega: 6.º lugar, premio de $160,000',
+    alt: 'Placa oficial del torneo, a nombre de Joe Vega: 6.º lugar, premio de $160,000',
     pie: '6.º lugar · $160,000',
     ancho: 475,
     alto: 794,
