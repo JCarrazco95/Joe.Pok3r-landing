@@ -62,9 +62,19 @@ export function VisorPost({ post, onCerrar }: { post: PostSocial; onCerrar: () =
       }
     }
 
+    // Red de seguridad: si el foco sale del panel (p. ej. al tabular fuera de un
+    // iframe, donde el teclado no pasa por aquí) se devuelve al panel.
+    const onFocusIn = (e: FocusEvent) => {
+      if (panel.current && e.target instanceof Node && !panel.current.contains(e.target)) {
+        panel.current.focus()
+      }
+    }
+
     document.addEventListener('keydown', onKey)
+    document.addEventListener('focusin', onFocusIn)
     return () => {
       document.removeEventListener('keydown', onKey)
+      document.removeEventListener('focusin', onFocusIn)
       document.body.style.overflow = overflow
       previo?.focus({ preventScroll: true })
     }
@@ -123,7 +133,7 @@ export function VisorPost({ post, onCerrar }: { post: PostSocial; onCerrar: () =
         )}
 
         {post.texto ? (
-          <p className="whitespace-pre-line break-words text-[15px] leading-relaxed text-fg-2">
+          <p className="whitespace-pre-line [overflow-wrap:anywhere] text-[15px] leading-relaxed text-fg-2">
             {post.texto}
           </p>
         ) : null}

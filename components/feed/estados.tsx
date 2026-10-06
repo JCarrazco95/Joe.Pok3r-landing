@@ -14,9 +14,9 @@ const REDES_QUE_SE_SIGUEN = new Set(['instagram', 'tiktok', 'youtube', 'kick', '
 export function EsqueletoMuro({ cantidad = 6 }: { cantidad?: number }) {
   return (
     <div role="status" aria-busy="true" aria-label="Cargando publicaciones">
-      <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {Array.from({ length: cantidad }, (_, i) => (
-          <li key={i}>
+          <li key={i} className="min-w-0">
             <Tarjeta className="overflow-hidden motion-safe:animate-pulse">
               <div className="aspect-video bg-surface" />
               <div className="grid gap-3 p-5">

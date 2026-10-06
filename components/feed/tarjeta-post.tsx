@@ -101,7 +101,7 @@ export function TarjetaPost({
       </span>
 
       <span className="flex flex-1 flex-col gap-3 p-5">
-        <span className="line-clamp-3 break-words text-[15px] font-semibold leading-snug text-fg">
+        <span className="line-clamp-3 [overflow-wrap:anywhere] text-[15px] font-semibold leading-snug text-fg">
           {post.texto || `Publicación en ${red}`}
         </span>
 

@@ -42,7 +42,7 @@ export function Muro({
   const conRespaldo = redes.filter((r) => manuales.has(r.red) && (!filtro || r.red === filtro))
 
   return (
-    <div className="grid gap-8">
+    <div className="grid grid-cols-1 gap-8">
       <FiltroRedes redes={redes} total={posts.length} activa={filtro} onCambiar={setFiltro} />
 
       <p className="sr-only" role="status">
@@ -50,9 +50,9 @@ export function Muro({
         {filtro ? ` de ${NOMBRE_RED[filtro]}` : ''}
       </p>
 
-      <ul className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+      <ul className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
         {visibles.map((p, i) => (
-          <li key={`${p.red}:${p.id}`}>
+          <li key={`${p.red}:${p.id}`} className="min-w-0">
             <Revelar retraso={(i % 3) * 80} className="h-full">
               <TarjetaPost post={p} manual={manuales.has(p.red)} onAbrir={() => setAbierto(p)} />
             </Revelar>

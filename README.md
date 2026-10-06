@@ -124,6 +124,23 @@ Ajustes: frecuencia de refresco en `lib/social/config.ts` (`REVALIDAR_SEG`, y el
 literal gemelo de `app/api/social/route.ts`, que una prueba vigila), y límites de
 posts en `lib/social/index.ts` (`MAX_POSTS_POR_RED`, `MAX_POSTS_TOTAL`).
 
+### Sección «Últimas publicaciones»
+
+[`components/sections/publicaciones.tsx`](components/sections/publicaciones.tsx) lee el
+feed en el servidor con `obtenerFeed()` (la página es ISR, `revalidate = 1800`, literal gemelo
+de `REVALIDAR_SEG`) y se lo pasa al muro de [`components/feed/`](components/feed/): filtro por
+red, tarjetas y visor. Si el fetch fallara o no hubiera posts, la sección muestra el estado
+vacío con enlaces a las redes; nunca rompe la página.
+
+- El texto de los posts es de terceros: se pinta siempre como texto de React.
+- Los embeds (YouTube por `youtube-nocookie.com`, Instagram y TikTok por su iframe oficial)
+  se crean solo al abrir el visor, nunca al cargar la página, y no se carga ningún script de
+  terceros. Kick no tiene embed: el visor muestra la vista previa y el enlace.
+- Las miniaturas son `<img>` perezosas con `no-referrer`: salen de las CDN de cada red.
+- Probar los estados (0, 1 y 30 posts, cargando, error) con datos de ejemplo: `/design`,
+  bloque «Muro de publicaciones». Los ejemplos viven en `components/feed/ejemplos.ts` y
+  solo los importa esa página.
+
 ## Variables de entorno
 
 Documentadas en [`.env.example`](.env.example) y leídas desde

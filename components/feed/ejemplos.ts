@@ -9,7 +9,7 @@ const REDES_CON_POSTS = REDES_FEED.filter((r) => r !== 'facebook')
 
 /** Cada red con una URL que respeta la forma real, para ejercitar los embeds. */
 const URL_DE: Record<RedFeed, (n: number) => string> = {
-  youtube: (n) => `https://www.youtube.com/watch?v=EJEMPLO${String(n).padStart(5, '0')}`,
+  youtube: (n) => `https://www.youtube.com/watch?v=EJEMPLO${String(n).padStart(4, '0')}`,
   instagram: (n) => `https://www.instagram.com/p/EJEMPLO${n}/`,
   tiktok: (n) => `https://www.tiktok.com/@joe.pok3r/video/73000000000000${String(n).padStart(5, '0')}`,
   kick: (n) => `https://kick.com/joe-pok3r/clips/ejemplo_${n}`,
