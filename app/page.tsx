@@ -6,12 +6,19 @@ import { Galeria } from '@/components/sections/galeria'
 import { Historia } from '@/components/sections/historia'
 import { Nav } from '@/components/sections/nav'
 import { Pie } from '@/components/sections/pie'
+import { Publicaciones } from '@/components/sections/publicaciones'
 import { Redes } from '@/components/sections/redes'
 import { ReelsSeccion } from '@/components/sections/reels'
 import { Resultados } from '@/components/sections/resultados'
 import { TuMano } from '@/components/sections/tu-mano'
 import { SITE_URL } from '@/lib/env'
 import { enVivo, enlaces, joe } from '@/lib/joe-poker'
+
+/**
+ * ISR: la página se regenera cada 30 min para refrescar el feed social. Debe ser
+ * un literal y coincidir con `REVALIDAR_SEG` de `lib/social/config.ts`.
+ */
+export const revalidate = 1800
 
 /** Datos estructurados para Google y para las tarjetas enriquecidas. */
 const jsonLd = {
@@ -51,6 +58,7 @@ export default function JoePokerPage() {
         <Historia />
         <ReelsSeccion />
         <Galeria />
+        <Publicaciones />
         <Redes />
         <Contacto />
       </main>

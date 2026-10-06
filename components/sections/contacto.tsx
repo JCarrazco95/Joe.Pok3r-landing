@@ -42,7 +42,7 @@ export function Contacto() {
           />
 
           <div className="relative grid content-start gap-[18px]">
-            <span className="text-[13px] font-bold uppercase tracking-[0.3em]">07 · Contacto</span>
+            <span className="text-[13px] font-bold uppercase tracking-[0.3em]">08 · Contacto</span>
             <h2 className="font-display text-[clamp(64px,8vw,120px)] font-normal uppercase leading-[0.85]">
               Patrocinios,
               <br />

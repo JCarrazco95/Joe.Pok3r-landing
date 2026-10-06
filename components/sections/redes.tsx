@@ -65,7 +65,7 @@ export function Redes() {
   return (
     <Seccion id="redes" className="grid gap-10 pb-[clamp(72px,9vw,120px)] pt-[60px]">
       <Revelar className="grid gap-3">
-        <Eyebrow>06 · Encuéntralo aquí</Eyebrow>
+        <Eyebrow>07 · Encuéntralo aquí</Eyebrow>
         <h2 className="font-display text-[clamp(64px,8vw,120px)] font-normal uppercase leading-[0.85]">
           Sigue el grind
         </h2>
