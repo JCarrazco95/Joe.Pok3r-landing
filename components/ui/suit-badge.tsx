@@ -31,3 +31,18 @@ export function InsigniaPalo({
     </span>
   )
 }
+
+/** Mismo color fijo, para texto (cifras sobre fondo oscuro). */
+export const TEXTO_PALO: Record<PaloId, string> = {
+  heart: 'text-ruby',
+  spade: 'text-violet',
+  club: 'text-azure',
+  diamond: 'text-ember',
+}
+
+export const SIMBOLO_PALO: Record<PaloId, string> = {
+  heart: '♥',
+  spade: '♠',
+  club: '♣',
+  diamond: '♦',
+}
