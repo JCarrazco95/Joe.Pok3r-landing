@@ -1,9 +1,11 @@
 import { EnVivo } from '@/components/en-vivo'
 import { Hero } from '@/components/sections/hero'
 import { Marquesina } from '@/components/sections/marquesina'
+import { Historia } from '@/components/sections/historia'
 import { Nav } from '@/components/sections/nav'
 import { Pie } from '@/components/sections/pie'
 import { Resultados } from '@/components/sections/resultados'
+import { TuMano } from '@/components/sections/tu-mano'
 import { SITE_URL } from '@/lib/env'
 import { enVivo, enlaces, joe } from '@/lib/joe-poker'
 
@@ -41,6 +43,8 @@ export default function JoePokerPage() {
         <Hero />
         <Marquesina />
         <Resultados />
+        <TuMano />
+        <Historia />
       </main>
 
       <Pie />
