@@ -62,6 +62,14 @@ a{color:#A78BFA;text-decoration:none}a:hover{color:#FAFAFA}
 
   <header id="top" onClick="{{ burst }}" style="position:relative;min-height:max(100vh,720px);overflow:hidden;background:radial-gradient(ellipse 60% 70% at 75% 45%,rgba(139,92,246,.28),transparent 70%),radial-gradient(ellipse 40% 50% at 95% 90%,rgba(214,51,75,.22),transparent 70%),#0b0b0d">
     <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(250,250,250,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(250,250,250,.035) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse at 60% 50%,#000 30%,transparent 75%)"></div>
+    <sc-if value="{{ fotosOn }}" hint-placeholder-val="{{ true }}">
+      <div style="position:absolute;top:0;bottom:0;left:0;width:min(100%,max(62%,640px));mask-image:linear-gradient(90deg,#000 25%,transparent 100%);-webkit-mask-image:linear-gradient(90deg,#000 25%,transparent 100%);pointer-events:none">
+        <sc-for list="{{ heroBg }}" as="f" hint-placeholder-count="0">
+          <div role="img" aria-label="Joe Vega" style="position:absolute;inset:0;background-image:url({{ f.src }});background-size:cover;background-position:{{ f.pos }};opacity:{{ f.op }};transform:scale({{ f.sc }});transition:opacity 1.6s ease,transform 7s linear;filter:grayscale(.25) contrast(1.05)"></div>
+        </sc-for>
+        <div style="position:absolute;inset:0;background:linear-gradient(0deg,#0b0b0d,transparent 35%),linear-gradient(90deg,rgba(11,11,13,.35),rgba(11,11,13,.1) 50%,#0b0b0d 100%)"></div>
+      </div>
+    </sc-if>
     <div ref="{{ heroCanvas }}" style="position:absolute;inset:0"></div>
     <div style="position:relative;z-index:2;min-height:max(100vh,720px);max-width:1360px;margin:0 auto;padding:120px clamp(20px,4vw,56px) 150px;display:flex;flex-direction:column;justify-content:center;gap:26px;pointer-events:none">
       <span data-reveal="1" style="display:flex;align-items:center;gap:12px;font-weight:700;font-size:13px;letter-spacing:.3em;color:#A78BFA"><i style="width:9px;height:9px;border-radius:50%;background:#D6334B;animation:blink 1.6s infinite"></i>JOE VEGA · TEXAS HOLD’EM · MÉXICO</span>
@@ -186,7 +194,7 @@ a{color:#A78BFA;text-decoration:none}a:hover{color:#FAFAFA}
       </div>
     </div>
     <div ref="{{ reelRef }}" style="display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:0 clamp(20px,4vw,56px) 12px;scrollbar-width:none">
-      <sc-for list="{{ reels }}" as="v" hint-placeholder-count="5">
+      <sc-for list="{{ reels }}" as="v" hint-placeholder-count="0">
         <div onMouseEnter="{{ reelEnter }}" onMouseLeave="{{ reelLeave }}" data-hover="1" style="flex:none;width:240px;aspect-ratio:9/16;border-radius:16px;overflow:hidden;position:relative;scroll-snap-align:start;background:#18181B;border:1px solid #27272A;transition:transform .3s" style-hover="transform:translateY(-8px)">
           <video src="{{ v.src }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block"></video>
           <div style="position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(11,11,13,.92));pointer-events:none"></div>
@@ -209,7 +217,7 @@ a{color:#A78BFA;text-decoration:none}a:hover{color:#FAFAFA}
     <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));grid-auto-rows:220px;grid-auto-flow:dense;gap:14px">
       <sc-for list="{{ photos }}" as="p" hint-placeholder-count="8">
         <div onClick="{{ p.open }}" data-hover="1" style="grid-column:{{ p.span }};grid-row:{{ p.span }};border-radius:14px;overflow:hidden;position:relative;background:#18181B">
-          <img src="{{ p.src }}" alt="{{ p.cap }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.2,.8,.2,1),filter .4s;filter:saturate(.85)" style-hover="transform:scale(1.08);filter:saturate(1.1)">
+          <div role="img" aria-label="{{ p.cap }}" style="position:absolute;inset:0;background-image:url({{ p.src }});background-size:cover;background-position:center;transition:transform .6s cubic-bezier(.2,.8,.2,1),filter .4s;filter:saturate(.85)" style-hover="transform:scale(1.08);filter:saturate(1.1)"></div>
           <div style="position:absolute;inset:auto 0 0 0;padding:28px 14px 12px;background:linear-gradient(transparent,rgba(11,11,13,.9));font-weight:600;font-size:13px;pointer-events:none">{{ p.cap }}</div>
         </div>
       </sc-for>
@@ -266,7 +274,7 @@ a{color:#A78BFA;text-decoration:none}a:hover{color:#FAFAFA}
   <sc-if value="{{ lbOn }}" hint-placeholder-val="{{ false }}">
     <div onClick="{{ lbClose }}" style="position:fixed;inset:0;z-index:80;background:rgba(11,11,13,.94);backdrop-filter:blur(8px);display:grid;place-items:center;padding:40px">
       <div style="display:grid;gap:16px;justify-items:center;max-width:min(1100px,92vw)">
-        <img src="{{ lb.src }}" alt="{{ lb.cap }}" style="max-width:100%;max-height:78vh;border-radius:14px;display:block;box-shadow:0 40px 100px rgba(0,0,0,.6)">
+        <div role="img" aria-label="{{ lb.cap }}" style="width:min(1100px,92vw);height:78vh;background-image:url({{ lb.src }});background-size:contain;background-repeat:no-repeat;background-position:center;filter:drop-shadow(0 40px 60px rgba(0,0,0,.6))"></div>
         <div style="display:flex;align-items:center;gap:20px">
           <button onClick="{{ lbPrev }}" data-hover="1" style="width:48px;height:48px;border-radius:50%;border:2px solid #3F3F46;background:transparent;color:#FAFAFA;font-size:20px;cursor:inherit">←</button>
           <span style="font-weight:600;font-size:15px;min-width:260px;text-align:center">{{ lb.cap }} · <span style="color:#71717A">{{ lb.pos }}</span></span>
@@ -277,7 +285,7 @@ a{color:#A78BFA;text-decoration:none}a:hover{color:#FAFAFA}
   </sc-if>
 </div>
 </x-dc>
-<script type="text/x-dc" data-dc-script data-props="{&quot;escena3d&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;orbita&quot;,&quot;lluvia&quot;,&quot;torre&quot;],&quot;default&quot;:&quot;orbita&quot;,&quot;tsType&quot;:&quot;'orbita'|'lluvia'|'torre'&quot;,&quot;section&quot;:&quot;Hero 3D&quot;},&quot;cursorFicha&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Interacción&quot;},&quot;intro&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Interacción&quot;}}">
+<script type="text/x-dc" data-dc-script data-props="{&quot;fotosHero&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;label&quot;:&quot;Fotos de Joe de fondo en el hero&quot;},&quot;escena3d&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;orbita&quot;,&quot;lluvia&quot;,&quot;torre&quot;],&quot;default&quot;:&quot;orbita&quot;,&quot;tsType&quot;:&quot;'orbita'|'lluvia'|'torre'&quot;,&quot;section&quot;:&quot;Hero 3D&quot;},&quot;cursorFicha&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Interacción&quot;},&quot;intro&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Interacción&quot;}}">
 const IMG = (n, w) => 'https://www.joepok3r.com/_next/image?url=%2F' + n + '.webp&w=' + (w || 1080) + '&q=75';
 const PH = [
 ['mesa-final','Los 9 de la mesa final','hr'],['con-negreanu','Con Daniel Negreanu','vegas'],['quinto-lugar-296k','5.º del field · 296K (74 BB)','circuit'],['sexto-lugar','6.º lugar · $160,000','hr'],['letras-wsop','Las letras','vegas'],['escenario-wsop-circuit','La mesa final, montada','circuit'],['retrato-gorra-j','Día 1 · en acción','circuit'],['paris-las-vegas','Paris Las Vegas','vegas'],['conteo-mesa-final','Conteo de fichas · mesa final','hr'],['wsop-live-mesa-34','Mesa 34 · líder con 296K','circuit'],['jubilee-mesa-19','Mesa 19 · Jubilee Casino','hr'],['entrada-wsop-2023','La entrada, WSOP 2023','vegas'],['fichas-tapete-circuit','Stack en juego','circuit'],['bluff-central','Cobertura · Bluff Central','hr'],['buy-in-main-event','Main Event 2023 · $10,000 de buy-in','vegas'],['sala-wsop-circuit','La sala, antes del primer reparto','circuit'],['bajo-los-banners','Bajo los estandartes de campeones','vegas'],['boton-dealer-wsop','Botón de dealer · WSOP','circuit'],['cash-game','Cash game','hr'],['reloj-mini-main','48 de 184 · bolsa MX$1,814,400','circuit'],['mesa-wsop-vegas','En juego · WSOP Las Vegas','vegas'],['stack-25k','El stack, con las de 25K','circuit'],['conteo-mini-main','13.º con 64.2K','circuit'],['wsop-live-mesa-25','WSOP Live · mesa 25, asiento 3','circuit'],['fichas-big-bola','Big Bola Casinos','circuit'],['fichas-wsop-dealer','Fichas del WSOP Circuit','circuit'],['wsop-circuit-cdmx','WSOP Circuit · CDMX','circuit'],['wsop-live-mesa-22','Mesa 22 · todos en 40K','circuit']
@@ -298,6 +306,7 @@ const SOCIALS = [
 ];
 const RANKS = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
 const SUITS = ['♠','♥','♦','♣'];
+const JOE = [['joe_1','assets/joe-1.jpg',.5],['joe_2','assets/joe-2.jpg',.47],['joe_3','assets/joe-3.jpg',.5]].map(([id, p, fx]) => ({src:(window.__resources && window.__resources[id]) || p, fx}));
 const RNAME = {A:'Ases',K:'Reyes',Q:'Reinas',J:'Jotas','10':'Dieces','9':'Nueves','8':'Ochos','7':'Sietes','6':'Seises','5':'Cincos','4':'Cuatros','3':'Treses','2':'Doses'};
 const FILTERS = [['all','Todas'],['circuit','WSOP Circuit'],['vegas','WSOP Las Vegas'],['hr','High Roller']];
 
@@ -310,6 +319,7 @@ class Component extends DCLogic {
   mt = {x:0,y:0}; m = {x:0,y:0}; cur = {x:-100,y:-100}; ring = {x:-100,y:-100}; burstT = -10;
 
   componentDidMount() {
+    this.bgTimer = setInterval(() => this.setState(s => ({bgI: ((s.bgI || 0) + 1) % JOE.length})), 5000);
     this.onScroll = () => this.handleScroll();
     this.onMove = e => this.handleMove(e);
     this.onKey = e => { if (this.state.lb < 0) return; if (e.key === 'Escape') this.setState({lb:-1}); if (e.key === 'ArrowRight') this.lbStep(1); if (e.key === 'ArrowLeft') this.lbStep(-1); };
@@ -322,7 +332,7 @@ class Component extends DCLogic {
     if (this.state.introOn) this.runIntro(); else this.startPage();
   }
   componentWillUnmount() {
-    this.dead = true;
+    this.dead = true; clearInterval(this.bgTimer);
     removeEventListener('scroll', this.onScroll); removeEventListener('mousemove', this.onMove); removeEventListener('keydown', this.onKey);
     cancelAnimationFrame(this.raf); cancelAnimationFrame(this.craf);
     this.io && this.io.disconnect(); this.heroIO && this.heroIO.disconnect(); this.ro && this.ro.disconnect();
@@ -330,7 +340,7 @@ class Component extends DCLogic {
   }
   componentDidUpdate(pp, ps) {
     if (ps.dealKey !== this.state.dealKey) this.animateDeal();
-    if (pp.escena3d !== this.props.escena3d && this.three) this.buildMode();
+    if ((pp.escena3d !== this.props.escena3d || pp.fotosHero !== this.props.fotosHero) && this.three) this.buildMode();
     if (ps.filter !== this.state.filter || ps.all !== this.state.all) this.observeReveals();
   }
 
@@ -452,7 +462,7 @@ class Component extends DCLogic {
     this.makeAssets();
     this.buildMode();
     const resize = () => { const w = host.clientWidth, h = host.clientHeight; r.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix();
-      const visW = 2 * Math.tan(cam.fov * Math.PI / 360) * cam.position.z * cam.aspect; this.offX = cam.aspect > 1.15 ? visW * .2 : 0; this.sc = cam.aspect > 1.15 ? 1 : .75; };
+      const visW = 2 * Math.tan(cam.fov * Math.PI / 360) * cam.position.z * cam.aspect; this.offX = cam.aspect > 1.15 ? visW * .2 : 0; this.sc = cam.aspect > 1.15 ? 1 : .75; if (this.photoMat) this.photoMat.color.set(cam.aspect > 1.15 ? 0xffffff : 0x555555); };
     resize(); this.ro = new ResizeObserver(resize); this.ro.observe(host);
     this.visible = true;
     this.heroIO = new IntersectionObserver(es => { this.visible = es[0].isIntersecting; }); this.heroIO.observe(host);
@@ -493,13 +503,32 @@ class Component extends DCLogic {
     this.cardMats = [[edge, edge, edge, edge, fm(card('J','♠','#18181B')), bm], [edge, edge, edge, edge, fm(card('J','♥','#D6334B')), bm]];
     this.chipGeo = new T.CylinderGeometry(1, 1, .26, 64);
     this.cardGeo = new T.BoxGeometry(2.5, 3.5, .03);
+    this.photoGeo = new T.BoxGeometry(4.5, 6, .08);
+    this.photoMat = new T.MeshBasicMaterial({color:0xffffff});
+    this.photoEdge = new T.MeshStandardMaterial({color:0x8B5CF6, roughness:.4});
+    this.photoTex = [];
+    JOE.forEach((p, i) => { const im = new Image(); im.crossOrigin = 'anonymous';
+      im.onload = () => {
+        this.photoTex[i] = tex(cv(768, 1024, (g, w, h) => {
+          g.fillStyle = '#FAFAFA'; g.beginPath(); g.roundRect(0, 0, w, h, 44); g.fill();
+          const b = 18, iw = w - b * 2, ih = h - b * 2, s = Math.max(iw / im.width, ih / im.height), dw = im.width * s, dh = im.height * s;
+          g.save(); g.beginPath(); g.roundRect(b, b, iw, ih, 30); g.clip();
+          g.drawImage(im, b + Math.min(0, Math.max(iw - dw, iw / 2 - dw * p.fx)), b + (ih - dh) / 2, dw, dh);
+          const gr = g.createLinearGradient(0, h * .7, 0, h); gr.addColorStop(0, 'rgba(11,11,13,0)'); gr.addColorStop(1, 'rgba(11,11,13,.45)'); g.fillStyle = gr; g.fillRect(0, 0, w, h);
+          g.restore(); }));
+        if (!this.photoMat.map) { this.photoMat.map = this.photoTex[i]; this.photoMat.needsUpdate = true; }
+      };
+      im.src = p.src; });
   }
   buildMode() {
     const T = this.T, root = this.three.root; while (root.children.length) root.remove(root.children[0]);
     const mode = this.props.escena3d ?? 'orbita'; this.mode = mode; this.chips = [];
     const rnd = (a, b) => a + Math.random() * (b - a);
     const chip = i => { const m = new T.Mesh(this.chipGeo, this.chipMats[i % 5]); root.add(m); return m; };
-    this.cards = this.cardMats.map((mats, i) => { const m = new T.Mesh(this.cardGeo, mats); root.add(m); return m; });
+    const fotos = false;
+    this.cards = fotos ? [] : this.cardMats.map((mats, i) => { const m = new T.Mesh(this.cardGeo, mats); root.add(m); return m; });
+    this.photoMesh = null;
+    if (fotos) { const e = this.photoEdge; this.photoMesh = new T.Mesh(this.photoGeo, [e, e, e, e, this.photoMat, this.photoMat]); root.add(this.photoMesh); this.photoT0 = performance.now() / 1000; }
     if (mode === 'orbita') {
       for (let i = 0; i < 18; i++) this.chips.push({m:chip(i), a:i / 18 * Math.PI * 2, rad:rnd(4.4, 5.6), yo:rnd(-.8, .8), sx:rnd(.4, 1.2), sz:rnd(-.8, .8), ph:rnd(0, 6)});
     } else if (mode === 'lluvia') {
@@ -521,6 +550,16 @@ class Component extends DCLogic {
       if (this.mode === 'torre') { c.position.set(i ? 1 : -1, -1.6, 3.2); c.rotation.set(-.35, flip + (i ? -.3 : .3), i ? -.12 : .12); }
       else { c.position.set(i ? .85 : -.85, Math.sin(t * 1.2 + i) * .18, i * .06); c.rotation.set(0, flip + Math.sin(t * .6 + i) * .2, i ? -.14 : .14); }
     });
+    if (this.photoMesh) {
+      const P = 5, F = .45, el = t - this.photoT0, k = Math.floor(el / P), ph = el - k * P, n = JOE.length;
+      const tx = this.photoTex[k % n] || this.photoTex.find(Boolean);
+      if (tx && this.photoMat.map !== tx) { this.photoMat.map = tx; this.photoMat.needsUpdate = true; }
+      let ry = 0;
+      if (ph > P - F) { const q = (ph - (P - F)) / F; ry = q * q * Math.PI / 2; }
+      else if (k > 0 && ph < F) { const q = 1 - ph / F; ry = -q * q * Math.PI / 2; }
+      this.photoMesh.position.set(0, Math.sin(t * 1.1) * .15, 0);
+      this.photoMesh.rotation.set(Math.sin(t * .7) * .04, ry + Math.sin(t * .5) * .08, -.05 + bp * Math.sin(t * 30) * .03);
+    }
     if (this.mode === 'orbita') this.chips.forEach(c => {
       c.a += dt * .28 * (1 + bp * 3); const rr = c.rad + bp * 2.5;
       c.m.position.set(Math.cos(c.a) * rr, Math.sin(c.a * 2 + c.ph) * .9 + c.yo, Math.sin(c.a) * rr * .55);
@@ -551,7 +590,10 @@ class Component extends DCLogic {
   renderVals() {
     const st = this.state, list = this.filtered(), shown = st.all ? list : list.slice(0, 12);
     const lb = st.lb >= 0 && list[st.lb] ? list[st.lb] : null;
+    const bgI = st.bgI || 0;
     return {
+      fotosOn: this.props.fotosHero !== false,
+      heroBg: JOE.map((p, i) => ({src:p.src, pos:(p.fx * 100) + '% 30%', op: i === bgI ? .5 : 0, sc: i === bgI ? 1.08 : 1})),
       rootRef:this.rootRef, progRef:this.progRef, introRef:this.introRef, introPctRef:this.introPctRef, ringRef:this.ringRef, dotRef:this.dotRef,
       heroCanvas:this.heroCanvas, tlRef:this.tlRef, lineRef:this.lineRef, reelRef:this.reelRef,
       introOn: st.introOn, cursorOn: this.props.cursorFicha !== false, cursorCss: this.props.cursorFicha !== false ? 'none' : 'auto',
