@@ -8,9 +8,10 @@ importaba de fuera eran `cn()` y una constante. Compartir despliegue obligaba a
 darle a una página pública la misma configuración de acceso que a una
 herramienta privada.
 
-**Hoy es un sitio estático.** Las rutas se prerenderizan; no hay middleware
-ni base de datos. El plan de rediseño ([PLAN.md](PLAN.md)) lo pasa a ISR para
-incluir feeds de redes sociales.
+**Ya no es 100 % estático.** Las páginas se siguen prerenderizando, pero el feed
+de redes sociales sale de un route handler (`/api/social`) con ISR: se sirve
+desde caché y se regenera solo cada 30 min. Sigue sin haber middleware ni base
+de datos. Contexto en [PLAN.md](PLAN.md).
 
 ## Arrancar
 
@@ -19,7 +20,8 @@ npm install
 npm run dev
 ```
 
-`npm run check` corre typecheck y lint.
+`npm run check` corre typecheck y lint; `npm test` corre las pruebas (vitest) de
+la capa de feeds.
 
 ## Editar el contenido
 
@@ -93,19 +95,53 @@ Los clips van en `public/reels/` junto a su póster, y se listan en `reels`.
 | `app/layout.tsx` | Metadatos, Open Graph y las dos fuentes |
 | `app/globals.css` | Base de Tailwind y el tema, acotado a `.joe-theme` |
 | `app/page.tsx` | Composición de las secciones y datos estructurados |
+| `lib/social/` | Feeds sociales: un adaptador por red, contrato `PostSocial`, agregador y lista manual |
+| `app/api/social/route.ts` | `GET /api/social`: el feed agregado, con ISR |
 | `components/` | Galería con visor y filtro, carrusel de reels, filas de enlace |
 | `public/` | Fotos, clips, pósters y la imagen de Open Graph |
 
+## Feeds sociales
+
+`GET /api/social` devuelve `{ posts, fuentes, generado }`. Cada post cumple el
+contrato `PostSocial` de [`lib/social/types.ts`](lib/social/types.ts); `fuentes`
+dice, por red, si los datos son `real`, `manual` o `vacio`, para que la UI pueda
+avisarlo.
+
+| Red | Fuente | Sin credenciales o si falla |
+| --- | --- | --- |
+| YouTube | RSS público del canal (sin API key; no trae vistas) | Respaldo manual |
+| Kick | API oficial con OAuth de aplicación. **No existe endpoint de clips** | Clips del manual |
+| Instagram | Embeds curados a mano. Camino Graph API listo pero apagado | Siempre manual |
+| TikTok | oEmbed oficial sobre la lista curada | Post sin título/miniatura |
+| Facebook | Apagado: no hay Página | Vacío |
+
+Un adaptador roto nunca tumba a los demás ni a la página: si una red se queda sin
+datos, se usa su lista de [`lib/social/manual.ts`](lib/social/manual.ts), y si
+tampoco hay, esa red simplemente no aparece. `manual.ts` empieza vacío: se llena
+pegando URLs reales y su fecha.
+
+Ajustes: frecuencia de refresco en `lib/social/config.ts` (`REVALIDAR_SEG`, y el
+literal gemelo de `app/api/social/route.ts`, que una prueba vigila), y límites de
+posts en `lib/social/index.ts` (`MAX_POSTS_POR_RED`, `MAX_POSTS_TOTAL`).
+
 ## Variables de entorno
 
-Una sola, documentada en [`.env.example`](.env.example):
-`NEXT_PUBLIC_SITE_URL`, la URL absoluta del sitio. La usan las imágenes de Open
-Graph —WhatsApp e Instagram no resuelven rutas relativas—, el canonical y el
-sitemap. Si falta, cae en localhost y el enlace se comparte sin vista previa.
+Documentadas en [`.env.example`](.env.example) y leídas desde
+[`lib/env.ts`](lib/env.ts). Los tokens viven **solo** en las variables de entorno
+de Vercel, nunca en el repo. Todas son opcionales: sin ellas el sitio funciona y
+los feeds caen al contenido manual.
+
+| Variable | Para qué |
+| --- | --- |
+| `NEXT_PUBLIC_SITE_URL` | URL absoluta del sitio: Open Graph (WhatsApp e Instagram no resuelven rutas relativas), canonical y sitemap. Si falta, cae en localhost |
+| `YOUTUBE_CHANNEL_ID` | Sobreescribe el canal de YouTube (ya hay uno por defecto, es público) |
+| `KICK_CLIENT_ID`, `KICK_CLIENT_SECRET` | App de Kick (OAuth client credentials) |
+| `KICK_CHANNEL_SLUG` | Sobreescribe el canal de Kick (por defecto `joe-pok3r`) |
+| `INSTAGRAM_AUTO`, `INSTAGRAM_ACCESS_TOKEN` | Camino automático de Instagram. Apagado; solo con una Página de Facebook |
 
 ## Desplegar
 
-Vercel, importando el repo. Carga `NEXT_PUBLIC_SITE_URL` con el dominio real.
+Vercel, importando el repo. Carga `NEXT_PUBLIC_SITE_URL` con el dominio real y, cuando existan, las variables de los feeds.
 
 Al ser un proyecto aparte del HUB, su protección de despliegues es
 independiente: los previews pueden ser públicos para enseñárselos a alguien sin
