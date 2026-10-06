@@ -136,7 +136,7 @@ los feeds caen al contenido manual.
 | `NEXT_PUBLIC_SITE_URL` | URL absoluta del sitio: Open Graph (WhatsApp e Instagram no resuelven rutas relativas), canonical y sitemap. Si falta, cae en localhost |
 | `YOUTUBE_CHANNEL_ID` | Sobreescribe el canal de YouTube (ya hay uno por defecto, es público) |
 | `KICK_CLIENT_ID`, `KICK_CLIENT_SECRET` | App de Kick (OAuth client credentials) |
-| `KICK_CHANNEL_SLUG` | Canal de Kick. Pendiente de decidir |
+| `KICK_CHANNEL_SLUG` | Sobreescribe el canal de Kick (por defecto `joe-pok3r`) |
 | `INSTAGRAM_AUTO`, `INSTAGRAM_ACCESS_TOKEN` | Camino automático de Instagram. Apagado; solo con una Página de Facebook |
 
 ## Desplegar

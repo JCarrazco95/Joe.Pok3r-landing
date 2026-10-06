@@ -28,10 +28,11 @@ export const KICK_CLIENT_ID = process.env.KICK_CLIENT_ID || ''
 export const KICK_CLIENT_SECRET = process.env.KICK_CLIENT_SECRET || ''
 
 /**
- * Slug del canal de Kick. TODO (Joe): no hay enlace de Kick en `enlaces`, así
- * que no se supone ninguno; sin esta variable el adaptador queda apagado.
+ * Slug del canal de Kick (https://kick.com/joe-pok3r). Es público, no un
+ * secreto; la variable solo sirve para sobreescribirlo. El adaptador sigue
+ * apagado sin KICK_CLIENT_ID y KICK_CLIENT_SECRET.
  */
-export const KICK_CHANNEL_SLUG = process.env.KICK_CHANNEL_SLUG || ''
+export const KICK_CHANNEL_SLUG = process.env.KICK_CHANNEL_SLUG || 'joe-pok3r'
 
 /**
  * Token de larga duración de Instagram (Graph API). Hoy el adaptador automático
