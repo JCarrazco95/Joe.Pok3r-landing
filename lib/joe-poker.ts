@@ -15,6 +15,7 @@ export type RedSocial =
   | 'youtube'
   | 'x'
   | 'twitch'
+  | 'kick'
   | 'whatsapp'
   | 'trofeo'
   | 'web'
@@ -315,7 +316,7 @@ export const enlaces: Enlace[] = [
     id: 'kick',
     etiqueta: 'Kick',
     detalle: 'Directos y clips',
-    icono: 'web',
+    icono: 'kick',
     url: 'https://kick.com/joe-pok3r',
   },
   {
