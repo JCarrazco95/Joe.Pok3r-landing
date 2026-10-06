@@ -1,147 +1,138 @@
 @import "tailwindcss";
 
 /*
+  Sistema de diseño "Fichas 3D" (handoff de Claude Design).
+
+  Los tokens viven aquí, en `@theme`, para que Tailwind genere sus utilidades
+  (`bg-canvas`, `text-violet-soft`, `font-display`, `rounded-card`…). Los nombres
+  evitan chocar con las paletas de Tailwind: no hay `red` ni `blue` a secas.
+*/
+@theme {
+  /* Superficies */
+  --color-canvas: #0b0b0d;
+  --color-surface: #131316;
+  --color-surface-2: #18181b;
+  --color-line: #27272a;
+  --color-line-strong: #3f3f46;
+
+  /* Texto */
+  --color-fg: #fafafa;
+  --color-fg-2: #d4d4d8;
+  --color-fg-muted: #a1a1aa;
+  --color-fg-dim: #71717a;
+
+  /* Marca */
+  --color-violet: #8b5cf6;
+  --color-violet-deep: #7c3aed;
+  --color-violet-soft: #a78bfa;
+
+  /* Palos: ♥ ruby · ♠ violet · ♣ azure · ♦ ember */
+  --color-ruby: #d6334b;
+  --color-rose: #f08a99;
+  --color-azure: #3b6fe0;
+  --color-ember: #c2410c;
+
+  /* Tipografía */
+  --font-display: var(--font-bebas), Impact, sans-serif;
+  --font-body: var(--font-mont), Arial, sans-serif;
+
+  /* Forma */
+  --radius-card: 1.25rem;
+  --radius-panel: 1.75rem;
+  --radius-photo: 0.875rem;
+
+  /* Sombras */
+  --shadow-feature: 0 30px 80px rgb(0 0 0 / 0.5);
+  --shadow-card: 0 30px 60px rgb(0 0 0 / 0.55);
+  --shadow-glow: 0 0 40px rgb(139 92 246 / 0.6);
+
+  /* Movimiento */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.2, 0.9, 0.25, 1.15);
+
+  /* Animaciones continuas. En el marcado van siempre con `motion-safe:`. */
+  --animate-marquee: marquee 34s linear infinite;
+  --animate-giro-lento: spin 40s linear infinite;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+}
+
+/*
   Base del sitio. Antes esto vivía repartido entre el globals.css del HUB (que
   traía todo shadcn) y joe.css. Aquí queda sólo lo que la landing usa.
 */
 @layer base {
   html {
-    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-body);
     color-scheme: dark;
+    background: var(--color-canvas);
+  }
+
+  /* Las anclas de la nav se deslizan; con reduced-motion saltan. */
+  @media (prefers-reduced-motion: no-preference) {
+    html {
+      scroll-behavior: smooth;
+    }
   }
 
   body {
-    /* Inter sólo en 400 y 500: nada de negritas sintéticas del navegador. */
-    font-weight: 400;
+    /* Mont arranca en 500: no hay 400, así que ése es el peso de lectura. */
+    font-weight: 500;
     font-synthesis-weight: none;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* La tipografía no sube de 500 en ningún nivel. */
+  ::selection {
+    background: var(--color-violet);
+    color: var(--color-fg);
+  }
+
+  /*
+    Los títulos siguen en 500 por defecto. El diseño usa 600/700 en etiquetas y
+    botones; esos componentes lo piden explícito (`font-bold`, `font-semibold`).
+    Pendiente: confirmar con Joe si la marca admite negritas (ver PLAN.md). Si
+    dice que no, se baja a `font-medium` desde components/ui.
+  */
   h1, h2, h3, h4, h5, h6, th, strong, b {
     font-weight: 500;
   }
 
   :focus-visible {
-    outline: 2px solid var(--accent);
+    outline: 2px solid var(--color-violet);
     outline-offset: 2px;
   }
 }
 
-@layer utilities {
-  /* Barra de scroll fina para el carrusel de reels. */
-  .scrollbar-thin {
-    scrollbar-width: thin;
-    scrollbar-color: var(--stroke-soft) transparent;
-  }
-}
-
 /*
-  Tema visual de la landing pública de Joe.Pok3r.
-
-  Grafito + morado, porque el arte de la marca —el letrero y el monograma— está
-  hecho para fondo oscuro. Todo sigue acotado a `.joe-theme`, que va en el
-  <body>: el tema se lee de un vistazo y no se mezcla con la base de Tailwind.
+  Tema de la landing. `.joe-theme` va en el <body>. Sus variables `--accent*`,
+  `--ink*` y `--stroke` las lee todavía el aviso "en vivo" (en-vivo.tsx); el
+  resto del sitio usa los tokens de `@theme`.
 */
-
 .joe-theme {
-  --ground: #232329;
-  --ground-deep: #131316;
   --accent: #8b5cf6;
   --accent-bright: #b9a4fb;
   --ink: #f4f4f5;
   --ink-muted: #a1a1aa;
   --stroke: rgb(139 92 246 / 0.28);
-  --stroke-soft: rgb(244 244 245 / 0.09);
-  --sep: rgb(139 92 246 / 0.6);
-  --panel: rgb(19 19 22 / 0.6);
 
   position: relative;
   isolation: isolate;
   min-height: 100dvh;
-  color: var(--ink);
-  background-color: var(--ground-deep);
+  color: var(--color-fg);
+  background-color: var(--color-canvas);
 }
 
 /*
-  El fondo va en pseudo-elementos FIJOS al viewport, no en el div.
-
-  Si el degradado se pintara sobre el elemento, en una página de ~2500 px la
-  luz cenital quedaría toda en el primer scroll y el resto sería un negro
-  plano. Anclado al viewport, la mesa se ve igual de iluminada en cualquier
-  punto del scroll. `.joe-theme` tiene `isolation: isolate`, así que el
-  `z-index: -1` no se cuela por debajo del fondo de la página.
-*/
-.joe-theme::before,
-.joe-theme::after {
-  content: '';
-  position: fixed;
-  inset: 0;
-  z-index: -1;
-  pointer-events: none;
-}
-
-/* Capa 1: halo morado cenital sobre grafito + trama diagonal muy tenue. */
-.joe-theme::before {
-  background-image:
-    repeating-linear-gradient(45deg, rgb(0 0 0 / 0.10) 0 1px, transparent 1px 4px),
-    repeating-linear-gradient(-45deg, rgb(255 255 255 / 0.015) 0 1px, transparent 1px 4px),
-    radial-gradient(125% 95% at 50% -18%, #3b3350 0%, #2a2733 38%, var(--ground) 62%, var(--ground-deep) 100%);
-}
-
-/* Capa 2: viñeta. Oscurece las orillas para que el centro pese más. */
-.joe-theme::after {
-  background: radial-gradient(80% 60% at 50% 40%, transparent 35%, rgb(0 0 0 / 0.5) 100%);
-}
-
-/*
-  Piezas reutilizables, dentro de `@layer components`.
-
-  La capa no es decorativa. Tailwind v4 mete sus utilidades en `@layer utilities`,
-  y en la cascada de CSS **lo que no está en ninguna capa gana sobre lo que sí
-  está**, sin importar la especificidad. Con estas reglas sueltas, un
-  `border-[var(--accent)]` de Tailwind sobre un `.joe-panel` no hacía nada: el
-  borde de la clase ganaba siempre. Así se veían iguales las filas destacadas y
-  las normales, y los enlaces marcados como destacados nunca se distinguieron.
-
-  Metidas en `components`, que va antes de `utilities`, las utilidades vuelven a
-  poder pisar lo que necesiten.
+  Dentro de `@layer components` para que las utilidades de Tailwind (que van en
+  `@layer utilities`) puedan pisarlas: lo que está fuera de toda capa gana
+  siempre en la cascada, sin importar la especificidad.
 */
 @layer components {
-  /* ---------- Piezas reutilizables ---------- */
-
-  /* Panel de vidrio oscuro. */
-  .joe-panel {
-    background: var(--panel);
-    border: 1px solid var(--stroke-soft);
-    backdrop-filter: blur(8px);
-  }
-
-  /* Borde del avatar, imitando el canto de una ficha. */
-  .joe-chip-ring {
-    background:
-      conic-gradient(
-        from 0deg,
-        var(--accent) 0 6deg, transparent 6deg 24deg,
-        var(--accent) 24deg 30deg, transparent 30deg 48deg,
-        var(--accent) 48deg 54deg, transparent 54deg 72deg,
-        var(--accent) 72deg 78deg, transparent 78deg 96deg,
-        var(--accent) 96deg 102deg, transparent 102deg 120deg,
-        var(--accent) 120deg 126deg, transparent 126deg 144deg,
-        var(--accent) 144deg 150deg, transparent 150deg 168deg,
-        var(--accent) 168deg 174deg, transparent 174deg 192deg,
-        var(--accent) 192deg 198deg, transparent 198deg 216deg,
-        var(--accent) 216deg 222deg, transparent 222deg 240deg,
-        var(--accent) 240deg 246deg, transparent 246deg 264deg,
-        var(--accent) 264deg 270deg, transparent 270deg 288deg,
-        var(--accent) 288deg 294deg, transparent 294deg 312deg,
-        var(--accent) 312deg 318deg, transparent 318deg 336deg,
-        var(--accent) 336deg 342deg, transparent 342deg 360deg
-      ),
-      radial-gradient(closest-side, transparent 88%, rgb(217 182 92 / 0.35) 88%);
-  }
-
-  /* Barrido de luz al pasar el cursor sobre un enlace. */
+  /* Barrido de luz al pasar el cursor sobre un enlace (aviso "en vivo"). */
   .joe-link {
     position: relative;
     overflow: hidden;
@@ -168,39 +159,43 @@
     }
   }
 
-  /* La galería usa columnas CSS: masonry real sin JS ni librerías. */
-  .joe-masonry {
-    column-count: 2;
-    column-gap: 0.75rem;
+  /* Oculta la barra de scroll del carrusel de reels; lo recorren las flechas. */
+  .scrollbar-none {
+    scrollbar-width: none;
   }
 
-  @media (min-width: 768px) {
-    .joe-masonry {
-      column-count: 3;
-      column-gap: 1rem;
-    }
-
-    /*
-      Con pocas fotos, tres columnas nunca cierran parejo: una carga dos piezas y
-      las demás una, así que siempre queda un escalón del alto de una foto. Dos
-      columnas reparten mejor. El umbral lo marca el componente con `data-pocas`.
-    */
-    .joe-masonry[data-pocas='true'] {
-      column-count: 2;
-    }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
   }
+}
 
-  .joe-masonry > * {
-    break-inside: avoid;
-    margin-bottom: 0.75rem;
+/*
+  Entrada del hero, sólo con CSS: se ve en el primer pintado, sin esperar a que
+  hidrate React. Cada letra del H1 sube girando; el resto sube con fundido.
+  `--i` es el índice, para escalonar.
+*/
+@keyframes letra-entra {
+  from {
+    transform: translateY(105%) rotate(8deg);
   }
+}
 
-  @media (min-width: 768px) {
-    .joe-masonry > * {
-      margin-bottom: 1rem;
-    }
+@keyframes sube-entra {
+  from {
+    opacity: 0;
+    transform: translateY(48px);
   }
+}
 
+.hero-letra {
+  display: inline-block;
+  animation: letra-entra 900ms cubic-bezier(0.2, 0.9, 0.2, 1) backwards;
+  animation-delay: calc(var(--i) * 55ms);
+}
+
+.hero-sube {
+  animation: sube-entra 900ms var(--ease-out) backwards;
+  animation-delay: calc(500ms + var(--i) * 110ms);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -208,6 +203,7 @@
   .joe-theme *::before,
   .joe-theme *::after {
     animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
     transition-duration: 0.001ms !important;
   }
 }

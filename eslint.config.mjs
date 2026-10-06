@@ -6,8 +6,9 @@ const compat = new FlatCompat({ baseDirectory: dirname(fileURLToPath(import.meta
 
 const eslintConfig = [
   ...compat.extends('next/core-web-vitals', 'next/typescript'),
-  // next-env.d.ts lo genera Next en cada build y no se versiona.
-  { ignores: ['.next/**', 'node_modules/**', 'next-env.d.ts'] },
+  // next-env.d.ts lo genera Next en cada build y no se versiona. Design/ es la
+  // referencia exportada de Claude Design, no código del proyecto.
+  { ignores: ['.next/**', 'node_modules/**', 'next-env.d.ts', 'Design/**'] },
 ]
 
 export default eslintConfig

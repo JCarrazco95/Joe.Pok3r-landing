@@ -1,5 +1,5 @@
 /**
- * Contenido de la landing pública de Joe.Pok3r (/joe).
+ * Contenido de la landing pública de Joe.Pok3r.
  *
  * Este archivo es la ÚNICA fuente de verdad de la página: textos, enlaces,
  * estadísticas y galería. Para actualizar la landing no hace falta tocar JSX.
@@ -48,6 +48,11 @@ export type Reel = {
 /**
  * Historial de resultados, del más reciente al más viejo.
  *
+ * Los cobros salen de la ficha de The Hendon Mob (pokerdb.thehendonmob.com,
+ * jugador n=541062). Los premios van en la moneda local del torneo. Lo que no
+ * está en Hendon Mob (High Roller del Jubilee, Main Event 2023, Opener) se
+ * conserva con su fuente propia o con `puesto: null`.
+ *
  * Sólo entran torneos con participación comprobada. Un `puesto: null` es
  * deliberado: significa que jugó y todavía no se registró dónde quedó, no que
  * se fue sin cobrar. Rellenarlo es de las pocas cosas de esta landing que hay
@@ -56,12 +61,41 @@ export type Reel = {
  */
 export const resultados: Resultado[] = [
   {
+    fecha: '2026-09-17',
+    torneo: 'Main Event · Ring Event #13',
+    serie: 'WSOP Circuit Austin',
+    sede: 'Austin, Texas',
+    buyIn: '$1,700 USD',
+    puesto: 92,
+    premio: '$4,780 USD',
+  },
+  {
+    fecha: '2026-09-14',
+    torneo: 'Monster Stack · Ring Event #9',
+    serie: 'WSOP Circuit Austin',
+    sede: 'Austin, Texas',
+    buyIn: '$400 USD',
+    puesto: 43,
+    premio: '$1,950 USD',
+  },
+  {
+    fecha: '2026-09-07',
+    torneo: 'Pot Limit Omaha Championship · Ring Event #9',
+    serie: 'WSOP Circuit México',
+    sede: 'Big Bola Casinos · CDMX',
+    buyIn: '$12,800 MXN',
+    puesto: 10,
+    premio: '$30,900 MXN',
+  },
+  {
     fecha: '2026-09-02',
     torneo: '#2 Mini Main Event',
     serie: 'WSOP Circuit México',
     sede: 'Big Bola Casinos · CDMX',
-    puesto: null,
+    buyIn: '$8,000 MXN',
+    puesto: 138,
     field: 184,
+    premio: '$16,000 MXN',
     nota: 'Cerró el Day 1A 5.º del field con 296,000 en fichas',
   },
   {
@@ -88,6 +122,39 @@ export const resultados: Resultado[] = [
     sede: 'Horseshoe & Paris · Las Vegas',
     buyIn: '$10,000 USD',
     puesto: null,
+  },
+  {
+    fecha: '2017-07-22',
+    torneo: 'Nightly Event',
+    sede: 'Aria Resort & Casino · Las Vegas',
+    buyIn: '$125 USD',
+    puesto: 9,
+    premio: '$231 USD',
+  },
+  {
+    fecha: '2017-06-18',
+    torneo: '7PM Turbo',
+    serie: 'Rio Daily Deepstacks',
+    sede: 'Rio · Las Vegas',
+    buyIn: '$365 USD',
+    puesto: 3,
+    premio: '$5,972 USD',
+  },
+  {
+    fecha: '2017-05-05',
+    torneo: 'Daily Event',
+    sede: 'Aria Resort & Casino · Las Vegas',
+    buyIn: '$240 USD',
+    puesto: 4,
+    premio: '$1,435 USD',
+  },
+  {
+    fecha: '2017-05-04',
+    torneo: 'Daily Event',
+    sede: 'Aria Resort & Casino · Las Vegas',
+    buyIn: '$125 USD',
+    puesto: 7,
+    premio: '$359 USD',
   },
 ]
 
@@ -245,21 +312,13 @@ export const enlaces: Enlace[] = [
     url: 'https://www.twitch.tv/joe_pok3r',
   },
   {
-    /*
-     * El destino natural es su ficha en The Hendon Mob: es el registro
-     * estándar de cobros en torneos y se actualiza solo, sin que nadie toque
-     * esta landing.
-     *
-     * Buscado en septiembre de 2026 y NO encontrado. Dos cosas que saber antes
-     * de volver a intentarlo: pokerdb.thehendonmob.com está detrás de
-     * protección anti-bots, así que hay que consultarlo a mano desde un
-     * navegador; y una ficha sólo nace cuando el jugador registra un cobro en
-     * un torneo reportado. El 6.º lugar del High Roller del Jubilee puede no
-     * estarlo; los eventos del WSOP Circuit sí.
-     *
-     * O sea: si Joe cobra en el Circuit CDMX, la ficha aparece sola. Ese es el
-     * momento de pegar la URL aquí.
-     */
+    id: 'hendon-mob',
+    etiqueta: 'The Hendon Mob',
+    detalle: 'Registro oficial de cobros en torneos',
+    icono: 'trofeo',
+    url: 'https://pokerdb.thehendonmob.com/player.php?a=r&n=541062',
+  },
+  {
     id: 'resultados',
     etiqueta: 'Resultados',
     detalle: 'Historial de torneos y premios',
@@ -515,8 +574,7 @@ export const galeria: Foto[] = [
   },
   {
     src: '/sexto-lugar.webp',
-    // El alt conserva "Mariano Vega" porque es lo que está impreso en la placa.
-    alt: 'Placa oficial del torneo, a nombre de Mariano Vega: 6.º lugar, premio de $160,000',
+    alt: 'Placa oficial del torneo, a nombre de Joe Vega: 6.º lugar, premio de $160,000',
     pie: '6.º lugar · $160,000',
     ancho: 475,
     alto: 794,
@@ -587,3 +645,34 @@ export const galeria: Foto[] = [
     evento: 'wsop-circuit',
   },
 ]
+
+/**
+ * Línea de tiempo de la sección "Historia".
+ *
+ * El texto de los tres primeros hitos es, palabra por palabra, el de
+ * `joe.historia`: es la bio que dictó Joe. `cuando` y `titulo` son los rótulos
+ * que ordenan la línea. El último hito suma el dato del High Roller, que ya
+ * está en `resultados`.
+ */
+export const hitos = [
+  {
+    cuando: 'Hace más de 20 años',
+    titulo: 'En casa, con amigos y familia',
+    texto: joe.historia[0],
+  },
+  {
+    cuando: 'Mayoría de edad',
+    titulo: 'Primera vez en Las Vegas',
+    texto: joe.historia[1],
+  },
+  {
+    cuando: 'Julio 2023',
+    titulo: 'Main Event de la WSOP · Evento #76',
+    texto: joe.historia[2],
+  },
+  {
+    cuando: 'Agosto 2026',
+    titulo: 'Mesa final del High Roller 2.5M GTD',
+    texto: `6.º de 112 y $160,000 MXN. ${joe.historia[3]}`,
+  },
+] as const

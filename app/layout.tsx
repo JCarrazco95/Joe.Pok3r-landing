@@ -1,17 +1,20 @@
 import type { Metadata, Viewport } from 'next'
 import { Bebas_Neue } from 'next/font/google'
-import { Inter } from 'next/font/google'
+import localFont from 'next/font/local'
 
 import { SITE_URL } from '@/lib/env'
 import { joe } from '@/lib/joe-poker'
 
 import './globals.css'
 
-/** Texto corrido. Sólo 400 y 500: la marca no usa negritas. */
-const inter = Inter({
-  subsets: ['latin'],
-  weight: ['400', '500'],
-  variable: '--font-inter',
+/** Texto corrido: Mont 500/600/700, servida desde public/fonts. */
+const body = localFont({
+  src: [
+    { path: '../public/fonts/Mont-500.woff2', weight: '500', style: 'normal' },
+    { path: '../public/fonts/Mont-600.woff2', weight: '600', style: 'normal' },
+    { path: '../public/fonts/Mont-700.woff2', weight: '700', style: 'normal' },
+  ],
+  variable: '--font-mont',
   display: 'swap',
 })
 
@@ -19,7 +22,7 @@ const inter = Inter({
 const display = Bebas_Neue({
   subsets: ['latin'],
   weight: '400',
-  variable: '--font-display',
+  variable: '--font-bebas',
   display: 'swap',
 })
 
@@ -65,11 +68,11 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es-MX" className={`${inter.variable} ${display.variable}`}>
+    <html lang="es-MX" className={`${body.variable} ${display.variable}`}>
       <body className="joe-theme">
         <a
           href="#contenido"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-[var(--panel)] focus:px-3 focus:py-2 focus:text-sm focus:outline-2 focus:outline-offset-2 focus:outline-[var(--accent)]"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-surface-2 focus:px-3 focus:py-2 focus:text-sm focus:outline-2 focus:outline-offset-2 focus:outline-violet"
         >
           Saltar al contenido
         </a>

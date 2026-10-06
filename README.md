@@ -2,14 +2,15 @@
 
 Sitio público de Joe Vega (Joe.Pok3r), operado por Analy·sys.
 
-Vivía dentro del HUB privado, en la ruta `/joe`. Se separó porque no compartía
+Vivía dentro del HUB privado. Se separó porque no compartía
 nada con él: cero Supabase, cero sesión, cero middleware. Lo único que
 importaba de fuera eran `cn()` y una constante. Compartir despliegue obligaba a
 darle a una página pública la misma configuración de acceso que a una
 herramienta privada.
 
-**Es un sitio estático.** Las cuatro rutas se prerenderizan; no hay middleware
-ni base de datos.
+**Hoy es un sitio estático.** Las rutas se prerenderizan; no hay middleware
+ni base de datos. El plan de rediseño ([PLAN.md](PLAN.md)) lo pasa a ISR para
+incluir feeds de redes sociales.
 
 ## Arrancar
 
