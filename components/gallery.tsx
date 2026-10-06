@@ -4,28 +4,39 @@ import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 import Image from 'next/image'
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 
+import { Boton } from '@/components/ui/button'
+import { Chip } from '@/components/ui/chip'
 import { eventos, type EventoId, type Foto } from '@/lib/joe-poker'
 import { cn } from '@/lib/utils'
 
+const FLECHA =
+  'grid size-12 shrink-0 place-items-center rounded-full border-2 border-line-strong text-fg transition-colors hover:border-violet hover:bg-violet'
+
+/** Cuántas fotos se ven antes de "Ver las N fotos". */
+const PRIMERAS = 12
+
 /**
- * Galería masonry con visor a pantalla completa.
+ * Galería: filtro por torneo, grid denso de filas de 220px (1 de cada 7 fotos
+ * ocupa 2×2) y visor a pantalla completa con teclado. Muestra las primeras 12 y
+ * "Ver las N fotos" despliega el resto. El visor navega sobre la lista completa
+ * del filtro, no sólo sobre lo visible.
  *
- * El masonry es `column-count` puro (ver `.joe-masonry` en joe.css): sin JS y
- * sin librería, cada foto conserva su proporción real. El visor sí necesita
- * cliente por el teclado y el bloqueo de scroll.
+ * `children` es el título de la sección: va a la izquierda de los chips.
  *
- * El filtro por torneo no toca la URL a propósito: es una landing que se abre
- * desde una historia de Instagram y se cierra, no algo que alguien vaya a
- * compartir filtrado.
+ * El filtro no toca la URL a propósito: es una landing que se abre desde una
+ * historia de Instagram y se cierra, no algo que alguien vaya a compartir.
  */
-export function Gallery({ fotos }: { fotos: Foto[] }) {
+export function Gallery({ fotos, children }: { fotos: Foto[]; children?: React.ReactNode }) {
   const [filtro, setFiltro] = useState<EventoId | null>(null)
   const [abierta, setAbierta] = useState<number | null>(null)
+  const [verTodas, setVerTodas] = useState(false)
 
   const visibles = useMemo(
     () => (filtro ? fotos.filter((f) => f.evento === filtro) : fotos),
     [fotos, filtro],
   )
+  const mostradas = verTodas ? visibles : visibles.slice(0, PRIMERAS)
+  const hayMas = !verTodas && visibles.length > PRIMERAS
 
   /** Sólo se ofrecen los torneos que de verdad tienen fotos. */
   const conFotos = useMemo(
@@ -39,6 +50,7 @@ export function Gallery({ fotos }: { fotos: Foto[] }) {
   const cambiarFiltro = useCallback((id: EventoId | null) => {
     // Si el visor sigue abierto su índice apunta a la lista vieja: se cierra.
     setAbierta(null)
+    setVerTodas(false)
     setFiltro(id)
   }, [])
   const disparadores = useRef<(HTMLButtonElement | null)[]>([])
@@ -72,12 +84,12 @@ export function Gallery({ fotos }: { fotos: Foto[] }) {
     }
   }, [abierta, cerrar, mover])
 
-  // Al cerrar, el foco regresa a la miniatura desde la que se abrió.
+  // Al cerrar, el foco regresa a la miniatura desde la que se abrió (si está a la vista).
   useEffect(() => {
     if (abierta !== null) return
     const i = ultimoDisparador.current
     if (i !== null) {
-      disparadores.current[i]?.focus()
+      disparadores.current[i]?.focus({ preventScroll: true })
       ultimoDisparador.current = null
     }
   }, [abierta])
@@ -86,43 +98,26 @@ export function Gallery({ fotos }: { fotos: Foto[] }) {
 
   return (
     <>
-      {conFotos.length > 1 ? (
-        <div
-          role="group"
-          aria-label="Filtrar fotos por torneo"
-          className="mb-5 flex flex-wrap justify-center gap-2"
-        >
-          {[{ id: null, corto: 'Todas', total: fotos.length }, ...conFotos].map((e) => {
-            const activo = filtro === e.id
-            return (
-              <button
+      <div className="flex flex-wrap items-end justify-between gap-6">
+        {children}
+        {conFotos.length > 1 ? (
+          <div role="group" aria-label="Filtrar fotos por torneo" className="flex flex-wrap gap-2">
+            {[{ id: null, corto: 'Todas', total: fotos.length }, ...conFotos].map((e) => (
+              <Chip
                 key={e.id ?? 'todas'}
-                type="button"
-                aria-pressed={activo}
+                activo={filtro === e.id}
                 onClick={() => cambiarFiltro(e.id as EventoId | null)}
-                className={cn(
-                  'rounded-full border px-3 py-1.5 text-xs transition duration-200',
-                  'focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]',
-                  activo
-                    ? 'border-[var(--stroke)] bg-[rgb(139_92_246_/_0.14)] text-[var(--accent-bright)]'
-                    : 'border-[var(--stroke-soft)] text-[var(--ink-muted)] hover:border-[var(--stroke)] hover:text-[var(--ink)]',
-                )}
+                className="border-[1.5px]"
               >
-                {e.corto}
-                <span className="ml-1.5 tabular-nums opacity-60">{e.total}</span>
-              </button>
-            )
-          })}
-        </div>
-      ) : null}
+                {e.corto} <b className="font-semibold opacity-60">{e.total}</b>
+              </Chip>
+            ))}
+          </div>
+        ) : null}
+      </div>
 
-      <div
-        className="joe-masonry"
-        // Con 4 fotos o menos las tres columnas de escritorio siempre quedan
-        // escalonadas: una carga dos piezas y las otras una. Ver joe.css.
-        data-pocas={visibles.length <= 4 ? 'true' : undefined}
-      >
-        {visibles.map((f, i) => (
+      <div className="mt-10 grid auto-rows-[150px] grid-flow-dense grid-cols-2 gap-3.5 sm:auto-rows-[220px] sm:grid-cols-[repeat(auto-fill,minmax(220px,1fr))]">
+        {mostradas.map((f, i) => (
           <button
             key={f.src}
             type="button"
@@ -133,23 +128,38 @@ export function Gallery({ fotos }: { fotos: Foto[] }) {
               ultimoDisparador.current = i
               setAbierta(i)
             }}
-            className="group relative block w-full overflow-hidden rounded-xl border border-[var(--stroke-soft)] bg-[var(--ground-deep)] transition duration-300 hover:border-[var(--stroke)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+            className={cn(
+              'group relative overflow-hidden rounded-photo bg-surface-2 text-left',
+              i % 7 === 0 && 'col-span-2 row-span-2',
+            )}
           >
             <Image
               src={f.src}
               alt={f.alt}
-              width={f.ancho}
-              height={f.alto}
-              sizes="(min-width: 768px) 30vw, 45vw"
-              className="h-auto w-full transition-transform duration-500 group-hover:scale-[1.04]"
+              fill
+              sizes={
+                i % 7 === 0 ? '(min-width: 640px) 440px, 100vw' : '(min-width: 640px) 220px, 50vw'
+              }
+              className="object-cover saturate-[0.85] transition-[transform,filter] duration-[600ms] ease-[var(--ease-out)] group-hover:scale-[1.08] group-hover:saturate-[1.1] motion-reduce:transition-none"
             />
-            {/* El pie sólo aparece al hover/foco; en móvil el alt hace el trabajo. */}
-            <span className="pointer-events-none absolute inset-x-0 bottom-0 translate-y-2 bg-gradient-to-t from-[rgb(0_0_0_/_0.85)] to-transparent px-2.5 pb-2 pt-6 text-left text-[0.7rem] leading-tight text-[var(--ink)] opacity-0 transition duration-300 group-hover:translate-y-0 group-hover:opacity-100 group-focus-visible:translate-y-0 group-focus-visible:opacity-100">
+            <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-canvas/90 to-transparent px-3.5 pb-3 pt-7 text-[13px] font-semibold">
               {f.pie}
             </span>
           </button>
         ))}
       </div>
+
+      {hayMas ? (
+        <div className="mt-10 flex justify-center">
+          <Boton
+            variante="contorno"
+            onClick={() => setVerTodas(true)}
+            className="border-2 hover:bg-violet/15 hover:text-fg"
+          >
+            Ver las {visibles.length} fotos
+          </Boton>
+        </div>
+      ) : null}
 
       {foto ? (
         <div
@@ -159,59 +169,45 @@ export function Gallery({ fotos }: { fotos: Foto[] }) {
           aria-label={foto.pie}
           tabIndex={-1}
           onClick={cerrar}
-          className="fixed inset-0 z-50 flex flex-col items-center justify-center gap-3 bg-[rgb(10_10_12_/_0.94)] p-4 backdrop-blur-sm focus:outline-none"
+          className="fixed inset-0 z-[80] flex flex-col items-center justify-center gap-4 bg-canvas/95 p-4 backdrop-blur-lg focus:outline-none sm:p-10"
         >
           <button
             type="button"
             onClick={cerrar}
             aria-label="Cerrar"
-            className="absolute right-4 top-4 grid size-10 place-items-center rounded-full border border-[var(--stroke-soft)] text-[var(--ink)] transition hover:border-[var(--stroke)] hover:text-[var(--accent-bright)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)]"
+            className="absolute right-4 top-4 grid size-12 place-items-center rounded-full border-2 border-line-strong text-fg transition-colors hover:border-violet hover:bg-violet"
           >
             <X className="size-5" aria-hidden />
           </button>
-
-          {visibles.length > 1 ? (
-            <>
-              <button
-                type="button"
-                aria-label="Foto anterior"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  mover(-1)
-                }}
-                className="absolute left-2 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full border border-[var(--stroke-soft)] bg-[rgb(10_10_12_/_0.6)] text-[var(--ink)] transition hover:border-[var(--stroke)] hover:text-[var(--accent-bright)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:left-6"
-              >
-                <ChevronLeft className="size-6" aria-hidden />
-              </button>
-              <button
-                type="button"
-                aria-label="Foto siguiente"
-                onClick={(e) => {
-                  e.stopPropagation()
-                  mover(1)
-                }}
-                className="absolute right-2 top-1/2 grid size-11 -translate-y-1/2 place-items-center rounded-full border border-[var(--stroke-soft)] bg-[rgb(10_10_12_/_0.6)] text-[var(--ink)] transition hover:border-[var(--stroke)] hover:text-[var(--accent-bright)] focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[var(--accent)] sm:right-6"
-              >
-                <ChevronRight className="size-6" aria-hidden />
-              </button>
-            </>
-          ) : null}
 
           <Image
             src={foto.src}
             alt={foto.alt}
             width={foto.ancho}
             height={foto.alto}
-            sizes="90vw"
+            sizes="92vw"
             onClick={(e) => e.stopPropagation()}
-            className="max-h-[78dvh] w-auto max-w-[min(100%,52rem)] rounded-lg object-contain"
+            className="max-h-[74dvh] w-auto max-w-[min(100%,1100px)] rounded-photo object-contain shadow-[0_40px_100px_rgb(0_0_0/0.6)]"
           />
 
-          <p className="text-center text-sm text-[var(--ink-muted)]">
-            <span className="text-[var(--ink)]">{foto.pie}</span>
-            <span className="mx-2 text-[var(--sep)]">·</span>
-            {(abierta ?? 0) + 1} de {visibles.length}
-          </p>
+          <div className="flex items-center gap-3 sm:gap-5" onClick={(e) => e.stopPropagation()}>
+            {visibles.length > 1 ? (
+              <button type="button" aria-label="Foto anterior" onClick={() => mover(-1)} className={FLECHA}>
+                <ChevronLeft className="size-5" aria-hidden />
+              </button>
+            ) : null}
+            <p className="min-w-0 text-center text-[15px] font-semibold sm:min-w-[260px]">
+              {foto.pie} ·{' '}
+              <span className="text-fg-dim">
+                {(abierta ?? 0) + 1} / {visibles.length}
+              </span>
+            </p>
+            {visibles.length > 1 ? (
+              <button type="button" aria-label="Foto siguiente" onClick={() => mover(1)} className={FLECHA}>
+                <ChevronRight className="size-5" aria-hidden />
+              </button>
+            ) : null}
+          </div>
         </div>
       ) : null}
     </>
