@@ -60,3 +60,28 @@ export function resultadoVisible(r: Resultado): {
   const dia = r.nota ? /Day \d+[A-Z]?/.exec(r.nota)?.[0] : undefined
   return { principal: dia ?? r.buyIn ?? 'Sin registrar', sinRegistrar: true }
 }
+
+const RELATIVO = new Intl.RelativeTimeFormat('es', { numeric: 'auto', style: 'short' })
+const COMPACTO = new Intl.NumberFormat('es', { notation: 'compact', maximumFractionDigits: 1 })
+
+/**
+ * "hace 5 min", "ayer", "hace 3 sem". Pasada una semana ya no sirve de nada la
+ * cuenta exacta y se muestra la fecha. `ahora` entra por parámetro: depende del
+ * reloj, y así la función es pura y se prueba sin simularlo.
+ */
+export function fechaRelativa(iso: string, ahora: number): string {
+  const t = Date.parse(iso)
+  if (Number.isNaN(t)) return ''
+  const seg = Math.round((ahora - t) / 1000)
+  // Fecha en el futuro (reloj desfasado): mejor decir "hoy" que "dentro de…".
+  if (seg < 60) return seg < -3600 ? fechaCorta(iso.slice(0, 10)) : RELATIVO.format(0, 'second')
+  if (seg < 3600) return RELATIVO.format(-Math.floor(seg / 60), 'minute')
+  if (seg < 86400) return RELATIVO.format(-Math.floor(seg / 3600), 'hour')
+  if (seg < 7 * 86400) return RELATIVO.format(-Math.floor(seg / 86400), 'day')
+  return fechaCorta(iso.slice(0, 10))
+}
+
+/** 1 234 567 → "1,2 M". */
+export function cifraCompacta(n: number): string {
+  return COMPACTO.format(n)
+}

@@ -69,6 +69,15 @@ function Twitch(props: Props) {
   )
 }
 
+function Kick(props: Props) {
+  return (
+    <svg {...base} {...props} strokeWidth={2.2}>
+      <path d="M6 4v16" />
+      <path d="M18 4l-8 8 8 8" />
+    </svg>
+  )
+}
+
 function WhatsApp(props: Props) {
   return (
     <svg {...base} {...props}>
@@ -106,6 +115,7 @@ const iconos: Record<RedSocial, (props: Props) => React.ReactElement> = {
   youtube: YouTube,
   x: Equis,
   twitch: Twitch,
+  kick: Kick,
   whatsapp: WhatsApp,
   trofeo: Trofeo,
   web: Web,

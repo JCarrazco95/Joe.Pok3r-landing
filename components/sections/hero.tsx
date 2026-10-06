@@ -10,6 +10,7 @@ import { joe } from '@/lib/joe-poker'
 import { cn } from '@/lib/utils'
 
 import { HeroEscena } from './hero-escena'
+import { HeroFotos } from './hero-fotos'
 
 /** Las tres cifras de `joe.stats` y los años jugando, que el handoff suma aparte. */
 const CIFRAS = [
@@ -45,6 +46,8 @@ export function Hero() {
         aria-hidden
         className="absolute inset-0 bg-[linear-gradient(rgb(250_250_250/0.035)_1px,transparent_1px),linear-gradient(90deg,rgb(250_250_250/0.035)_1px,transparent_1px)] bg-[size:64px_64px] [mask-image:radial-gradient(ellipse_at_60%_50%,#000_30%,transparent_75%)]"
       />
+
+      <HeroFotos />
 
       <HeroEscena burst={burst} />
 

@@ -76,6 +76,15 @@ Logo "JOE.POK3R" (el 3 en violeta) · anclas Resultados / Tu mano / Historia / R
   - `torre`: 5 columnas que se apilan ficha a ficha con gravedad y, al llenarse, salen volando.
 - Pausar el render cuando el hero sale de pantalla (IntersectionObserver).
 
+**Fotos de fondo del hero** (nuevo · v1.1)
+- 3 fotos de Joe (`public/hero/joe-1.jpg`, `joe-2.jpg`, `joe-3.jpg`) detrás del texto y del canvas 3D. Agregarlas a `lib/joe-poker.ts` como `joe.fotosHero` con su foco horizontal (`.5`, `.47`, `.5`).
+- Capa absoluta pegada a la izquierda: `top:0; bottom:0; left:0; width:min(100%, max(62%, 640px))`, con `mask-image: linear-gradient(90deg,#000 25%,transparent 100%)` (+ `-webkit-`) para que se desvanezca hacia las fichas.
+- Cada foto: `next/image` con `fill`, `object-fit: cover`, `object-position: {foco}% 30%`, `filter: grayscale(.25) contrast(1.05)`. La primera con `priority`.
+- Rotación cada **5 s**. La activa queda en `opacity: .5; transform: scale(1.08)` y las demás en `opacity: 0; scale(1)`. Transición `opacity 1.6s ease, transform 7s linear` (crossfade + zoom lento).
+- Encima, un overlay: `linear-gradient(0deg,#0b0b0d,transparent 35%), linear-gradient(90deg,rgba(11,11,13,.35),rgba(11,11,13,.1) 50%,#0b0b0d 100%)`.
+- Orden de capas: fondo radial → rejilla → **fotos** → canvas 3D → texto (z 2) → barra de stats (z 3).
+- Con `prefers-reduced-motion`: sin zoom y cambio de foto sin transición (o solo la primera foto fija).
+
 **3. Resultados** (`#resultados`)
 Dos columnas (`auto-fit, minmax(min(100%,520px),1fr)`).
 - Izquierda: tarjeta destacada con foto `mesa-final.webp`, degradado a negro, badge rojo "DESTACADO · 31 AGO 2026", título, nota y 3 mini-stats. **Tilt 3D** con el mouse (±12°, scale 1.02, perspective 1200px).
@@ -112,12 +121,13 @@ Bloque violeta `#8B5CF6`, radio 28px, ficha gigante girando en la esquina (40s/v
 `scrolled`, `introVista`, `tarjetaVolteada`, `mano` (2 cartas) + `manosRepartidas`, `filtroGaleria`, `verTodas`, `fotoAbierta`, `formEnviado`. Todo local, sin backend. Aislar en componentes cliente (`'use client'`); la página sigue estática.
 
 ## Assets
-Todo ya está en `public/` del repo: fotos `.webp`, `avatar.webp`, `logo.png`, `reels/*.mp4` y pósters, `og.jpg`. Lo único nuevo son las fuentes Mont (`fonts-para-public/`). Las texturas de fichas y cartas se generan por código (canvas), no hay modelos 3D.
+Todo ya está en `public/` del repo: fotos `.webp`, `avatar.webp`, `logo.png`, `reels/*.mp4` y pósters, `og.jpg`. Lo nuevo: las fuentes Mont (`fonts-para-public/`) y las fotos del hero (`fotos-para-public/hero/` → copiar a `public/hero/`; conviene convertirlas a `.webp`). Las texturas de fichas y cartas se generan por código (canvas), no hay modelos 3D.
 
 ## Files
 - `prototipo/Joe.Pok3r Landing (abrir en navegador).html` — demo funcional.
 - `prototipo/Landing Joe.Pok3r.dc.html` — fuente de referencia (estilos inline + lógica).
 - `fonts-para-public/` — Mont 500/600/700 y Bebas (woff2).
+- `fotos-para-public/hero/` — las 3 fotos de fondo del hero.
 
 ## Prompt sugerido para Claude Code
 > Lee `design_handoff_landing_joepok3r/README.md` y abre el prototipo como referencia. Reimplementa `app/page.tsx` siguiendo el diseño, con un componente por sección en `components/`, todo el contenido desde `lib/joe-poker.ts` y el hero 3D en React Three Fiber cargado sin SSR. Instala three, @react-three/fiber, @react-three/drei, gsap, @gsap/react y lenis. Respeta reduced-motion y táctil. Al terminar, corre `npm run check` y `npm run build`.

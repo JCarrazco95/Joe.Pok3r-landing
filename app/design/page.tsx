@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { ProbadorMuro } from '@/components/feed/probador'
 import { Boton } from '@/components/ui/button'
 import { Tarjeta } from '@/components/ui/card'
 import { Chip, Insignia } from '@/components/ui/chip'
@@ -175,6 +176,10 @@ export default function DisenoPage() {
               </Tarjeta>
             </Revelar>
           </div>
+        </Bloque>
+
+        <Bloque titulo="Muro de publicaciones (fase 4 · datos de ejemplo)">
+          <ProbadorMuro />
         </Bloque>
       </Seccion>
     </main>

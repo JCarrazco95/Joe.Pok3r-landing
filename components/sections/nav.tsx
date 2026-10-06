@@ -13,6 +13,7 @@ const ANCLAS = [
   { id: 'historia', etiqueta: 'Historia' },
   { id: 'reels', etiqueta: 'Reels' },
   { id: 'galeria', etiqueta: 'Galería' },
+  { id: 'publicaciones', etiqueta: 'Publicaciones' },
   { id: 'redes', etiqueta: 'Redes' },
 ] as const
 
