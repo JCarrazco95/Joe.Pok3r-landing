@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<style>
+@font-face{font-family:"Bebas";font-weight:400;font-display:block;src:url(fonts/Bebas-400.woff2) format("woff2")}
+@font-face{font-family:"Mont";font-weight:500;font-display:block;src:url(fonts/Mont-500.woff2) format("woff2")}
+@font-face{font-family:"Mont";font-weight:600;font-display:block;src:url(fonts/Mont-600.woff2) format("woff2")}
+@font-face{font-family:"Mont";font-weight:700;font-display:block;src:url(fonts/Mont-700.woff2) format("woff2")}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{background:#0b0b0d}
+body{font-family:Mont,Arial,sans-serif;color:#FAFAFA;overflow-x:hidden}
+a{color:#A78BFA;text-decoration:none}a:hover{color:#FAFAFA}
+::selection{background:#8B5CF6;color:#FAFAFA}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes marquee{to{transform:translateX(-50%)}}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(8px)}}
+</style>
+</helmet>
+
+<div ref="{{ rootRef }}" style="position:relative;cursor:{{ cursorCss }}">
+
+  <div ref="{{ progRef }}" style="position:fixed;left:0;top:0;height:3px;width:100%;transform-origin:0 50%;transform:scaleX(0);background:linear-gradient(90deg,#8B5CF6,#D6334B);z-index:60"></div>
+
+  <sc-if value="{{ introOn }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ introRef }}" style="position:fixed;inset:0;z-index:100;background:#0b0b0d;display:grid;place-items:center">
+      <div style="display:grid;justify-items:center;gap:26px">
+        <div style="width:120px;height:120px;border-radius:50%;position:relative;box-shadow:0 0 60px rgba(139,92,246,.5)">
+          <i style="position:absolute;inset:0;border-radius:50%;background:repeating-conic-gradient(#8B5CF6 0 20deg,#27272A 20deg 45deg);animation:spin 1.2s linear infinite"></i>
+          <i style="position:absolute;inset:10%;border-radius:50%;background:#18181B;box-shadow:0 0 0 3px #8B5CF6 inset"></i>
+          <span style="position:absolute;inset:0;display:grid;place-items:center;font-family:Bebas,Impact,sans-serif;font-size:48px;color:#A78BFA">J</span>
+        </div>
+        <div style="display:flex;gap:14px;align-items:baseline;font-family:Bebas,Impact,sans-serif"><span style="font-size:28px;letter-spacing:.2em;color:#A1A1AA">BARAJANDO</span><span ref="{{ introPctRef }}" style="font-size:40px;min-width:70px">0%</span></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{ cursorOn }}" hint-placeholder-val="{{ false }}">
+    <div ref="{{ ringRef }}" style="position:fixed;left:0;top:0;width:40px;height:40px;margin:-20px 0 0 -20px;border-radius:50%;border:2px solid #A78BFA;pointer-events:none;z-index:90;transition:width .25s,height .25s,margin .25s,background .25s,border-color .25s;mix-blend-mode:difference"></div>
+    <div ref="{{ dotRef }}" style="position:fixed;left:0;top:0;width:8px;height:8px;margin:-4px 0 0 -4px;border-radius:50%;background:#FAFAFA;pointer-events:none;z-index:91"></div>
+  </sc-if>
+
+  <nav style="position:fixed;top:0;left:0;right:0;z-index:50;height:72px;display:flex;align-items:center;justify-content:space-between;gap:24px;padding:0 clamp(20px,4vw,56px);background:{{ navBg }};border-bottom:1px solid {{ navBorder }};backdrop-filter:blur(14px);transition:background .3s,border-color .3s">
+    <span onClick="{{ go }}" data-to="top" data-hover="1" style="font-family:Bebas,Impact,sans-serif;font-size:30px;letter-spacing:.02em;line-height:1">JOE.POK<span style="color:#8B5CF6">3</span>R</span>
+    <div style="display:flex;gap:clamp(14px,2.2vw,32px);font-weight:600;font-size:14px;color:#D4D4D8;flex-wrap:wrap;justify-content:center">
+      <span onClick="{{ go }}" data-to="resultados" data-hover="1" style="transition:color .2s" style-hover="color:#A78BFA">Resultados</span>
+      <span onClick="{{ go }}" data-to="mano" data-hover="1" style="transition:color .2s" style-hover="color:#A78BFA">Tu mano</span>
+      <span onClick="{{ go }}" data-to="historia" data-hover="1" style="transition:color .2s" style-hover="color:#A78BFA">Historia</span>
+      <span onClick="{{ go }}" data-to="reels" data-hover="1" style="transition:color .2s" style-hover="color:#A78BFA">Reels</span>
+      <span onClick="{{ go }}" data-to="galeria" data-hover="1" style="transition:color .2s" style-hover="color:#A78BFA">Galería</span>
+      <span onClick="{{ go }}" data-to="redes" data-hover="1" style="transition:color .2s" style-hover="color:#A78BFA">Redes</span>
+    </div>
+    <span onClick="{{ go }}" data-to="contacto" data-hover="1" data-magnet="1" style="font-weight:700;font-size:14px;padding:11px 20px;border-radius:999px;background:#8B5CF6;transition:background .2s,box-shadow .2s" style-hover="background:#7C3AED;box-shadow:0 0 30px rgba(139,92,246,.6)">Patrocinios</span>
+  </nav>
+
+  <header id="top" onClick="{{ burst }}" style="position:relative;min-height:max(100vh,720px);overflow:hidden;background:radial-gradient(ellipse 60% 70% at 75% 45%,rgba(139,92,246,.28),transparent 70%),radial-gradient(ellipse 40% 50% at 95% 90%,rgba(214,51,75,.22),transparent 70%),#0b0b0d">
+    <div style="position:absolute;inset:0;background-image:linear-gradient(rgba(250,250,250,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(250,250,250,.035) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse at 60% 50%,#000 30%,transparent 75%)"></div>
+    <div ref="{{ heroCanvas }}" style="position:absolute;inset:0"></div>
+    <div style="position:relative;z-index:2;min-height:max(100vh,720px);max-width:1360px;margin:0 auto;padding:120px clamp(20px,4vw,56px) 150px;display:flex;flex-direction:column;justify-content:center;gap:26px;pointer-events:none">
+      <span data-reveal="1" style="display:flex;align-items:center;gap:12px;font-weight:700;font-size:13px;letter-spacing:.3em;color:#A78BFA"><i style="width:9px;height:9px;border-radius:50%;background:#D6334B;animation:blink 1.6s infinite"></i>JOE VEGA · TEXAS HOLD’EM · MÉXICO</span>
+      <h1 style="font-family:Bebas,Impact,sans-serif;font-weight:400;font-size:clamp(96px,15vw,232px);line-height:.84;display:flex;overflow:hidden;padding-top:.04em">
+        <span data-letter="1" style="display:inline-block">J</span><span data-letter="1" style="display:inline-block">O</span><span data-letter="1" style="display:inline-block">E</span><span data-letter="1" style="display:inline-block">.</span><span data-letter="1" style="display:inline-block">P</span><span data-letter="1" style="display:inline-block">O</span><span data-letter="1" style="display:inline-block">K</span><span data-letter="1" style="display:inline-block;color:#8B5CF6">3</span><span data-letter="1" style="display:inline-block">R</span>
+      </h1>
+      <p data-reveal="1" style="font-size:clamp(17px,1.5vw,21px);line-height:1.55;color:#D4D4D8;max-width:520px;text-wrap:pretty">Más de 20 años en las mesas, siempre por gusto. Torneos y cash, en vivo y en línea. Del WSOP Circuit al Main Event de Las Vegas.</p>
+      <div data-reveal="1" style="display:flex;gap:14px;flex-wrap:wrap;pointer-events:auto">
+        <span onClick="{{ go }}" data-to="resultados" data-hover="1" data-magnet="1" style="font-weight:700;font-size:16px;padding:16px 28px;border-radius:999px;background:#FAFAFA;color:#131316;transition:box-shadow .25s" style-hover="box-shadow:0 0 0 6px rgba(250,250,250,.15)">Ver resultados</span>
+        <span onClick="{{ go }}" data-to="mano" data-hover="1" data-magnet="1" style="font-weight:700;font-size:16px;padding:16px 28px;border-radius:999px;border:2px solid rgba(250,250,250,.3);transition:border-color .25s,background .25s" style-hover="border-color:#8B5CF6;background:rgba(139,92,246,.15)">Reparte una mano ♠</span>
+      </div>
+      <span data-reveal="1" style="font-size:13px;color:#71717A;font-weight:600">Mueve el mouse · haz clic para barajar las fichas</span>
+    </div>
+    <div style="position:absolute;z-index:3;left:0;right:0;bottom:0;border-top:1px solid rgba(250,250,250,.08);background:rgba(11,11,13,.6);backdrop-filter:blur(10px)">
+      <div style="max-width:1360px;margin:0 auto;padding:0 clamp(20px,4vw,56px);display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr))">
+        <div style="padding:20px 0;display:grid;gap:2px"><span data-count="6" data-suffix=".º" style="font-family:Bebas,Impact,sans-serif;font-size:48px;line-height:.9">6.º</span><span style="font-size:13px;color:#A1A1AA">High Roller 2.5M GTD</span></div>
+        <div style="padding:20px 0 20px 24px;border-left:1px solid rgba(250,250,250,.08);display:grid;gap:2px"><span data-count="160" data-prefix="$" data-suffix="K" style="font-family:Bebas,Impact,sans-serif;font-size:48px;line-height:.9;color:#F08A99">$160K</span><span style="font-size:13px;color:#A1A1AA">Premio · MXN</span></div>
+        <div style="padding:20px 0 20px 24px;border-left:1px solid rgba(250,250,250,.08);display:grid;gap:2px"><span data-count="9" data-suffix="/112" style="font-family:Bebas,Impact,sans-serif;font-size:48px;line-height:.9">9/112</span><span style="font-size:13px;color:#A1A1AA">Mesa final</span></div>
+        <div style="padding:20px 0 20px 24px;border-left:1px solid rgba(250,250,250,.08);display:grid;gap:2px"><span data-count="20" data-suffix="+" style="font-family:Bebas,Impact,sans-serif;font-size:48px;line-height:.9;color:#A78BFA">20+</span><span style="font-size:13px;color:#A1A1AA">Años jugando</span></div>
+      </div>
+    </div>
+  </header>
+
+  <div style="background:#D6334B;overflow:hidden;padding:16px 0;transform:rotate(-1.2deg);margin:-14px -20px 0;position:relative;z-index:4">
+    <div style="display:flex;width:max-content;animation:marquee 34s linear infinite;font-family:Bebas,Impact,sans-serif;font-size:30px;letter-spacing:.04em;white-space:nowrap">
+      <span style="display:flex;gap:40px;padding-right:40px"><span>HIGH ROLLER 2.5M GTD · 6.º · $160,000</span><span>♠</span><span>MINI MAIN EVENT · 5.º DEL FIELD · 296K</span><span>♥</span><span>WSOP MAIN EVENT 2023 · EVENTO #76</span><span>♣</span><span>MESA FINAL 9 DE 112</span><span>♦</span></span>
+      <span style="display:flex;gap:40px;padding-right:40px"><span>HIGH ROLLER 2.5M GTD · 6.º · $160,000</span><span>♠</span><span>MINI MAIN EVENT · 5.º DEL FIELD · 296K</span><span>♥</span><span>WSOP MAIN EVENT 2023 · EVENTO #76</span><span>♣</span><span>MESA FINAL 9 DE 112</span><span>♦</span></span>
+    </div>
+  </div>
+
+  <section id="resultados" data-screen-label="Resultados" style="max-width:1360px;margin:0 auto;padding:140px clamp(20px,4vw,56px) 120px;display:grid;gap:48px">
+    <div data-reveal="1" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <div style="display:grid;gap:12px"><span style="font-weight:700;font-size:13px;letter-spacing:.3em;color:#A78BFA">01 · RESULTADOS</span><h2 style="font-family:Bebas,Impact,sans-serif;font-weight:400;font-size:clamp(64px,8vw,120px);line-height:.85">En la mesa<br>final</h2></div>
+      <p style="font-size:15px;line-height:1.6;color:#A1A1AA;max-width:380px">Pasa el mouse sobre cada torneo para ver el detalle. El historial se sigue armando.</p>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,520px),1fr));gap:24px">
+      <div data-reveal="1" style="perspective:1200px">
+        <div onMouseMove="{{ tilt }}" onMouseLeave="{{ untilt }}" data-hover="1" style="position:relative;height:100%;min-height:540px;border-radius:20px;overflow:hidden;transition:transform .2s ease-out;transform-style:preserve-3d;box-shadow:0 30px 80px rgba(0,0,0,.5)">
+          <img src="https://www.joepok3r.com/_next/image?url=%2Fmesa-final.webp&amp;w=1920&amp;q=75" alt="Los 9 de la mesa final" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block">
+          <div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(11,11,13,.2),rgba(11,11,13,.5) 45%,rgba(11,11,13,.97))"></div>
+          <div style="position:absolute;left:32px;right:32px;bottom:32px;display:grid;gap:18px">
+            <span style="justify-self:start;font-weight:700;font-size:12px;letter-spacing:.2em;padding:6px 12px;border-radius:999px;background:#D6334B">DESTACADO · 31 AGO 2026</span>
+            <span style="font-family:Bebas,Impact,sans-serif;font-size:clamp(56px,6vw,88px);line-height:.85">High Roller<br>2.5M GTD</span>
+            <span style="font-size:15px;color:#D4D4D8">Jubilee Poker Room · CDMX · llegó a la mesa final con 615,000 en fichas</span>
+            <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding-top:18px;border-top:1px solid rgba(250,250,250,.15)">
+              <div style="display:grid;gap:2px"><span style="font-family:Bebas,Impact,sans-serif;font-size:44px;line-height:.9">6.º</span><span style="font-size:12px;color:#A1A1AA">Lugar</span></div>
+              <div style="display:grid;gap:2px"><span style="font-family:Bebas,Impact,sans-serif;font-size:44px;line-height:.9;color:#F08A99">$160K</span><span style="font-size:12px;color:#A1A1AA">Premio MXN</span></div>
+              <div style="display:grid;gap:2px"><span style="font-family:Bebas,Impact,sans-serif;font-size:44px;line-height:.9">112</span><span style="font-size:12px;color:#A1A1AA">Jugadores</span></div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:24px">
+        <sc-for list="{{ results }}" as="r" hint-placeholder-count="4">
+          <div data-reveal="1" onMouseEnter="{{ r.enter }}" onMouseLeave="{{ r.leave }}" data-hover="1" style="perspective:1000px;min-height:258px">
+            <div style="position:relative;height:100%;min-height:258px;transform-style:preserve-3d;transition:transform .7s cubic-bezier(.2,.8,.2,1);transform:{{ r.transform }}">
+              <div style="position:absolute;inset:0;backface-visibility:hidden;border-radius:16px;background:#18181B;border:1px solid #27272A;padding:24px;display:flex;flex-direction:column;justify-content:space-between">
+                <div style="display:flex;justify-content:space-between;align-items:center"><span style="font-size:13px;color:#71717A;font-weight:600">{{ r.date }}</span><span style="font-size:22px;color:{{ r.color }}">{{ r.suit }}</span></div>
+                <div style="display:grid;gap:6px"><span style="font-weight:700;font-size:19px;line-height:1.25">{{ r.name }}</span><span style="font-size:13px;color:#A1A1AA;line-height:1.4">{{ r.venue }}</span></div>
+                <span style="font-family:Bebas,Impact,sans-serif;font-size:46px;line-height:.9;color:{{ r.color }}">{{ r.result }}</span>
+              </div>
+              <div style="position:absolute;inset:0;backface-visibility:hidden;transform:rotateY(180deg);border-radius:16px;background:{{ r.color }};padding:24px;display:flex;flex-direction:column;justify-content:space-between;color:#FAFAFA">
+                <span style="font-family:Bebas,Impact,sans-serif;font-size:64px;line-height:.8">{{ r.suit }}</span>
+                <p style="font-weight:600;font-size:16px;line-height:1.5;text-wrap:pretty">{{ r.detail }}</p>
+              </div>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </section>
+
+  <section id="mano" data-screen-label="Tu mano" style="position:relative;overflow:hidden;padding:120px clamp(20px,4vw,56px);background:radial-gradient(ellipse 70% 80% at 50% 50%,#2a1f4a 0%,#18181B 60%,#0b0b0d 100%)">
+    <div style="position:absolute;left:50%;top:50%;width:min(1100px,140vw);aspect-ratio:2/1;transform:translate(-50%,-50%);border-radius:50%;border:2px solid rgba(167,139,250,.18);box-shadow:inset 0 0 120px rgba(139,92,246,.18)"></div>
+    <div style="position:relative;max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,420px),1fr));gap:56px;align-items:center">
+      <div data-reveal="1" style="display:grid;gap:20px">
+        <span style="font-weight:700;font-size:13px;letter-spacing:.3em;color:#A78BFA">02 · TU TURNO</span>
+        <h2 style="font-family:Bebas,Impact,sans-serif;font-weight:400;font-size:clamp(64px,8vw,120px);line-height:.85">¿Qué haría<br>Joe con<br>tu mano?</h2>
+        <p style="font-size:16px;line-height:1.6;color:#A1A1AA;max-width:420px">Reparte dos cartas y descubre si la juega o la tira.</p>
+        <div style="display:flex;gap:14px;align-items:center;flex-wrap:wrap">
+          <button onClick="{{ deal }}" data-hover="1" data-magnet="1" style="font-family:Mont,Arial,sans-serif;font-weight:700;font-size:16px;padding:16px 30px;border-radius:999px;border:0;background:#8B5CF6;color:#FAFAFA;cursor:inherit;transition:box-shadow .25s,background .25s" style-hover="background:#7C3AED;box-shadow:0 0 40px rgba(139,92,246,.6)">Repartir ♠</button>
+          <span style="font-size:14px;color:#71717A;font-weight:600">Manos repartidas: <b style="color:#FAFAFA">{{ dealCount }}</b></span>
+        </div>
+      </div>
+      <div style="display:grid;justify-items:center;gap:28px">
+        <div style="display:flex;gap:20px;perspective:1000px">
+          <sc-for list="{{ hand }}" as="c" hint-placeholder-count="2">
+            <div data-dealt="1" style="width:clamp(130px,14vw,170px);aspect-ratio:5/7;border-radius:14px;background:#FAFAFA;color:{{ c.color }};position:relative;box-shadow:0 30px 60px rgba(0,0,0,.55);transform:rotate({{ c.rot }})">
+              <div style="position:absolute;top:12px;left:14px;display:grid;justify-items:center;line-height:.9"><span style="font-family:Bebas,Impact,sans-serif;font-size:44px">{{ c.r }}</span><span style="font-size:26px">{{ c.s }}</span></div>
+              <div style="position:absolute;bottom:12px;right:14px;display:grid;justify-items:center;line-height:.9;transform:rotate(180deg)"><span style="font-family:Bebas,Impact,sans-serif;font-size:44px">{{ c.r }}</span><span style="font-size:26px">{{ c.s }}</span></div>
+              <span style="position:absolute;inset:0;display:grid;place-items:center;font-size:clamp(64px,7vw,88px)">{{ c.s }}</span>
+            </div>
+          </sc-for>
+        </div>
+        <div data-verdict="1" style="width:100%;max-width:440px;border-radius:16px;background:rgba(24,24,27,.85);border:2px solid rgba(139,92,246,.4);padding:22px 24px;display:grid;gap:8px;text-align:center">
+          <span style="font-family:Bebas,Impact,sans-serif;font-size:38px;line-height:.95">{{ verdict.label }}</span>
+          <span style="font-weight:600;font-size:16px;color:#F08A99">{{ verdict.say }}</span>
+          <span style="font-size:13px;color:#71717A">Probabilidad de recibirla: {{ verdict.odds }}</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="historia" ref="{{ tlRef }}" data-screen-label="Historia" style="max-width:1100px;margin:0 auto;padding:140px clamp(20px,4vw,56px) 120px;display:grid;gap:64px">
+    <div data-reveal="1" style="display:grid;gap:12px"><span style="font-weight:700;font-size:13px;letter-spacing:.3em;color:#A78BFA">03 · CÓMO EMPECÉ</span><h2 style="font-family:Bebas,Impact,sans-serif;font-weight:400;font-size:clamp(64px,8vw,120px);line-height:.85">De la mesa de<br>la casa a Las Vegas</h2></div>
+    <div style="position:relative;display:grid;gap:72px;padding-left:56px">
+      <div style="position:absolute;left:14px;top:8px;bottom:8px;width:3px;background:#27272A;border-radius:2px"></div>
+      <div ref="{{ lineRef }}" style="position:absolute;left:14px;top:8px;bottom:8px;width:3px;background:linear-gradient(#8B5CF6,#D6334B);border-radius:2px;transform-origin:50% 0;transform:scaleY(0)"></div>
+      <div data-reveal="1" style="position:relative;display:grid;gap:10px;max-width:720px"><i style="position:absolute;left:-52px;top:6px;width:24px;height:24px;border-radius:50%;background:#0b0b0d;border:3px solid #8B5CF6"></i><span style="font-family:Bebas,Impact,sans-serif;font-size:28px;color:#A78BFA">Hace más de 20 años</span><span style="font-weight:700;font-size:clamp(22px,2.4vw,30px);line-height:1.2">En casa, con amigos y familia</span><p style="font-size:16px;line-height:1.65;color:#A1A1AA">Todavía no tenía edad para entrar a un casino. Ahí aprendí las reglas del juego.</p></div>
+      <div data-reveal="1" style="position:relative;display:grid;gap:10px;max-width:720px"><i style="position:absolute;left:-52px;top:6px;width:24px;height:24px;border-radius:50%;background:#0b0b0d;border:3px solid #A78BFA"></i><span style="font-family:Bebas,Impact,sans-serif;font-size:28px;color:#A78BFA">Mayoría de edad</span><span style="font-weight:700;font-size:clamp(22px,2.4vw,30px);line-height:1.2">Primera vez en Las Vegas</span><p style="font-size:16px;line-height:1.65;color:#A1A1AA">Un aprendizaje más duro: gente de todo el mundo, estrategias distintas y muchos jugadores profesionales.</p></div>
+      <div data-reveal="1" style="position:relative;display:grid;gap:10px;max-width:720px"><i style="position:absolute;left:-52px;top:6px;width:24px;height:24px;border-radius:50%;background:#0b0b0d;border:3px solid #F08A99"></i><span style="font-family:Bebas,Impact,sans-serif;font-size:28px;color:#F08A99">Julio 2023</span><span style="font-weight:700;font-size:clamp(22px,2.4vw,30px);line-height:1.2">Main Event de la WSOP · Evento #76</span><p style="font-size:16px;line-height:1.65;color:#A1A1AA">Buy-in de $10,000 USD en Horseshoe y Paris. El torneo más grande del mundo.</p></div>
+      <div data-reveal="1" style="position:relative;display:grid;gap:10px;max-width:720px"><i style="position:absolute;left:-52px;top:6px;width:24px;height:24px;border-radius:50%;background:#D6334B;border:3px solid #D6334B;box-shadow:0 0 24px #D6334B"></i><span style="font-family:Bebas,Impact,sans-serif;font-size:28px;color:#D6334B">Agosto 2026</span><span style="font-weight:700;font-size:clamp(22px,2.4vw,30px);line-height:1.2">Mesa final del High Roller 2.5M GTD</span><p style="font-size:16px;line-height:1.65;color:#A1A1AA">6.º de 112 y $160,000 MXN. Hoy: torneos y cash en GGPoker y PokerStars, en vivo y en línea.</p></div>
+    </div>
+  </section>
+
+  <section id="reels" data-screen-label="Reels" style="padding:120px 0;background:#131316;border-top:1px solid #27272A;border-bottom:1px solid #27272A;display:grid;gap:40px">
+    <div data-reveal="1" style="max-width:1360px;width:100%;margin:0 auto;padding:0 clamp(20px,4vw,56px);display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <div style="display:grid;gap:12px"><span style="font-weight:700;font-size:13px;letter-spacing:.3em;color:#A78BFA">04 · REELS</span><h2 style="font-family:Bebas,Impact,sans-serif;font-weight:400;font-size:clamp(64px,8vw,120px);line-height:.85">Desde la sala</h2></div>
+      <div style="display:flex;gap:10px">
+        <button onClick="{{ reelPrev }}" data-hover="1" style="width:56px;height:56px;border-radius:50%;border:2px solid #3F3F46;background:transparent;color:#FAFAFA;font-size:22px;cursor:inherit;transition:background .2s,border-color .2s" style-hover="background:#8B5CF6;border-color:#8B5CF6">←</button>
+        <button onClick="{{ reelNext }}" data-hover="1" style="width:56px;height:56px;border-radius:50%;border:2px solid #3F3F46;background:transparent;color:#FAFAFA;font-size:22px;cursor:inherit;transition:background .2s,border-color .2s" style-hover="background:#8B5CF6;border-color:#8B5CF6">→</button>
+      </div>
+    </div>
+    <div ref="{{ reelRef }}" style="display:flex;gap:20px;overflow-x:auto;scroll-snap-type:x mandatory;scroll-behavior:smooth;padding:0 clamp(20px,4vw,56px) 12px;scrollbar-width:none">
+      <sc-for list="{{ reels }}" as="v" hint-placeholder-count="5">
+        <div onMouseEnter="{{ reelEnter }}" onMouseLeave="{{ reelLeave }}" data-hover="1" style="flex:none;width:240px;aspect-ratio:9/16;border-radius:16px;overflow:hidden;position:relative;scroll-snap-align:start;background:#18181B;border:1px solid #27272A;transition:transform .3s" style-hover="transform:translateY(-8px)">
+          <video src="{{ v.src }}" muted="{{ true }}" loop="{{ true }}" playsInline="{{ true }}" preload="metadata" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block"></video>
+          <div style="position:absolute;inset:0;background:linear-gradient(transparent 55%,rgba(11,11,13,.92));pointer-events:none"></div>
+          <span style="position:absolute;top:12px;right:12px;font-weight:700;font-size:12px;padding:4px 9px;border-radius:999px;background:rgba(11,11,13,.7)">{{ v.dur }}</span>
+          <div style="position:absolute;left:16px;right:16px;bottom:16px;display:grid;gap:6px;pointer-events:none"><span style="font-size:22px;color:#A78BFA">▶</span><span style="font-weight:700;font-size:15px;line-height:1.3">{{ v.title }}</span></div>
+        </div>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="galeria" data-screen-label="Galería" style="max-width:1360px;margin:0 auto;padding:140px clamp(20px,4vw,56px) 120px;display:grid;gap:40px">
+    <div data-reveal="1" style="display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap">
+      <div style="display:grid;gap:12px"><span style="font-weight:700;font-size:13px;letter-spacing:.3em;color:#A78BFA">05 · GALERÍA</span><h2 style="font-family:Bebas,Impact,sans-serif;font-weight:400;font-size:clamp(64px,8vw,120px);line-height:.85">En la mesa</h2></div>
+      <div style="display:flex;gap:8px;flex-wrap:wrap">
+        <sc-for list="{{ filters }}" as="f" hint-placeholder-count="4">
+          <span onClick="{{ f.pick }}" data-hover="1" style="font-weight:600;font-size:14px;padding:10px 18px;border-radius:999px;background:{{ f.bg }};border:1.5px solid {{ f.border }};transition:background .25s,border-color .25s">{{ f.label }} <b style="opacity:.6;font-weight:600">{{ f.n }}</b></span>
+        </sc-for>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));grid-auto-rows:220px;grid-auto-flow:dense;gap:14px">
+      <sc-for list="{{ photos }}" as="p" hint-placeholder-count="8">
+        <div onClick="{{ p.open }}" data-hover="1" style="grid-column:{{ p.span }};grid-row:{{ p.span }};border-radius:14px;overflow:hidden;position:relative;background:#18181B">
+          <img src="{{ p.src }}" alt="{{ p.cap }}" loading="lazy" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;display:block;transition:transform .6s cubic-bezier(.2,.8,.2,1),filter .4s;filter:saturate(.85)" style-hover="transform:scale(1.08);filter:saturate(1.1)">
+          <div style="position:absolute;inset:auto 0 0 0;padding:28px 14px 12px;background:linear-gradient(transparent,rgba(11,11,13,.9));font-weight:600;font-size:13px;pointer-events:none">{{ p.cap }}</div>
+        </div>
+      </sc-for>
+    </div>
+    <sc-if value="{{ hasMore }}" hint-placeholder-val="{{ true }}">
+      <span onClick="{{ showAll }}" data-hover="1" data-magnet="1" style="justify-self:center;font-weight:700;font-size:15px;padding:14px 26px;border-radius:999px;border:2px solid #3F3F46;transition:border-color .2s,background .2s" style-hover="border-color:#8B5CF6;background:rgba(139,92,246,.15)">Ver las {{ total }} fotos</span>
+    </sc-if>
+  </section>
+
+  <section id="redes" data-screen-label="Redes" style="max-width:1360px;margin:0 auto;padding:60px clamp(20px,4vw,56px) 120px;display:grid;gap:40px">
+    <div data-reveal="1" style="display:grid;gap:12px"><span style="font-weight:700;font-size:13px;letter-spacing:.3em;color:#A78BFA">06 · ENCUÉNTRALO AQUÍ</span><h2 style="font-family:Bebas,Impact,sans-serif;font-weight:400;font-size:clamp(64px,8vw,120px);line-height:.85">Sigue el grind</h2></div>
+    <div style="display:grid;border-top:1px solid #27272A">
+      <sc-for list="{{ socials }}" as="s" hint-placeholder-count="5">
+        <a href="{{ s.url }}" target="_blank" rel="noopener" data-reveal="1" data-hover="1" style="display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:24px;padding:26px 20px;border-bottom:1px solid #27272A;color:#FAFAFA;transition:background .35s,padding .35s" style-hover="background:#8B5CF6;padding-left:40px;color:#FAFAFA">
+          <div style="display:flex;align-items:baseline;gap:24px;flex-wrap:wrap"><span style="font-family:Bebas,Impact,sans-serif;font-size:clamp(40px,5vw,72px);line-height:.9">{{ s.name }}</span><span style="font-size:15px;opacity:.75">{{ s.desc }}</span></div>
+          <span style="font-weight:700;font-size:15px;white-space:nowrap">{{ s.handle }} ↗</span>
+        </a>
+      </sc-for>
+    </div>
+  </section>
+
+  <section id="contacto" data-screen-label="Contacto" style="padding:0 clamp(20px,4vw,56px) 120px">
+    <div data-reveal="1" style="max-width:1360px;margin:0 auto;border-radius:28px;overflow:hidden;position:relative;background:#8B5CF6;padding:clamp(40px,6vw,80px);display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,400px),1fr));gap:48px">
+      <div style="position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:repeating-conic-gradient(rgba(250,250,250,.16) 0 20deg,transparent 20deg 45deg);animation:spin 40s linear infinite"></div>
+      <div style="position:relative;display:grid;gap:18px;align-content:start">
+        <span style="font-weight:700;font-size:13px;letter-spacing:.3em">07 · CONTACTO</span>
+        <h2 style="font-family:Bebas,Impact,sans-serif;font-weight:400;font-size:clamp(64px,8vw,120px);line-height:.85">Patrocinios,<br>staking y prensa</h2>
+        <p style="font-size:17px;line-height:1.6;max-width:420px">Colaboraciones con salas, marcas y medios. Escríbeme y te contesto.</p>
+      </div>
+      <sc-if value="{{ notSent }}" hint-placeholder-val="{{ true }}">
+        <form onSubmit="{{ send }}" style="position:relative;display:grid;gap:14px;align-content:start">
+          <input required="{{ true }}" placeholder="Nombre" style="font-family:Mont,Arial,sans-serif;font-size:16px;padding:18px 20px;border-radius:14px;border:2px solid transparent;background:rgba(11,11,13,.85);color:#FAFAFA;outline:none" style-focus="border-color:#FAFAFA">
+          <input required="{{ true }}" type="email" placeholder="Correo" style="font-family:Mont,Arial,sans-serif;font-size:16px;padding:18px 20px;border-radius:14px;border:2px solid transparent;background:rgba(11,11,13,.85);color:#FAFAFA;outline:none" style-focus="border-color:#FAFAFA">
+          <textarea rows="4" placeholder="Cuéntame la propuesta" style="font-family:Mont,Arial,sans-serif;font-size:16px;padding:18px 20px;border-radius:14px;border:2px solid transparent;background:rgba(11,11,13,.85);color:#FAFAFA;outline:none;resize:vertical" style-focus="border-color:#FAFAFA"></textarea>
+          <button type="submit" data-hover="1" data-magnet="1" style="justify-self:start;font-family:Mont,Arial,sans-serif;font-weight:700;font-size:16px;padding:18px 32px;border-radius:999px;border:0;background:#FAFAFA;color:#131316;cursor:inherit;transition:box-shadow .25s" style-hover="box-shadow:0 0 0 6px rgba(250,250,250,.25)">Enviar · All-in →</button>
+        </form>
+      </sc-if>
+      <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+        <div style="position:relative;display:grid;gap:10px;align-content:center;justify-items:start;background:rgba(11,11,13,.85);border-radius:20px;padding:40px"><span style="font-family:Bebas,Impact,sans-serif;font-size:64px;line-height:.9">¡Fichas al centro!</span><span style="font-size:16px;color:#D4D4D8">Mensaje recibido. Te respondo pronto.</span></div>
+      </sc-if>
+    </div>
+  </section>
+
+  <footer style="border-top:1px solid #27272A;padding:56px clamp(20px,4vw,56px) 40px;overflow:hidden">
+    <div style="max-width:1360px;margin:0 auto;display:grid;gap:36px">
+      <span style="font-family:Bebas,Impact,sans-serif;font-size:clamp(96px,19vw,300px);line-height:.8;color:transparent;-webkit-text-stroke:2px #3F3F46;white-space:nowrap">JOE.POK3R</span>
+      <div style="display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;font-size:13px;color:#71717A">
+        <span style="display:flex;align-items:center;gap:12px"><b style="display:grid;place-items:center;width:34px;height:34px;border-radius:50%;border:2px solid #71717A;font-family:Bebas,Impact,sans-serif;font-size:16px;font-weight:400;color:#A1A1AA">+18</b>Contenido sobre poker deportivo. Juega con responsabilidad.</span>
+        <span>© 2026 Joe.Pok3r · Operado por Analy·sys</span>
+      </div>
+    </div>
+  </footer>
+
+  <sc-if value="{{ lbOn }}" hint-placeholder-val="{{ false }}">
+    <div onClick="{{ lbClose }}" style="position:fixed;inset:0;z-index:80;background:rgba(11,11,13,.94);backdrop-filter:blur(8px);display:grid;place-items:center;padding:40px">
+      <div style="display:grid;gap:16px;justify-items:center;max-width:min(1100px,92vw)">
+        <img src="{{ lb.src }}" alt="{{ lb.cap }}" style="max-width:100%;max-height:78vh;border-radius:14px;display:block;box-shadow:0 40px 100px rgba(0,0,0,.6)">
+        <div style="display:flex;align-items:center;gap:20px">
+          <button onClick="{{ lbPrev }}" data-hover="1" style="width:48px;height:48px;border-radius:50%;border:2px solid #3F3F46;background:transparent;color:#FAFAFA;font-size:20px;cursor:inherit">←</button>
+          <span style="font-weight:600;font-size:15px;min-width:260px;text-align:center">{{ lb.cap }} · <span style="color:#71717A">{{ lb.pos }}</span></span>
+          <button onClick="{{ lbNext }}" data-hover="1" style="width:48px;height:48px;border-radius:50%;border:2px solid #3F3F46;background:transparent;color:#FAFAFA;font-size:20px;cursor:inherit">→</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;escena3d&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;orbita&quot;,&quot;lluvia&quot;,&quot;torre&quot;],&quot;default&quot;:&quot;orbita&quot;,&quot;tsType&quot;:&quot;'orbita'|'lluvia'|'torre'&quot;,&quot;section&quot;:&quot;Hero 3D&quot;},&quot;cursorFicha&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Interacción&quot;},&quot;intro&quot;:{&quot;editor&quot;:&quot;boolean&quot;,&quot;default&quot;:true,&quot;tsType&quot;:&quot;boolean&quot;,&quot;section&quot;:&quot;Interacción&quot;}}">
+const IMG = (n, w) => 'https://www.joepok3r.com/_next/image?url=%2F' + n + '.webp&w=' + (w || 1080) + '&q=75';
+const PH = [
+['mesa-final','Los 9 de la mesa final','hr'],['con-negreanu','Con Daniel Negreanu','vegas'],['quinto-lugar-296k','5.º del field · 296K (74 BB)','circuit'],['sexto-lugar','6.º lugar · $160,000','hr'],['letras-wsop','Las letras','vegas'],['escenario-wsop-circuit','La mesa final, montada','circuit'],['retrato-gorra-j','Día 1 · en acción','circuit'],['paris-las-vegas','Paris Las Vegas','vegas'],['conteo-mesa-final','Conteo de fichas · mesa final','hr'],['wsop-live-mesa-34','Mesa 34 · líder con 296K','circuit'],['jubilee-mesa-19','Mesa 19 · Jubilee Casino','hr'],['entrada-wsop-2023','La entrada, WSOP 2023','vegas'],['fichas-tapete-circuit','Stack en juego','circuit'],['bluff-central','Cobertura · Bluff Central','hr'],['buy-in-main-event','Main Event 2023 · $10,000 de buy-in','vegas'],['sala-wsop-circuit','La sala, antes del primer reparto','circuit'],['bajo-los-banners','Bajo los estandartes de campeones','vegas'],['boton-dealer-wsop','Botón de dealer · WSOP','circuit'],['cash-game','Cash game','hr'],['reloj-mini-main','48 de 184 · bolsa MX$1,814,400','circuit'],['mesa-wsop-vegas','En juego · WSOP Las Vegas','vegas'],['stack-25k','El stack, con las de 25K','circuit'],['conteo-mini-main','13.º con 64.2K','circuit'],['wsop-live-mesa-25','WSOP Live · mesa 25, asiento 3','circuit'],['fichas-big-bola','Big Bola Casinos','circuit'],['fichas-wsop-dealer','Fichas del WSOP Circuit','circuit'],['wsop-circuit-cdmx','WSOP Circuit · CDMX','circuit'],['wsop-live-mesa-22','Mesa 22 · todos en 40K','circuit']
+];
+const REELS = [[9,'La sala llena · Day 1A','0:34'],[8,'El anillo del Circuit en pantalla','0:19'],[7,'Mini Main Event · antes de sentarse','0:54'],[6,'Día 1C · The Opener Mystery Bounty','0:29'],[5,'Ocho minutos para el arranque','0:55'],[4,'Recorrido por la sala de torneo','0:28'],[1,'Mural de fichas · WSOP Circuit Events','0:09'],[3,'World Series of Poker · CDMX','0:15'],[2,'Entrada a Big Bola Casinos','0:02']];
+const RESULTS = [
+  {date:'31 ago 2026',name:'High Roller 2.5M GTD',venue:'Jubilee Poker Room · CDMX',result:'6.º de 112',suit:'♥',color:'#D6334B',detail:'Llegó a la mesa final con 615,000 en fichas. Cobró $160,000 MXN.'},
+  {date:'2 sep 2026',name:'#2 Mini Main Event',venue:'WSOP Circuit México · Big Bola Casinos',result:'5.º Day 1A',suit:'♠',color:'#8B5CF6',detail:'Cerró el Day 1A quinto del field con 296,000 en fichas. 184 inscritos.'},
+  {date:'1 sep 2026',name:'#1 The Opener Mystery Bounty',venue:'WSOP Circuit México · Big Bola Casinos',result:'Day 1C',suit:'♣',color:'#3B6FE0',detail:'Jugó el Day 1C del evento inaugural del Circuit en CDMX.'},
+  {date:'3 jul 2023',name:'Main Event · Evento #76',venue:'World Series of Poker · Las Vegas',result:'$10K buy-in',suit:'♦',color:'#C2410C',detail:'Horseshoe & Paris, Las Vegas. Se sentó en el torneo más grande del mundo.'}
+];
+const SOCIALS = [
+  {name:'Instagram',desc:'Día a día del grind y las series',handle:'@joe.pok3r',url:'https://www.instagram.com/joe.pok3r/'},
+  {name:'TikTok',desc:'Manos, bad beats y clips de mesa',handle:'@joe.pok3r',url:'https://www.tiktok.com/@joe.pok3r'},
+  {name:'YouTube',desc:'Análisis de manos y vlogs de torneo',handle:'@Joe.Pok3r',url:'https://www.youtube.com/@Joe.Pok3r'},
+  {name:'Twitch',desc:'Sesiones en vivo',handle:'joe_pok3r',url:'https://www.twitch.tv/joe_pok3r'},
+  {name:'Código Poker MX',desc:'Cobertura del High Roller y del Main Event',handle:'@codigopokermx',url:'https://www.instagram.com/codigopokermx/'}
+];
+const RANKS = ['2','3','4','5','6','7','8','9','10','J','Q','K','A'];
+const SUITS = ['♠','♥','♦','♣'];
+const RNAME = {A:'Ases',K:'Reyes',Q:'Reinas',J:'Jotas','10':'Dieces','9':'Nueves','8':'Ochos','7':'Sietes','6':'Seises','5':'Cincos','4':'Cuatros','3':'Treses','2':'Doses'};
+const FILTERS = [['all','Todas'],['circuit','WSOP Circuit'],['vegas','WSOP Las Vegas'],['hr','High Roller']];
+
+class Component extends DCLogic {
+  state = { scrolled:false, flip:-1, filter:'all', all:false, lb:-1, sent:false, dealCount:0, dealKey:0,
+    hand:[{r:'J',s:'♠'},{r:'J',s:'♥'}], introOn: this.props.intro !== false };
+  rootRef = React.createRef(); progRef = React.createRef(); introRef = React.createRef(); introPctRef = React.createRef();
+  ringRef = React.createRef(); dotRef = React.createRef(); heroCanvas = React.createRef(); tlRef = React.createRef();
+  lineRef = React.createRef(); reelRef = React.createRef();
+  mt = {x:0,y:0}; m = {x:0,y:0}; cur = {x:-100,y:-100}; ring = {x:-100,y:-100}; burstT = -10;
+
+  componentDidMount() {
+    this.onScroll = () => this.handleScroll();
+    this.onMove = e => this.handleMove(e);
+    this.onKey = e => { if (this.state.lb < 0) return; if (e.key === 'Escape') this.setState({lb:-1}); if (e.key === 'ArrowRight') this.lbStep(1); if (e.key === 'ArrowLeft') this.lbStep(-1); };
+    addEventListener('scroll', this.onScroll, {passive:true});
+    addEventListener('mousemove', this.onMove, {passive:true});
+    addEventListener('keydown', this.onKey);
+    this.handleScroll();
+    this.cursorLoop();
+    this.initThree();
+    if (this.state.introOn) this.runIntro(); else this.startPage();
+  }
+  componentWillUnmount() {
+    this.dead = true;
+    removeEventListener('scroll', this.onScroll); removeEventListener('mousemove', this.onMove); removeEventListener('keydown', this.onKey);
+    cancelAnimationFrame(this.raf); cancelAnimationFrame(this.craf);
+    this.io && this.io.disconnect(); this.heroIO && this.heroIO.disconnect(); this.ro && this.ro.disconnect();
+    if (this.three) { this.three.r.dispose(); this.three.r.domElement.remove(); }
+  }
+  componentDidUpdate(pp, ps) {
+    if (ps.dealKey !== this.state.dealKey) this.animateDeal();
+    if (pp.escena3d !== this.props.escena3d && this.three) this.buildMode();
+    if (ps.filter !== this.state.filter || ps.all !== this.state.all) this.observeReveals();
+  }
+
+  runIntro() {
+    const t0 = performance.now(), D = 1500;
+    const step = () => {
+      const p = Math.min(1, (performance.now() - t0) / D);
+      if (this.introPctRef.current) this.introPctRef.current.textContent = Math.round(p * 100) + '%';
+      if (p < 1) return requestAnimationFrame(step);
+      const el = this.introRef.current;
+      const done = () => { this.setState({introOn:false}); this.startPage(); };
+      if (el) el.animate([{clipPath:'inset(0 0 0 0)'},{clipPath:'inset(0 0 100% 0)'}], {duration:700, easing:'cubic-bezier(.7,0,.2,1)', fill:'forwards'}).onfinish = done; else done();
+    };
+    requestAnimationFrame(step);
+  }
+  startPage() {
+    const root = this.rootRef.current; if (!root) return;
+    root.querySelectorAll('[data-letter]').forEach((el, i) => el.animate(
+      [{transform:'translateY(105%) rotate(8deg)'},{transform:'none'}],
+      {duration:900, delay:i*55, easing:'cubic-bezier(.2,.9,.2,1)', fill:'backwards'}));
+    this.burstT = performance.now() / 1000;
+    this.observeReveals();
+  }
+  observeReveals() {
+    const root = this.rootRef.current; if (!root) return;
+    if (!this.io) this.io = new IntersectionObserver(es => es.forEach(e => {
+      if (!e.isIntersecting) return;
+      const el = e.target; this.io.unobserve(el);
+      if (el.__anim) el.__anim.play();
+      if (el.dataset.count) this.countUp(el);
+    }), {threshold:.15});
+    root.querySelectorAll('[data-reveal]').forEach((el, i) => {
+      if (el.__seen) return; el.__seen = 1;
+      const r = el.getBoundingClientRect();
+      if (r.top < innerHeight && r.bottom > 0 && !el.closest('header')) return;
+      el.__anim = el.animate([{opacity:0, transform:'translateY(48px)'},{opacity:1, transform:'none'}],
+        {duration:900, delay: el.closest('header') ? 500 + (i % 5) * 110 : 0, easing:'cubic-bezier(.2,.8,.2,1)', fill:'both'});
+      el.__anim.pause();
+      this.io.observe(el);
+    });
+    root.querySelectorAll('[data-count]').forEach(el => { if (!el.__cseen) { el.__cseen = 1; this.io.observe(el); } });
+  }
+  countUp(el) {
+    const to = +el.dataset.count, pre = el.dataset.prefix || '', suf = el.dataset.suffix || '', t0 = performance.now(), D = 1600;
+    const f = () => { const p = Math.min(1, (performance.now() - t0) / D), e = 1 - Math.pow(2, -10 * p);
+      el.textContent = pre + Math.round(to * (p === 1 ? 1 : e)) + suf; if (p < 1) requestAnimationFrame(f); };
+    f();
+  }
+  handleScroll() {
+    const h = document.documentElement.scrollHeight - innerHeight;
+    if (this.progRef.current) this.progRef.current.style.transform = 'scaleX(' + (h > 0 ? scrollY / h : 0) + ')';
+    const s = scrollY > 40; if (s !== this.state.scrolled) this.setState({scrolled:s});
+    const tl = this.tlRef.current, ln = this.lineRef.current;
+    if (tl && ln) { const r = tl.getBoundingClientRect(); const p = Math.max(0, Math.min(1, (innerHeight * .6 - r.top - 200) / (r.height - 300))); ln.style.transform = 'scaleY(' + p + ')'; }
+  }
+  handleMove(e) {
+    this.cur.x = e.clientX; this.cur.y = e.clientY;
+    this.mt.x = e.clientX / innerWidth * 2 - 1; this.mt.y = e.clientY / innerHeight * 2 - 1;
+    const ring = this.ringRef.current;
+    if (ring) { const h = e.target.closest && e.target.closest('[data-hover],a,button,input,textarea');
+      if (h !== this.hov) { this.hov = h; ring.style.width = ring.style.height = h ? '72px' : '40px'; ring.style.margin = h ? '-36px 0 0 -36px' : '-20px 0 0 -20px'; ring.style.background = h ? 'rgba(167,139,250,.25)' : 'transparent'; } }
+    const root = this.rootRef.current; if (!root) return;
+    root.querySelectorAll('[data-magnet]').forEach(el => {
+      const r = el.getBoundingClientRect(), cx = r.left + r.width / 2, cy = r.top + r.height / 2, dx = e.clientX - cx, dy = e.clientY - cy;
+      const near = Math.abs(dx) < r.width / 2 + 40 && Math.abs(dy) < r.height / 2 + 40;
+      el.style.transition = 'translate .35s cubic-bezier(.2,.8,.2,1)';
+      el.style.translate = near ? (dx * .28) + 'px ' + (dy * .35) + 'px' : '0 0';
+    });
+  }
+  cursorLoop() {
+    const f = () => { this.craf = requestAnimationFrame(f);
+      const d = this.dotRef.current, r = this.ringRef.current; if (!d || !r) return;
+      this.ring.x += (this.cur.x - this.ring.x) * .18; this.ring.y += (this.cur.y - this.ring.y) * .18;
+      d.style.transform = 'translate(' + this.cur.x + 'px,' + this.cur.y + 'px)';
+      r.style.transform = 'translate(' + this.ring.x + 'px,' + this.ring.y + 'px)'; };
+    f();
+  }
+  animateDeal() {
+    const root = this.rootRef.current; if (!root) return;
+    root.querySelectorAll('[data-dealt]').forEach((el, i) => el.animate(
+      [{transform:'translate(' + (i ? 160 : -160) + 'px,-260px) rotate(' + (i ? 40 : -40) + 'deg) rotateY(180deg)', opacity:0},{opacity:1, offset:.3},{transform:getComputedStyle(el).transform === 'none' ? 'none' : getComputedStyle(el).transform}],
+      {duration:750, delay:i * 150, easing:'cubic-bezier(.2,.9,.25,1.15)', fill:'backwards'}));
+    const v = root.querySelector('[data-verdict]');
+    if (v) v.animate([{opacity:0, transform:'scale(.9)'},{opacity:1, transform:'none'}], {duration:500, delay:500, easing:'cubic-bezier(.2,.9,.2,1.3)', fill:'backwards'});
+  }
+  verdict(h) {
+    const v = c => RANKS.indexOf(c.r);
+    const [a, b] = v(h[0]) >= v(h[1]) ? h : [h[1], h[0]];
+    const pair = a.r === b.r, suited = a.s === b.s, hi = ['A','K','Q','J','10'];
+    const label = pair ? 'Pareja de ' + RNAME[a.r] : a.r + b.r + (suited ? ' del mismo palo' : ' de distinto palo');
+    const odds = pair ? '0.45%' : suited ? '0.30%' : '0.90%';
+    let say;
+    if (pair && ['A','K','Q','J'].includes(a.r)) say = '¡All-in sin pensarlo!';
+    else if (pair) say = 'Pareja chica: a buscar el set en el flop.';
+    else if (hi.includes(a.r) && hi.includes(b.r)) say = suited ? 'Broadway del mismo palo. Subo.' : 'Broadway. Subo 3x.';
+    else if (suited && v(a) - v(b) === 1) say = 'Conectores del mismo palo: en posición, la juego.';
+    else if (a.r === 'A') say = 'As con kicker débil: depende de la posición.';
+    else say = 'Fold. Paciencia, la buena viene.';
+    return {label, say, odds};
+  }
+
+  async initThree() {
+    let T;
+    try { T = await import('https://unpkg.com/three@0.160.0/build/three.module.js'); } catch (e) { return; }
+    const host = this.heroCanvas.current; if (this.dead || !host) return;
+    try { await document.fonts.load('400 120px Bebas'); } catch (e) {}
+    this.T = T;
+    const r = new T.WebGLRenderer({antialias:true, alpha:true});
+    r.setPixelRatio(Math.min(2, devicePixelRatio)); r.outputColorSpace = T.SRGBColorSpace;
+    r.domElement.style.cssText = 'width:100%;height:100%;display:block';
+    host.appendChild(r.domElement);
+    const scene = new T.Scene(), cam = new T.PerspectiveCamera(32, 1, .1, 100); cam.position.set(0, 0, 20);
+    scene.add(new T.AmbientLight(0xffffff, .8));
+    const key = new T.DirectionalLight(0xffffff, 2); key.position.set(4, 7, 9); scene.add(key);
+    const pv = new T.PointLight(0x8B5CF6, 80, 40); pv.position.set(-7, 3, 6); scene.add(pv);
+    const pr = new T.PointLight(0xD6334B, 80, 40); pr.position.set(8, -4, 6); scene.add(pr);
+    const root = new T.Group(); scene.add(root);
+    this.three = {r, scene, cam, root};
+    this.makeAssets();
+    this.buildMode();
+    const resize = () => { const w = host.clientWidth, h = host.clientHeight; r.setSize(w, h, false); cam.aspect = w / h; cam.updateProjectionMatrix();
+      const visW = 2 * Math.tan(cam.fov * Math.PI / 360) * cam.position.z * cam.aspect; this.offX = cam.aspect > 1.15 ? visW * .2 : 0; this.sc = cam.aspect > 1.15 ? 1 : .75; };
+    resize(); this.ro = new ResizeObserver(resize); this.ro.observe(host);
+    this.visible = true;
+    this.heroIO = new IntersectionObserver(es => { this.visible = es[0].isIntersecting; }); this.heroIO.observe(host);
+    r.domElement.animate([{opacity:0},{opacity:1}], {duration:1200, fill:'backwards'});
+    let last = performance.now();
+    const loop = () => { this.raf = requestAnimationFrame(loop); const now = performance.now(); const dt = Math.min(.05, (now - last) / 1000); last = now; if (this.visible) this.tick(dt, now / 1000); };
+    loop();
+  }
+  makeAssets() {
+    const T = this.T, tex = c => { const t = new T.CanvasTexture(c); t.colorSpace = T.SRGBColorSpace; t.anisotropy = 4; return t; };
+    const cv = (w, h, fn) => { const c = document.createElement('canvas'); c.width = w; c.height = h; fn(c.getContext('2d'), w, h); return c; };
+    const defs = [['#8B5CF6','#FAFAFA'],['#D6334B','#FAFAFA'],['#3B6FE0','#FAFAFA'],['#18181B','#A78BFA'],['#FAFAFA','#D6334B']];
+    this.chipMats = defs.map(([base, st]) => {
+      const top = cv(512, 512, (g, w) => { const c = w / 2;
+        g.fillStyle = base; g.beginPath(); g.arc(c, c, c, 0, 7); g.fill();
+        g.fillStyle = st; for (let i = 0; i < 8; i++) { const a = i * Math.PI / 4; g.beginPath(); g.arc(c, c, c, a - .17, a + .17); g.arc(c, c, c * .74, a + .2, a - .2, true); g.fill(); }
+        g.strokeStyle = st; g.lineWidth = 6; g.setLineDash([16, 12]); g.beginPath(); g.arc(c, c, c * .64, 0, 7); g.stroke(); g.setLineDash([]);
+        g.lineWidth = 4; g.beginPath(); g.arc(c, c, c * .55, 0, 7); g.stroke();
+        g.fillStyle = st; g.font = '400 210px Bebas, Impact, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('J', c, c + 12); });
+      const side = cv(1024, 64, (g, w, h) => { g.fillStyle = base; g.fillRect(0, 0, w, h); g.fillStyle = st; for (let i = 0; i < 8; i++) g.fillRect(i * w / 8, 0, w / 22, h); });
+      const mk = m => new T.MeshStandardMaterial({map:tex(m), roughness:.42, metalness:.08});
+      return [mk(side), mk(top), mk(top)];
+    });
+    const card = (rank, suit, col) => cv(500, 700, (g, w, h) => {
+      g.fillStyle = '#FAFAFA'; g.beginPath(); g.roundRect(0, 0, w, h, 40); g.fill();
+      g.fillStyle = col; g.textAlign = 'center'; g.font = '400 120px Bebas, Impact, sans-serif'; g.fillText(rank, 70, 130);
+      g.font = '70px serif'; g.fillText(suit, 70, 200);
+      g.save(); g.translate(w, h); g.rotate(Math.PI); g.font = '400 120px Bebas, Impact, sans-serif'; g.fillText(rank, 70, 130); g.font = '70px serif'; g.fillText(suit, 70, 200); g.restore();
+      g.font = '300px serif'; g.textBaseline = 'middle'; g.fillText(suit, w / 2, h / 2 + 10); });
+    const back = cv(500, 700, (g, w, h) => {
+      g.fillStyle = '#8B5CF6'; g.beginPath(); g.roundRect(0, 0, w, h, 40); g.fill();
+      g.strokeStyle = 'rgba(250,250,250,.35)'; g.lineWidth = 3; for (let i = -h; i < w + h; i += 34) { g.beginPath(); g.moveTo(i, 0); g.lineTo(i + h, h); g.stroke(); g.beginPath(); g.moveTo(i, h); g.lineTo(i + h, 0); g.stroke(); }
+      g.fillStyle = '#18181B'; g.beginPath(); g.arc(w / 2, h / 2, 120, 0, 7); g.fill();
+      g.fillStyle = '#FAFAFA'; g.font = '400 170px Bebas, Impact, sans-serif'; g.textAlign = 'center'; g.textBaseline = 'middle'; g.fillText('J', w / 2, h / 2 + 8); });
+    const edge = new T.MeshStandardMaterial({color:0xf4f4f5, roughness:.5});
+    const bm = new T.MeshStandardMaterial({map:tex(back), roughness:.45, transparent:true});
+    const fm = c => new T.MeshStandardMaterial({map:tex(c), roughness:.35, transparent:true});
+    this.cardMats = [[edge, edge, edge, edge, fm(card('J','♠','#18181B')), bm], [edge, edge, edge, edge, fm(card('J','♥','#D6334B')), bm]];
+    this.chipGeo = new T.CylinderGeometry(1, 1, .26, 64);
+    this.cardGeo = new T.BoxGeometry(2.5, 3.5, .03);
+  }
+  buildMode() {
+    const T = this.T, root = this.three.root; while (root.children.length) root.remove(root.children[0]);
+    const mode = this.props.escena3d ?? 'orbita'; this.mode = mode; this.chips = [];
+    const rnd = (a, b) => a + Math.random() * (b - a);
+    const chip = i => { const m = new T.Mesh(this.chipGeo, this.chipMats[i % 5]); root.add(m); return m; };
+    this.cards = this.cardMats.map((mats, i) => { const m = new T.Mesh(this.cardGeo, mats); root.add(m); return m; });
+    if (mode === 'orbita') {
+      for (let i = 0; i < 18; i++) this.chips.push({m:chip(i), a:i / 18 * Math.PI * 2, rad:rnd(4.4, 5.6), yo:rnd(-.8, .8), sx:rnd(.4, 1.2), sz:rnd(-.8, .8), ph:rnd(0, 6)});
+    } else if (mode === 'lluvia') {
+      for (let i = 0; i < 42; i++) this.chips.push({m:chip(i), x:rnd(-9, 9), y:rnd(-9, 10), z:rnd(-7, 3), vy:rnd(1.4, 3), rx:rnd(0, 6), rz:rnd(0, 6), vx:rnd(-2, 2), vz:rnd(-2, 2)});
+    } else {
+      this.cols = [-4, -2, 0, 2, 4].map((x, ci) => ({x, z:rnd(-1.5, .5), n:0, max:Math.round(rnd(7, 14)), stack:[], drop:null, wait:ci * .25}));
+    }
+  }
+  tick(dt, t) {
+    const {r, scene, cam, root} = this.three, rnd = (a, b) => a + Math.random() * (b - a);
+    this.m.x += (this.mt.x - this.m.x) * .05; this.m.y += (this.mt.y - this.m.y) * .05;
+    const bp = Math.max(0, 1 - (t - this.burstT) / 1.4), spin = 1 + bp * 8;
+    const sy = Math.min(1, scrollY / innerHeight);
+    root.position.x = this.offX || 0; root.position.y = sy * 3; root.scale.setScalar(this.sc || 1);
+    root.rotation.y = this.m.x * .45 + sy * .8; root.rotation.x = this.m.y * .25 + (this.mode === 'torre' ? .32 : .18);
+    const fp = Math.min(1, (t - this.burstT) / 1.1), fe = fp < 1 ? 1 - Math.pow(1 - fp, 3) : 1;
+    this.cards.forEach((c, i) => {
+      const flip = fp < 1 ? fe * Math.PI * 2 : 0;
+      if (this.mode === 'torre') { c.position.set(i ? 1 : -1, -1.6, 3.2); c.rotation.set(-.35, flip + (i ? -.3 : .3), i ? -.12 : .12); }
+      else { c.position.set(i ? .85 : -.85, Math.sin(t * 1.2 + i) * .18, i * .06); c.rotation.set(0, flip + Math.sin(t * .6 + i) * .2, i ? -.14 : .14); }
+    });
+    if (this.mode === 'orbita') this.chips.forEach(c => {
+      c.a += dt * .28 * (1 + bp * 3); const rr = c.rad + bp * 2.5;
+      c.m.position.set(Math.cos(c.a) * rr, Math.sin(c.a * 2 + c.ph) * .9 + c.yo, Math.sin(c.a) * rr * .55);
+      c.m.rotation.x = Math.PI / 2 + Math.sin(t * c.sx + c.ph) * .6; c.m.rotation.z += dt * c.sz * spin; c.m.rotation.y += dt * .6 * spin;
+    });
+    else if (this.mode === 'lluvia') this.chips.forEach(c => {
+      c.y -= dt * c.vy * (1 + bp * 2); c.rx += dt * c.vx * spin; c.rz += dt * c.vz * spin;
+      if (c.y < -10) { c.y = 10; c.x = rnd(-9, 9); }
+      c.m.position.set(c.x, c.y, c.z); c.m.rotation.set(c.rx, 0, c.rz);
+    });
+    else this.cols.forEach(col => {
+      if (bp > .9 && col.stack.length) { col.stack.forEach(m => { m.userData.v = {x:rnd(-6, 6), y:rnd(4, 10), z:rnd(-3, 6), r:rnd(-8, 8)}; }); col.fly = col.stack; col.stack = []; col.n = 0; col.drop && root.remove(col.drop.m); col.drop = null; col.wait = .8; }
+      if (col.fly) { col.fly.forEach(m => { const v = m.userData.v; v.y -= 20 * dt; m.position.x += v.x * dt; m.position.y += v.y * dt; m.position.z += v.z * dt; m.rotation.x += v.r * dt; m.rotation.z += v.r * .7 * dt; });
+        if (col.fly[0].position.y < -14) { col.fly.forEach(m => root.remove(m)); col.fly = null; } }
+      col.wait -= dt; if (col.wait > 0) return;
+      const baseY = -3 + col.n * .27;
+      if (!col.drop) { const m = new T.Mesh(this.chipGeo, this.chipMats[(col.n + Math.abs(col.x)) % 5]); root.add(m); col.drop = {m, y:9, v:0, rot:rnd(0, 6)}; }
+      const d = col.drop; d.v += 30 * dt; d.y -= d.v * dt; d.rot += dt * 4;
+      d.m.position.set(col.x + Math.sin(d.y) * .05, Math.max(d.y, baseY), col.z); d.m.rotation.set(0, d.rot, 0);
+      if (d.y <= baseY) { d.m.position.y = baseY; d.m.position.x = col.x + rnd(-.06, .06); col.stack.push(d.m); col.drop = null; col.n++; col.wait = rnd(.05, .25);
+        if (col.n >= col.max) { col.wait = 1e9; if (this.cols.every(c => c.n >= c.max)) this.cols.forEach(c => { c.stack.forEach(m => { m.userData.v = {x:rnd(-6, 6), y:rnd(4, 10), z:rnd(-3, 6), r:rnd(-8, 8)}; }); c.fly = c.stack; c.stack = []; c.n = 0; c.max = Math.round(rnd(7, 14)); c.wait = 1 + rnd(0, 1); }); } }
+    });
+    r.render(scene, cam);
+  }
+  lbStep(d) { const n = this.filtered().length; this.setState(s => ({lb:(s.lb + d + n) % n})); }
+  filtered() { const f = this.state.filter; return PH.filter(p => f === 'all' || p[2] === f); }
+
+  renderVals() {
+    const st = this.state, list = this.filtered(), shown = st.all ? list : list.slice(0, 12);
+    const lb = st.lb >= 0 && list[st.lb] ? list[st.lb] : null;
+    return {
+      rootRef:this.rootRef, progRef:this.progRef, introRef:this.introRef, introPctRef:this.introPctRef, ringRef:this.ringRef, dotRef:this.dotRef,
+      heroCanvas:this.heroCanvas, tlRef:this.tlRef, lineRef:this.lineRef, reelRef:this.reelRef,
+      introOn: st.introOn, cursorOn: this.props.cursorFicha !== false, cursorCss: this.props.cursorFicha !== false ? 'none' : 'auto',
+      navBg: st.scrolled ? 'rgba(11,11,13,.82)' : 'transparent', navBorder: st.scrolled ? '#27272A' : 'transparent',
+      go: e => { const id = e.currentTarget.dataset.to, el = document.getElementById(id); if (!el) return; scrollTo({top: id === 'top' ? 0 : el.getBoundingClientRect().top + scrollY - 70, behavior:'smooth'}); },
+      burst: e => { if (e.target.closest('[data-to]')) return; this.burstT = performance.now() / 1000; },
+      tilt: e => { const el = e.currentTarget, r = el.getBoundingClientRect(), x = (e.clientX - r.left) / r.width - .5, y = (e.clientY - r.top) / r.height - .5; el.style.transform = 'rotateY(' + (x * 12) + 'deg) rotateX(' + (-y * 12) + 'deg) scale(1.02)'; },
+      untilt: e => { e.currentTarget.style.transform = 'none'; },
+      results: RESULTS.map((r, i) => ({...r, transform: st.flip === i ? 'rotateY(180deg)' : 'none', enter: () => this.setState({flip:i}), leave: () => this.setState(s => s.flip === i ? {flip:-1} : null)})),
+      hand: st.hand.map((c, i) => ({...c, color: c.s === '♥' || c.s === '♦' ? '#D6334B' : '#18181B', rot: i ? '7deg' : '-7deg'})),
+      verdict: this.verdict(st.hand), dealCount: st.dealCount,
+      deal: () => { const a = Math.floor(Math.random() * 52); let b; do b = Math.floor(Math.random() * 52); while (b === a);
+        const c = n => ({r:RANKS[n % 13], s:SUITS[Math.floor(n / 13)]}); this.setState(s => ({hand:[c(a), c(b)], dealKey:s.dealKey + 1, dealCount:s.dealCount + 1})); },
+      reels: REELS.map(([n, title, dur]) => ({src:'https://www.joepok3r.com/reels/reel-' + n + '.mp4#t=0.5', title, dur})),
+      reelEnter: e => { const v = e.currentTarget.querySelector('video'); v && v.play().catch(() => {}); },
+      reelLeave: e => { const v = e.currentTarget.querySelector('video'); v && v.pause(); },
+      reelPrev: () => this.reelRef.current && this.reelRef.current.scrollBy({left:-520}),
+      reelNext: () => this.reelRef.current && this.reelRef.current.scrollBy({left:520}),
+      filters: FILTERS.map(([k, label]) => ({label, n: k === 'all' ? PH.length : PH.filter(p => p[2] === k).length, bg: st.filter === k ? '#8B5CF6' : 'transparent', border: st.filter === k ? '#8B5CF6' : '#3F3F46', pick: () => this.setState({filter:k, all:false})})),
+      photos: shown.map((p, i) => ({src:IMG(p[0], i % 7 === 0 ? 1920 : 1080), cap:p[1], span: i % 7 === 0 ? 'span 2' : 'span 1', open: () => this.setState({lb:i})})),
+      hasMore: !st.all && list.length > 12, total: list.length, showAll: () => this.setState({all:true}),
+      lbOn: !!lb, lb: lb ? {src:IMG(lb[0], 1920), cap:lb[1], pos:(st.lb + 1) + ' / ' + list.length} : {src:'', cap:'', pos:''},
+      lbClose: e => { if (e.target === e.currentTarget || e.target.tagName === 'IMG') this.setState({lb:-1}); },
+      lbPrev: e => { e.stopPropagation(); this.lbStep(-1); }, lbNext: e => { e.stopPropagation(); this.lbStep(1); },
+      socials: SOCIALS,
+      notSent: !st.sent, sent: st.sent, send: e => { e.preventDefault(); this.setState({sent:true}); }
+    };
+  }
+}
+</script>
+</body>
+</html>

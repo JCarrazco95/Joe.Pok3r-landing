@@ -1,23 +1,83 @@
 @import "tailwindcss";
 
 /*
+  Sistema de diseño "Fichas 3D" (handoff de Claude Design).
+
+  Los tokens viven aquí, en `@theme`, para que Tailwind genere sus utilidades
+  (`bg-canvas`, `text-violet-soft`, `font-display`, `rounded-card`…). Los nombres
+  evitan chocar con las paletas de Tailwind: no hay `red` ni `blue` a secas.
+*/
+@theme {
+  /* Superficies */
+  --color-canvas: #0b0b0d;
+  --color-surface: #131316;
+  --color-surface-2: #18181b;
+  --color-line: #27272a;
+  --color-line-strong: #3f3f46;
+
+  /* Texto */
+  --color-fg: #fafafa;
+  --color-fg-2: #d4d4d8;
+  --color-fg-muted: #a1a1aa;
+  --color-fg-dim: #71717a;
+
+  /* Marca */
+  --color-violet: #8b5cf6;
+  --color-violet-deep: #7c3aed;
+  --color-violet-soft: #a78bfa;
+
+  /* Palos: ♥ ruby · ♠ violet · ♣ azure · ♦ ember */
+  --color-ruby: #d6334b;
+  --color-rose: #f08a99;
+  --color-azure: #3b6fe0;
+  --color-ember: #c2410c;
+
+  /* Tipografía */
+  --font-display: var(--font-bebas), Impact, sans-serif;
+  --font-body: var(--font-mont), Arial, sans-serif;
+
+  /* Forma */
+  --radius-card: 1.25rem;
+  --radius-panel: 1.75rem;
+  --radius-photo: 0.875rem;
+
+  /* Sombras */
+  --shadow-feature: 0 30px 80px rgb(0 0 0 / 0.5);
+  --shadow-card: 0 30px 60px rgb(0 0 0 / 0.55);
+  --shadow-glow: 0 0 40px rgb(139 92 246 / 0.6);
+
+  /* Movimiento */
+  --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
+  --ease-bounce: cubic-bezier(0.2, 0.9, 0.25, 1.15);
+}
+
+/*
   Base del sitio. Antes esto vivía repartido entre el globals.css del HUB (que
   traía todo shadcn) y joe.css. Aquí queda sólo lo que la landing usa.
 */
 @layer base {
   html {
-    font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+    font-family: var(--font-body);
     color-scheme: dark;
   }
 
   body {
-    /* Inter sólo en 400 y 500: nada de negritas sintéticas del navegador. */
-    font-weight: 400;
+    /* Mont arranca en 500: no hay 400, así que ése es el peso de lectura. */
+    font-weight: 500;
     font-synthesis-weight: none;
     -webkit-font-smoothing: antialiased;
   }
 
-  /* La tipografía no sube de 500 en ningún nivel. */
+  ::selection {
+    background: var(--color-violet);
+    color: var(--color-fg);
+  }
+
+  /*
+    Los títulos siguen en 500 por defecto. El diseño usa 600/700 en etiquetas y
+    botones; esos componentes lo piden explícito. Pendiente: confirmar con Joe
+    si la marca admite negritas (ver PLAN.md, fase 1).
+  */
   h1, h2, h3, h4, h5, h6, th, strong, b {
     font-weight: 500;
   }
