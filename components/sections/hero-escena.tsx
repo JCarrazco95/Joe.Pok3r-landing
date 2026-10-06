@@ -46,7 +46,7 @@ export function HeroEscena({
   }, [])
 
   return (
-    <div ref={ref} aria-hidden className="absolute inset-0">
+    <div ref={ref} aria-hidden className="absolute inset-0 max-sm:opacity-50">
       <SinWebGL>
         <Escena modo={modo} visible={visible} reducir={reducir} burst={burst} />
       </SinWebGL>

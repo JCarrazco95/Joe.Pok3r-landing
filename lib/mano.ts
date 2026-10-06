@@ -46,7 +46,7 @@ export function veredicto(mano: readonly [Carta, Carta]): Veredicto {
 
   const label = pareja
     ? `Pareja de ${NOMBRE_PAR[a.r]}`
-    : `${a.r}${b.r}${mismoPalo ? ' del mismo palo' : ' de distinto palo'}`
+    : `${a.r}${a.r === '10' || b.r === '10' ? '-' : ''}${b.r}${mismoPalo ? ' del mismo palo' : ' de distinto palo'}`
   const odds = pareja ? '0.45%' : mismoPalo ? '0.30%' : '0.90%'
 
   let say: string

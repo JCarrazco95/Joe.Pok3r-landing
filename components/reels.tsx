@@ -72,7 +72,7 @@ export function Reels({ reels, pista }: { reels: Reel[]; pista?: Ref<HTMLDivElem
       ref={pista}
       tabIndex={0}
       aria-label="Reels"
-      className="scrollbar-none flex snap-x snap-mandatory gap-5 overflow-x-auto scroll-smooth px-[clamp(20px,4vw,56px)] pb-3 pt-2"
+      className="scrollbar-none flex snap-x snap-mandatory scroll-px-[clamp(20px,4vw,56px)] gap-5 overflow-x-auto scroll-smooth px-[clamp(20px,4vw,56px)] pb-3 pt-2"
     >
       {reels.map((reel, i) => {
         const conSonido = activo === i
