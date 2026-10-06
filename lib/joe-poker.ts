@@ -48,6 +48,11 @@ export type Reel = {
 /**
  * Historial de resultados, del más reciente al más viejo.
  *
+ * Los cobros salen de la ficha de The Hendon Mob (pokerdb.thehendonmob.com,
+ * jugador n=541062). Los premios van en la moneda local del torneo. Lo que no
+ * está en Hendon Mob (High Roller del Jubilee, Main Event 2023, Opener) se
+ * conserva con su fuente propia o con `puesto: null`.
+ *
  * Sólo entran torneos con participación comprobada. Un `puesto: null` es
  * deliberado: significa que jugó y todavía no se registró dónde quedó, no que
  * se fue sin cobrar. Rellenarlo es de las pocas cosas de esta landing que hay
@@ -56,12 +61,41 @@ export type Reel = {
  */
 export const resultados: Resultado[] = [
   {
+    fecha: '2026-09-17',
+    torneo: 'Main Event · Ring Event #13',
+    serie: 'WSOP Circuit Austin',
+    sede: 'Austin, Texas',
+    buyIn: '$1,700 USD',
+    puesto: 92,
+    premio: '$4,780 USD',
+  },
+  {
+    fecha: '2026-09-14',
+    torneo: 'Monster Stack · Ring Event #9',
+    serie: 'WSOP Circuit Austin',
+    sede: 'Austin, Texas',
+    buyIn: '$400 USD',
+    puesto: 43,
+    premio: '$1,950 USD',
+  },
+  {
+    fecha: '2026-09-07',
+    torneo: 'Pot Limit Omaha Championship · Ring Event #9',
+    serie: 'WSOP Circuit México',
+    sede: 'Big Bola Casinos · CDMX',
+    buyIn: '$12,800 MXN',
+    puesto: 10,
+    premio: '$30,900 MXN',
+  },
+  {
     fecha: '2026-09-02',
     torneo: '#2 Mini Main Event',
     serie: 'WSOP Circuit México',
     sede: 'Big Bola Casinos · CDMX',
-    puesto: null,
+    buyIn: '$8,000 MXN',
+    puesto: 138,
     field: 184,
+    premio: '$16,000 MXN',
     nota: 'Cerró el Day 1A 5.º del field con 296,000 en fichas',
   },
   {
@@ -88,6 +122,39 @@ export const resultados: Resultado[] = [
     sede: 'Horseshoe & Paris · Las Vegas',
     buyIn: '$10,000 USD',
     puesto: null,
+  },
+  {
+    fecha: '2017-07-22',
+    torneo: 'Nightly Event',
+    sede: 'Aria Resort & Casino · Las Vegas',
+    buyIn: '$125 USD',
+    puesto: 9,
+    premio: '$231 USD',
+  },
+  {
+    fecha: '2017-06-18',
+    torneo: '7PM Turbo',
+    serie: 'Rio Daily Deepstacks',
+    sede: 'Rio · Las Vegas',
+    buyIn: '$365 USD',
+    puesto: 3,
+    premio: '$5,972 USD',
+  },
+  {
+    fecha: '2017-05-05',
+    torneo: 'Daily Event',
+    sede: 'Aria Resort & Casino · Las Vegas',
+    buyIn: '$240 USD',
+    puesto: 4,
+    premio: '$1,435 USD',
+  },
+  {
+    fecha: '2017-05-04',
+    torneo: 'Daily Event',
+    sede: 'Aria Resort & Casino · Las Vegas',
+    buyIn: '$125 USD',
+    puesto: 7,
+    premio: '$359 USD',
   },
 ]
 
