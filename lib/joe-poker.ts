@@ -243,6 +243,15 @@ export const joe = {
   rol: 'Jugador recreativo de Texas Hold’em',
   ubicacion: 'México',
   avatar: '/avatar.webp',
+  /**
+   * Fotos de fondo del hero, que rotan cada 5 s. `foco` es el punto horizontal
+   * (0 a 1) que se mantiene a la vista al recortar con `object-fit: cover`.
+   */
+  fotosHero: [
+    { src: '/hero/joe-1.webp', foco: 0.5 },
+    { src: '/hero/joe-2.webp', foco: 0.47 },
+    { src: '/hero/joe-3.webp', foco: 0.5 },
+  ],
   /** Marquesina de la marca. PNG con fondo recortado: va sobre el paño. */
   logo: '/logo.png',
 
