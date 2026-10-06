@@ -312,6 +312,13 @@ export const enlaces: Enlace[] = [
     url: 'https://www.twitch.tv/joe_pok3r',
   },
   {
+    id: 'kick',
+    etiqueta: 'Kick',
+    detalle: 'Directos y clips',
+    icono: 'web',
+    url: 'https://kick.com/joe-pok3r',
+  },
+  {
     id: 'hendon-mob',
     etiqueta: 'The Hendon Mob',
     detalle: 'Registro oficial de cobros en torneos',
