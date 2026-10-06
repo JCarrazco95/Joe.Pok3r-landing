@@ -645,3 +645,34 @@ export const galeria: Foto[] = [
     evento: 'wsop-circuit',
   },
 ]
+
+/**
+ * Línea de tiempo de la sección "Historia".
+ *
+ * El texto de los tres primeros hitos es, palabra por palabra, el de
+ * `joe.historia`: es la bio que dictó Joe. `cuando` y `titulo` son los rótulos
+ * que ordenan la línea. El último hito suma el dato del High Roller, que ya
+ * está en `resultados`.
+ */
+export const hitos = [
+  {
+    cuando: 'Hace más de 20 años',
+    titulo: 'En casa, con amigos y familia',
+    texto: joe.historia[0],
+  },
+  {
+    cuando: 'Mayoría de edad',
+    titulo: 'Primera vez en Las Vegas',
+    texto: joe.historia[1],
+  },
+  {
+    cuando: 'Julio 2023',
+    titulo: 'Main Event de la WSOP · Evento #76',
+    texto: joe.historia[2],
+  },
+  {
+    cuando: 'Agosto 2026',
+    titulo: 'Mesa final del High Roller 2.5M GTD',
+    texto: `6.º de 112 y $160,000 MXN. ${joe.historia[3]}`,
+  },
+] as const
