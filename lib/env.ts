@@ -42,3 +42,11 @@ export const INSTAGRAM_ACCESS_TOKEN = process.env.INSTAGRAM_ACCESS_TOKEN || ''
 
 /** Interruptor del camino automático de Instagram. Solo `'true'` lo enciende. */
 export const INSTAGRAM_AUTO = process.env.INSTAGRAM_AUTO === 'true'
+
+/**
+ * Simulador del estado en vivo (fase 5): `en-vivo` o `apagado`. SOLO para
+ * desarrollo local: `lib/en-vivo.ts` lo ignora cuando NODE_ENV es `production`
+ * (build, `next start`, previews y producción de Vercel), así que nunca puede
+ * afirmar un directo falso en el sitio publicado.
+ */
+export const EN_VIVO_SIMULADO = process.env.EN_VIVO_SIMULADO || ''
