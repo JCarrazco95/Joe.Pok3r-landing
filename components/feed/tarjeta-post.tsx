@@ -7,14 +7,24 @@ import { IconoRed } from '@/components/icons'
 import { Insignia } from '@/components/ui/chip'
 import { ICONO_RED, NOMBRE_RED } from '@/lib/feed'
 import { cifraCompacta, fechaCorta, fechaRelativa } from '@/lib/formato'
-import type { PostSocial } from '@/lib/social/types'
+import type { PostSocial, RedFeed } from '@/lib/social/types'
 
 import { useAhora } from './use-ahora'
 
-/** Vista previa de la tarjeta y del visor: con la imagen rota cae al ícono de la red. */
-export function Miniatura({ post, className }: { post: PostSocial; className?: string }) {
+/**
+ * Imagen remota de vista previa: con la imagen rota (o sin ella) cae al ícono de
+ * la red. La usan las tarjetas, el visor y la portada del directo.
+ */
+export function MiniaturaRemota({
+  src,
+  red,
+  className,
+}: {
+  src?: string
+  red: RedFeed
+  className?: string
+}) {
   const [rota, setRota] = useState(false)
-  const src = post.media?.miniatura
 
   if (!src || rota) {
     return (
@@ -22,7 +32,7 @@ export function Miniatura({ post, className }: { post: PostSocial; className?: s
         aria-hidden
         className={`grid place-items-center bg-surface text-fg-dim ${className ?? ''}`}
       >
-        <IconoRed nombre={ICONO_RED[post.red]} className="size-10" />
+        <IconoRed nombre={ICONO_RED[red]} className="size-10" />
       </span>
     )
   }
@@ -42,6 +52,11 @@ export function Miniatura({ post, className }: { post: PostSocial; className?: s
       className={`object-cover ${className ?? ''}`}
     />
   )
+}
+
+/** Vista previa de un post. */
+export function Miniatura({ post, className }: { post: PostSocial; className?: string }) {
+  return <MiniaturaRemota src={post.media?.miniatura} red={post.red} className={className} />
 }
 
 function Metrica({ icono: Icono, etiqueta, valor }: { icono: typeof Eye; etiqueta: string; valor: number }) {

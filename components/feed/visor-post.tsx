@@ -1,7 +1,7 @@
 'use client'
 
 import { X } from 'lucide-react'
-import { useEffect, useRef } from 'react'
+import { useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 import { IconoRed } from '@/components/icons'
@@ -11,74 +11,21 @@ import { fechaCorta } from '@/lib/formato'
 import type { PostSocial } from '@/lib/social/types'
 
 import { Miniatura } from './tarjeta-post'
-
-const FOCALIZABLES = 'a[href], button:not([disabled]), iframe, [tabindex]:not([tabindex="-1"])'
+import { useModal } from './use-modal'
 
 /**
  * Visor modal de un post.
  *
- * - Foco: entra al panel, Tab y Shift+Tab no salen de él y al cerrar vuelve a
- *   la tarjeta que lo abrió. Escape cierra, igual que el clic en el fondo.
- * - Scroll del <body> bloqueado mientras está abierto.
+ * - Foco, Escape y scroll del <body>: ver `useModal`. El clic en el fondo cierra
+ *   igual que Escape.
  * - El embed (iframe oficial de la red) existe sólo mientras el visor está
  *   abierto: nunca se carga al renderizar la página. YouTube va por
  *   youtube-nocookie.com. Sin embed (Kick) se muestra la vista previa y el
  *   enlace a la red.
- *
- * Con el foco dentro de un iframe el teclado es del iframe y Escape no llega
- * aquí; por eso el botón de cerrar es siempre alcanzable.
  */
 export function VisorPost({ post, onCerrar }: { post: PostSocial; onCerrar: () => void }) {
   const panel = useRef<HTMLDivElement>(null)
-  const cerrar = useRef(onCerrar)
-  useEffect(() => {
-    cerrar.current = onCerrar
-  })
-
-  useEffect(() => {
-    const previo = document.activeElement instanceof HTMLElement ? document.activeElement : null
-    const overflow = document.body.style.overflow
-    document.body.style.overflow = 'hidden'
-    panel.current?.focus()
-
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') {
-        e.preventDefault()
-        cerrar.current()
-        return
-      }
-      if (e.key !== 'Tab' || !panel.current) return
-      const items = [...panel.current.querySelectorAll<HTMLElement>(FOCALIZABLES)]
-      const primero = items[0]
-      const ultimo = items[items.length - 1]
-      if (!primero || !ultimo) return
-      const activo = document.activeElement
-      if (e.shiftKey && (activo === primero || activo === panel.current)) {
-        e.preventDefault()
-        ultimo.focus()
-      } else if (!e.shiftKey && activo === ultimo) {
-        e.preventDefault()
-        primero.focus()
-      }
-    }
-
-    // Red de seguridad: si el foco sale del panel (p. ej. al tabular fuera de un
-    // iframe, donde el teclado no pasa por aquí) se devuelve al panel.
-    const onFocusIn = (e: FocusEvent) => {
-      if (panel.current && e.target instanceof Node && !panel.current.contains(e.target)) {
-        panel.current.focus()
-      }
-    }
-
-    document.addEventListener('keydown', onKey)
-    document.addEventListener('focusin', onFocusIn)
-    return () => {
-      document.removeEventListener('keydown', onKey)
-      document.removeEventListener('focusin', onFocusIn)
-      document.body.style.overflow = overflow
-      previo?.focus({ preventScroll: true })
-    }
-  }, [])
+  useModal(panel, onCerrar)
 
   const red = NOMBRE_RED[post.red]
   const embed = embedDe(post)

@@ -3,6 +3,7 @@ import { EnVivo } from '@/components/en-vivo'
 import { Hero } from '@/components/sections/hero'
 import { Marquesina } from '@/components/sections/marquesina'
 import { Contacto } from '@/components/sections/contacto'
+import { Directo } from '@/components/sections/directo'
 import { Galeria } from '@/components/sections/galeria'
 import { Historia } from '@/components/sections/historia'
 import { Nav } from '@/components/sections/nav'
@@ -58,6 +59,7 @@ export default function JoePokerPage() {
           <Historia />
           <ReelsSeccion />
           <Galeria />
+          <Directo />
           <Publicaciones />
           <Redes />
           <Contacto />
