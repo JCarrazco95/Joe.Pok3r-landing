@@ -78,7 +78,7 @@ function DirectoReal({ estado }: { estado: EstadoEnVivo }) {
   const espectadores = estado.espectadores
 
   return (
-    <Tarjeta destacada className="grid gap-0 overflow-hidden md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
+    <Tarjeta destacada className="grid grid-cols-1 gap-0 overflow-hidden md:grid-cols-[minmax(0,1.5fr)_minmax(0,1fr)]">
       <button
         type="button"
         onClick={() => setAbierto(true)}
@@ -141,7 +141,7 @@ function DirectoReal({ estado }: { estado: EstadoEnVivo }) {
 
 function DirectoManual({ estado }: { estado: EstadoEnVivo }) {
   return (
-    <Tarjeta destacada className="grid gap-5 p-6 sm:p-8">
+    <Tarjeta destacada className="grid grid-cols-1 gap-5 p-6 sm:p-8">
       <div className="grid gap-2">
         <p className="flex items-center gap-2 text-sm font-bold text-rose">
           <span aria-hidden className="size-2.5 rounded-full bg-ruby motion-safe:animate-pulse" />

@@ -141,6 +141,37 @@ vacío con enlaces a las redes; nunca rompe la página.
   bloque «Muro de publicaciones». Los ejemplos viven en `components/feed/ejemplos.ts` y
   solo los importa esa página.
 
+### Directo de Kick («En directo»)
+
+El HTML de la página es ISR (30 min) y no puede saber si Joe está transmitiendo, así que el estado
+se pregunta aparte:
+
+- [`lib/en-vivo.ts`](lib/en-vivo.ts) combina Kick con el interruptor manual `enVivo` de
+  `lib/joe-poker.ts`. Nunca lanza. Si Kick confirma directo → `real`; si no, y el interruptor está
+  activo → `manual` (directos que no pasan por Kick, p. ej. un torneo); si Kick responde apagado →
+  `real` apagado; si Kick falla o no hay credenciales → `manual` apagado (sin certeza).
+- `GET /api/en-vivo` ([`app/api/en-vivo/route.ts`](app/api/en-vivo/route.ts)) cachea 60 s en la CDN
+  (`s-maxage=60`, `stale-while-revalidate=120`): a Kick le llega ~1 consulta por minuto sin
+  importar las visitas. El `revalidate` literal debe coincidir con `REVALIDAR_EN_VIVO_SEG`
+  (`lib/directo.ts`); una prueba lo vigila.
+- [`ProveedorEnVivo`](components/directo/proveedor.tsx) arranca con el estado manual del HTML,
+  consulta al montar y cada 60 s con la pestaña visible, y conserva el último estado si falla.
+- Solo el origen `real` dice «En vivo en Kick», muestra espectadores y ofrece reproductor.
+- El aviso ([`components/en-vivo.tsx`](components/en-vivo.tsx)) va superpuesto bajo la nav, así que
+  no empuja el hero. La sección [`#directo`](components/sections/directo.tsx) muestra la portada,
+  y sin directo los clips de Kick (de `manual.ts`: Kick no tiene endpoint público de clips).
+- El reproductor (`player.kick.com`, **no documentado como oficial**) se monta solo al hacer clic
+  en la portada, en un visor modal con el mismo foco/Escape/aria que el de posts (`useModal`).
+  El visor siempre ofrece «Abrir en Kick»; la URL del embed vive solo en `embedKick`
+  (`lib/directo.ts`), por si hay que cambiarla.
+
+Probar los estados:
+
+- Todos los casos (en vivo, manual, comprobando, apagado con y sin clips, Kick sin respuesta):
+  `/design`, bloque «Directo de Kick».
+- La página real en local: `EN_VIVO_SIMULADO=en-vivo` (o `apagado`) en `.env.local`. Se ignora
+  cuando `NODE_ENV=production`, así que nunca afecta al sitio publicado.
+
 ## Variables de entorno
 
 Documentadas en [`.env.example`](.env.example) y leídas desde
@@ -154,6 +185,7 @@ los feeds caen al contenido manual.
 | `YOUTUBE_CHANNEL_ID` | Sobreescribe el canal de YouTube (ya hay uno por defecto, es público) |
 | `KICK_CLIENT_ID`, `KICK_CLIENT_SECRET` | App de Kick (OAuth client credentials) |
 | `KICK_CHANNEL_SLUG` | Sobreescribe el canal de Kick (por defecto `joe-pok3r`) |
+| `EN_VIVO_SIMULADO` | Solo desarrollo: `en-vivo` o `apagado` simula el estado de Kick. Se ignora en producción |
 | `INSTAGRAM_AUTO`, `INSTAGRAM_ACCESS_TOKEN` | Camino automático de Instagram. Apagado; solo con una Página de Facebook |
 
 ## Desplegar
