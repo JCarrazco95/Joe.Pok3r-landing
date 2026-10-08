@@ -19,7 +19,7 @@
   --color-fg: #fafafa;
   --color-fg-2: #d4d4d8;
   --color-fg-muted: #a1a1aa;
-  --color-fg-dim: #71717a;
+  --color-fg-dim: #8b8b95; /* AA (≥4.5:1) sobre canvas y surface */
 
   /* Marca */
   --color-violet: #8b5cf6;

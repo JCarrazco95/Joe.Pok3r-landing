@@ -3,8 +3,8 @@ import Link from 'next/link'
 import { cn } from '@/lib/utils'
 
 const variantes = {
-  /** Violeta de marca, con brillo al pasar el cursor. */
-  primario: 'bg-violet text-fg hover:bg-violet-deep hover:shadow-glow',
+  /** Violeta de marca (el profundo: el claro no llega a AA con texto blanco), con brillo al pasar el cursor. */
+  primario: 'bg-violet-deep text-fg hover:bg-[#6d28d9] hover:shadow-glow',
   /** Blanco pleno: el contraste más alto, para la acción principal del hero. */
   claro: 'bg-fg text-canvas hover:bg-fg-2',
   /** Sólo borde, para la acción secundaria. */
