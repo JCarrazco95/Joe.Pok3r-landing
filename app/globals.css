@@ -182,7 +182,10 @@
 
 @keyframes sube-entra {
   from {
-    opacity: 0;
+    /* No 0: el navegador no cuenta como LCP un texto con opacidad 0, y el
+       párrafo del hero es el LCP. Con .01 es igual de invisible y se registra
+       en el primer pintado. */
+    opacity: 0.01;
     transform: translateY(48px);
   }
 }
@@ -194,8 +197,8 @@
 }
 
 .hero-sube {
-  animation: sube-entra 900ms var(--ease-out) backwards;
-  animation-delay: calc(500ms + var(--i) * 110ms);
+  animation: sube-entra 700ms var(--ease-out) backwards;
+  animation-delay: calc(150ms + var(--i) * 90ms);
 }
 
 @media (prefers-reduced-motion: reduce) {
