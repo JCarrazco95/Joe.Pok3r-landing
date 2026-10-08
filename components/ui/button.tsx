@@ -23,7 +23,7 @@ type Comun = {
   tamano?: keyof typeof tamanos
   className?: string
   children: React.ReactNode
-  /** Lo lee el efecto magnético global (fase 6). No hace nada por sí solo. */
+  /** Lo lee `EfectoMagnetico` (montado en el layout), que arrastra el botón hacia el puntero. */
   magnetico?: boolean
 }
 
@@ -55,7 +55,7 @@ export function Boton(props: BotonProps) {
 
   const clases = cn(
     'inline-flex items-center justify-center gap-2 rounded-full font-bold',
-    'transition-[background-color,box-shadow,border-color,color] duration-200',
+    'transition-[background-color,box-shadow,border-color,color] duration-(--duration-rapido)',
     'disabled:pointer-events-none disabled:opacity-50',
     variantes[variante],
     tamanos[tamano],

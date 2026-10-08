@@ -50,6 +50,11 @@
   --ease-out: cubic-bezier(0.2, 0.8, 0.2, 1);
   --ease-bounce: cubic-bezier(0.2, 0.9, 0.25, 1.15);
 
+  /* Duraciones (gemelas de MOVIMIENTO en lib/motion.ts) */
+  --duration-rapido: 200ms;
+  --duration-medio: 600ms;
+  --duration-lento: 900ms;
+
   /* Animaciones continuas. En el marcado van siempre con `motion-safe:`. */
   --animate-marquee: marquee 34s linear infinite;
   --animate-giro-lento: spin 40s linear infinite;

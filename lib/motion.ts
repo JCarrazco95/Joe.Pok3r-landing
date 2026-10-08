@@ -2,6 +2,23 @@
 
 import { useSyncExternalStore } from 'react'
 
+/**
+ * Tokens de movimiento para lo que se anima desde JS. Sus gemelos en CSS viven
+ * en `@theme` (`--ease-out`, `--duration-*` en globals.css); si cambia uno,
+ * cambia el otro. Sólo se animan `transform` y `opacity`: nada que dispare layout.
+ */
+export const MOVIMIENTO = {
+  /** Hover y foco: respuesta inmediata. */
+  rapido: 200,
+  /** Tarjetas, giros y zoom de fotos. */
+  medio: 600,
+  /** Revelado al scroll y entrada de secciones. */
+  lento: 900,
+  /** Magnetismo: radio de captura (px) y fracción del desplazamiento que sigue. */
+  magnetoRadio: 90,
+  magnetoFuerza: 0.3,
+} as const
+
 const REDUCIR = '(prefers-reduced-motion: reduce)'
 const FINO = '(pointer: fine)'
 

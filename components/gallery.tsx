@@ -140,7 +140,7 @@ export function Gallery({ fotos, children }: { fotos: Foto[]; children?: React.R
               sizes={
                 i % 7 === 0 ? '(min-width: 640px) 440px, 100vw' : '(min-width: 640px) 220px, 50vw'
               }
-              className="object-cover saturate-[0.85] transition-[transform,filter] duration-[600ms] ease-[var(--ease-out)] group-hover:scale-[1.08] group-hover:saturate-[1.1] motion-reduce:transition-none"
+              className="object-cover saturate-[0.85] transition-[transform,filter] duration-(--duration-medio) ease-[var(--ease-out)] group-hover:scale-[1.08] group-hover:saturate-[1.1] motion-reduce:transition-none"
             />
             <span className="pointer-events-none absolute inset-x-0 bottom-0 bg-gradient-to-t from-canvas/90 to-transparent px-3.5 pb-3 pt-7 text-[13px] font-semibold">
               {f.pie}
