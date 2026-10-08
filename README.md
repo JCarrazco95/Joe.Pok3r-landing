@@ -92,13 +92,17 @@ Los clips van en `public/reels/` junto a su póster, y se listan en `reels`.
 | Archivo | Qué hace |
 | --- | --- |
 | `lib/joe-poker.ts` | Contenido: perfil, stats, enlaces, reels y galería |
-| `app/layout.tsx` | Metadatos, Open Graph y las dos fuentes |
+| `app/layout.tsx` | Metadatos, `lang="es"`, fuentes, efecto magnético y analítica |
+| `lib/seo.ts` | Título, descripción y JSON-LD `Person` con `sameAs` (solo perfiles propios) |
+| `app/opengraph-image.jpg`, `app/twitter-image.jpg` | Imagen social (1200×630), por convención de archivos de Next |
+| `lib/motion.ts` | Tokens de movimiento y hooks de `prefers-reduced-motion` / puntero fino |
+| `lib/analitica.ts` | Eventos de Vercel Analytics (`clic_red`, `abrir_post`, `cargar_kick`) |
 | `app/globals.css` | Base de Tailwind y el tema, acotado a `.joe-theme` |
 | `app/page.tsx` | Composición de las secciones y datos estructurados |
 | `lib/social/` | Feeds sociales: un adaptador por red, contrato `PostSocial`, agregador y lista manual |
 | `app/api/social/route.ts` | `GET /api/social`: el feed agregado, con ISR |
 | `components/` | Galería con visor y filtro, carrusel de reels, filas de enlace |
-| `public/` | Fotos, clips, pósters y la imagen de Open Graph |
+| `public/` | Fotos, clips y pósters |
 
 ## Feeds sociales
 
@@ -181,16 +185,48 @@ los feeds caen al contenido manual.
 
 | Variable | Para qué |
 | --- | --- |
-| `NEXT_PUBLIC_SITE_URL` | URL absoluta del sitio: Open Graph (WhatsApp e Instagram no resuelven rutas relativas), canonical y sitemap. Si falta, cae en localhost |
+| `NEXT_PUBLIC_SITE_URL` | URL absoluta del sitio (sin barra final): Open Graph, canonical, sitemap y JSON-LD. Si falta usa el dominio de producción que inyecta Vercel y, en local, localhost. **Ponla en producción** |
 | `YOUTUBE_CHANNEL_ID` | Sobreescribe el canal de YouTube (ya hay uno por defecto, es público) |
 | `KICK_CLIENT_ID`, `KICK_CLIENT_SECRET` | App de Kick (OAuth client credentials) |
 | `KICK_CHANNEL_SLUG` | Sobreescribe el canal de Kick (por defecto `joe-pok3r`) |
 | `EN_VIVO_SIMULADO` | Solo desarrollo: `en-vivo` o `apagado` simula el estado de Kick. Se ignora en producción |
 | `INSTAGRAM_AUTO`, `INSTAGRAM_ACCESS_TOKEN` | Camino automático de Instagram. Apagado; solo con una Página de Facebook |
 
+## Movimiento, SEO y analítica (fase 6)
+
+- **Movimiento.** Un solo conjunto de tokens: `--ease-out` y `--duration-*` en
+  `globals.css`, y `MOVIMIENTO` en `lib/motion.ts` para lo que va en JS. Solo se
+  animan `transform` y `opacity`. `Revelar` hace el scroll reveal;
+  `EfectoMagnetico` (montado en el layout) arrastra los `Boton magnetico` hacia
+  el puntero. Con `prefers-reduced-motion` no hay magnetismo, ni marquesinas, ni
+  zoom de fotos, ni 3D en movimiento (queda quieto), y el contenido se ve desde
+  el primer momento.
+- **3D del hero.** Three.js se monta cuando la página está en reposo (≥ 640 px)
+  o en el primer gesto (en móvil, en la primera interacción). Es un adorno: el
+  hero ya se ve completo sin él.
+- **SEO.** Metadatos y Open Graph en `app/layout.tsx`; JSON-LD en `lib/seo.ts`
+  (`sameAs`: Instagram, TikTok, YouTube, Twitch, Kick y Hendon Mob; Facebook no
+  existe y la cuenta de Código Poker es de un tercero). `app/sitemap.ts` y
+  `app/robots.ts` salen de `NEXT_PUBLIC_SITE_URL`. `/design` está en `noindex`.
+- **Analítica.** Vercel Analytics, sin cookies ni banner. Eventos: `clic_red`
+  (`red`), `abrir_post` (`red`) y `cargar_kick`. Ningún dato personal.
+- **Instalación.** `.npmrc` trae `legacy-peer-deps=true`: sin él `npm install`
+  falla por peers opcionales de `@vercel/analytics`.
+
+### Peso de los reels
+
+Los 9 clips suman **~38 MB** (el más grande, 6.8 MB). No se descargan al cargar la
+página (`preload="none"`, y los pósters solo al acercarse), pero sí al reproducirlos.
+Conviene recomprimirlos (480–720 px de alto, H.264, `faststart`), por ejemplo:
+
+```bash
+ffmpeg -i reel-5.mp4 -vf "scale=-2:720" -c:v libx264 -crf 28 -preset slow   -movflags +faststart -c:a aac -b:a 96k reel-5.min.mp4
+```
+
 ## Desplegar
 
-Vercel, importando el repo. Carga `NEXT_PUBLIC_SITE_URL` con el dominio real y, cuando existan, las variables de los feeds.
+Vercel, importando el repo. Variables a cargar y checklist completo en
+[`docs/despliegue.md`](docs/despliegue.md).
 
 Al ser un proyecto aparte del HUB, su protección de despliegues es
 independiente: los previews pueden ser públicos para enseñárselos a alguien sin
