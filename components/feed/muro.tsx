@@ -3,6 +3,7 @@
 import { useCallback, useMemo, useState } from 'react'
 
 import { Revelar } from '@/components/ui/reveal'
+import { registrar } from '@/lib/analitica'
 import { NOMBRE_RED, redesConPosts } from '@/lib/feed'
 import type { EstadoFuente, PostSocial, RedFeed } from '@/lib/social/types'
 
@@ -54,7 +55,10 @@ export function Muro({
         {visibles.map((p, i) => (
           <li key={`${p.red}:${p.id}`} className="min-w-0">
             <Revelar retraso={(i % 3) * 80} className="h-full">
-              <TarjetaPost post={p} manual={manuales.has(p.red)} onAbrir={() => setAbierto(p)} />
+              <TarjetaPost post={p} manual={manuales.has(p.red)} onAbrir={() => {
+                  registrar({ nombre: 'abrir_post', red: p.red })
+                  setAbierto(p)
+                }} />
             </Revelar>
           </li>
         ))}

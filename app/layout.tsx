@@ -2,6 +2,7 @@ import type { Metadata, Viewport } from 'next'
 import { Bebas_Neue } from 'next/font/google'
 import localFont from 'next/font/local'
 
+import { Analitica } from '@/components/analitica'
 import { EfectoMagnetico } from '@/components/ui/efecto-magnetico'
 import { SITE_URL } from '@/lib/env'
 import { joe } from '@/lib/joe-poker'
@@ -79,6 +80,7 @@ export default function RootLayout({
         </a>
         {children}
         <EfectoMagnetico />
+        <Analitica />
       </body>
     </html>
   )
