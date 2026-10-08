@@ -5,6 +5,7 @@ import localFont from 'next/font/local'
 import { EfectoMagnetico } from '@/components/ui/efecto-magnetico'
 import { SITE_URL } from '@/lib/env'
 import { joe } from '@/lib/joe-poker'
+import { DESCRIPCION, TITULO } from '@/lib/seo'
 
 import './globals.css'
 
@@ -27,28 +28,27 @@ const display = Bebas_Neue({
   display: 'swap',
 })
 
-const titulo = `${joe.alias} · ${joe.nombre}`
-const descripcion = `${joe.rol}. ${joe.logroTitulo}: 6.º lugar y $160,000 en la mesa final. Enlaces, resultados y galería.`
-
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
-  title: titulo,
-  description: descripcion,
+  title: { default: TITULO, template: `%s · ${joe.alias}` },
+  description: DESCRIPCION,
+  applicationName: joe.alias,
   robots: { index: true, follow: true },
   alternates: { canonical: '/' },
+  // Las imágenes salen de app/opengraph-image.jpg y app/twitter-image.jpg
+  // (convención de archivos de Next): no se declaran aquí.
   openGraph: {
     type: 'profile',
     locale: 'es_MX',
+    siteName: joe.alias,
     url: '/',
-    title: titulo,
-    description: descripcion,
-    images: [{ url: '/og.jpg', width: 1200, height: 630, alt: titulo }],
+    title: TITULO,
+    description: DESCRIPCION,
   },
   twitter: {
     card: 'summary_large_image',
-    title: titulo,
-    description: descripcion,
-    images: ['/og.jpg'],
+    title: TITULO,
+    description: DESCRIPCION,
   },
 }
 
@@ -69,7 +69,7 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es-MX" className={`${body.variable} ${display.variable}`}>
+    <html lang="es" className={`${body.variable} ${display.variable}`}>
       <body className="joe-theme">
         <a
           href="#contenido"
