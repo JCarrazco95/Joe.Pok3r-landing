@@ -8,14 +8,16 @@
  * automáticos: los clips salen de `manual.ts` (el índice los aplica como
  * respaldo). Si Kick publica un endpoint de clips, se agrega aquí.
  *
- * El estado en vivo es de la fase 5; `obtenerCanalKick` ya trae el canal
- * validado (incluido `stream.is_live`) para que esa fase solo lo consuma.
+ * El estado en vivo es de la fase 5: `obtenerCanalKick` trae el canal validado
+ * (incluido `stream.is_live`) y `lib/en-vivo.ts` lo consume con una revalidación
+ * corta (`revalidarSeg`), porque los 30 min del feed llegarían tarde a un directo.
  *
  * Sin KICK_CLIENT_ID / KICK_CLIENT_SECRET / KICK_CHANNEL_SLUG devuelve vacío sin
  * tocar la red.
  */
 
 import { KICK_CHANNEL_SLUG, KICK_CLIENT_ID, KICK_CLIENT_SECRET } from '@/lib/env'
+import { REVALIDAR_SEG } from './config'
 import {
   ErrorFuente,
   esObjeto,
@@ -86,9 +88,14 @@ async function obtenerToken(c: CredencialesKick): Promise<string> {
   return valor
 }
 
-/** Canal validado de Kick. Lanza `ErrorFuente` si algo no cuadra. */
+/**
+ * Canal validado de Kick. Lanza `ErrorFuente` si algo no cuadra.
+ * `revalidarSeg` es la vida de la petición del canal en la caché de datos de
+ * Next: por defecto la del feed; el estado en vivo pide una mucho más corta.
+ */
 export async function obtenerCanalKick(
   credenciales: CredencialesKick = porDefecto(),
+  revalidarSeg: number = REVALIDAR_SEG,
 ): Promise<CanalKick> {
   const { clientId, clientSecret, slug } = credenciales
   if (!clientId || !clientSecret || !slug) throw new ErrorFuente('Kick sin credenciales o canal')
@@ -98,6 +105,7 @@ export async function obtenerCanalKick(
   const datos = await leerJson(
     await fetchSeguro(`${URL_CANALES}?slug=${encodeURIComponent(slug)}`, {
       headers: { authorization: `Bearer ${token}` },
+      revalidate: revalidarSeg,
     }),
   )
   const lista = esObjeto(datos) && Array.isArray(datos.data) ? datos.data : undefined

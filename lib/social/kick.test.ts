@@ -45,6 +45,18 @@ describe('kick', () => {
     })
   })
 
+  it('la revalidación del canal es la del feed por defecto y la corta si se pide', async () => {
+    type Llamada = [string, RequestInit & { next?: { revalidate?: number } }]
+    const f = mockFetch(respuestaJson(TOKEN), respuestaJson(CANAL))
+    await obtenerCanalKick(CRED)
+    expect((f.mock.calls.at(-1) as unknown as Llamada)[1].next?.revalidate).toBe(1800)
+
+    _reiniciarTokenKick()
+    const g = mockFetch(respuestaJson(TOKEN), respuestaJson(CANAL))
+    await obtenerCanalKick(CRED, 60)
+    expect((g.mock.calls.at(-1) as unknown as Llamada)[1].next?.revalidate).toBe(60)
+  })
+
   it('error HTTP al pedir el token', async () => {
     mockFetch(respuestaJson({}, 401))
     expect(await obtenerKick(CRED)).toMatchObject({ origen: 'vacio', motivo: 'HTTP 401' })

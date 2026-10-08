@@ -1,7 +1,9 @@
+import { ProveedorEnVivo } from '@/components/directo/proveedor'
 import { EnVivo } from '@/components/en-vivo'
 import { Hero } from '@/components/sections/hero'
 import { Marquesina } from '@/components/sections/marquesina'
 import { Contacto } from '@/components/sections/contacto'
+import { Directo } from '@/components/sections/directo'
 import { Galeria } from '@/components/sections/galeria'
 import { Historia } from '@/components/sections/historia'
 import { Nav } from '@/components/sections/nav'
@@ -11,7 +13,8 @@ import { Redes } from '@/components/sections/redes'
 import { ReelsSeccion } from '@/components/sections/reels'
 import { Resultados } from '@/components/sections/resultados'
 import { TuMano } from '@/components/sections/tu-mano'
-import { SITE_URL } from '@/lib/env'
+import { estadoManual } from '@/lib/directo'
+import { KICK_CHANNEL_SLUG, SITE_URL } from '@/lib/env'
 import { enVivo, enlaces, joe } from '@/lib/joe-poker'
 
 /**
@@ -43,25 +46,25 @@ export default function JoePokerPage() {
       />
       <Nav />
 
-      <main id="contenido" className="overflow-x-clip">
-        {/* Aviso de "jugando ahora": arriba del hero, bajo la nav fija. */}
-        {enVivo.activo ? (
-          <div className="px-4 pt-[88px]">
-            <EnVivo />
-          </div>
-        ) : null}
-
-        <Hero />
-        <Marquesina />
-        <Resultados />
-        <TuMano />
-        <Historia />
-        <ReelsSeccion />
-        <Galeria />
-        <Publicaciones />
-        <Redes />
-        <Contacto />
-      </main>
+      <ProveedorEnVivo inicial={estadoManual(enVivo, KICK_CHANNEL_SLUG)}>
+        <main id="contenido" className="relative overflow-x-clip">
+          {/* Aviso de directo: superpuesto bajo la nav fija. El HTML trae solo el
+              interruptor manual; el navegador lo corrige con Kick (/api/en-vivo). */}
+          <EnVivo />
+  
+          <Hero />
+          <Marquesina />
+          <Resultados />
+          <TuMano />
+          <Historia />
+          <ReelsSeccion />
+          <Galeria />
+          <Directo />
+          <Publicaciones />
+          <Redes />
+          <Contacto />
+        </main>
+      </ProveedorEnVivo>
 
       <Pie />
     </>

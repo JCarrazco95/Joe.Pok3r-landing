@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 
+import { ProbadorDirecto } from '@/components/directo/probador'
 import { ProbadorMuro } from '@/components/feed/probador'
 import { Boton } from '@/components/ui/button'
 import { Tarjeta } from '@/components/ui/card'
@@ -180,6 +181,10 @@ export default function DisenoPage() {
 
         <Bloque titulo="Muro de publicaciones (fase 4 · datos de ejemplo)">
           <ProbadorMuro />
+        </Bloque>
+
+        <Bloque titulo="Directo de Kick (fase 5 · estados de ejemplo)">
+          <ProbadorDirecto />
         </Bloque>
       </Seccion>
     </main>
