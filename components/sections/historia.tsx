@@ -1,49 +1,55 @@
 'use client'
 
-import { useGSAP } from '@gsap/react'
-import gsap from 'gsap'
-import { ScrollTrigger } from 'gsap/ScrollTrigger'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 
 import { Eyebrow } from '@/components/ui/eyebrow'
 import { Revelar } from '@/components/ui/reveal'
 import { hitos, joe } from '@/lib/joe-poker'
 import { useReduceMotion } from '@/lib/motion'
 
-gsap.registerPlugin(useGSAP, ScrollTrigger)
-
 /** Color de cada hito: del violeta de la marca al rojo del presente. */
 const COLORES = ['#8b5cf6', '#a78bfa', '#f08a99', '#d6334b']
 
 /**
- * Línea de tiempo vertical. La línea de color crece con el scroll (scrub de
- * ScrollTrigger); con reduced-motion aparece completa.
+ * Línea de tiempo vertical. La línea de color crece con el scroll; con
+ * reduced-motion aparece completa.
  */
 export function Historia() {
   const linea = useRef<HTMLDivElement>(null)
   const hilo = useRef<HTMLDivElement>(null)
   const reducir = useReduceMotion()
 
-  useGSAP(
-    () => {
-      if (reducir || !linea.current || !hilo.current) return
-      gsap.fromTo(
-        linea.current,
-        { scaleY: 0 },
-        {
-          scaleY: 1,
-          ease: 'none',
-          scrollTrigger: {
-            trigger: hilo.current,
-            start: 'top 60%',
-            end: 'bottom 60%',
-            scrub: true,
-          },
-        },
-      )
-    },
-    { dependencies: [reducir], scope: hilo },
-  )
+  // La línea crece con el scroll: 0 cuando el tope de la lista llega al 60% del
+  // viewport, 1 cuando su base lo hace. Sólo se anima `transform` (compositor),
+  // sin librería: GSAP + ScrollTrigger pesaban ~60 KB para este único efecto.
+  useEffect(() => {
+    const barra = linea.current
+    const lista = hilo.current
+    if (!barra || !lista) return
+    if (reducir) {
+      barra.style.transform = 'scaleY(1)'
+      return
+    }
+
+    let raf = 0
+    const pintar = () => {
+      raf = 0
+      const r = lista.getBoundingClientRect()
+      const p = (window.innerHeight * 0.6 - r.top) / r.height
+      barra.style.transform = `scaleY(${Math.min(Math.max(p, 0), 1)})`
+    }
+    const alScroll = () => {
+      if (!raf) raf = requestAnimationFrame(pintar)
+    }
+    pintar()
+    window.addEventListener('scroll', alScroll, { passive: true })
+    window.addEventListener('resize', alScroll)
+    return () => {
+      window.removeEventListener('scroll', alScroll)
+      window.removeEventListener('resize', alScroll)
+      cancelAnimationFrame(raf)
+    }
+  }, [reducir])
 
   return (
     <section

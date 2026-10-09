@@ -2,11 +2,17 @@
  * URL absoluta del sitio.
  *
  * La necesitan las imágenes de Open Graph (las redes no resuelven rutas
- * relativas), el canonical y el sitemap. Si falta, cae en localhost: es
- * preferible a que el build reviente.
+ * relativas), el canonical y el sitemap. Orden: `NEXT_PUBLIC_SITE_URL`, luego el
+ * dominio de producción que Vercel inyecta solo (`VERCEL_PROJECT_PRODUCTION_URL`)
+ * y, por último, localhost: es preferible a que el build reviente.
  */
-export const SITE_URL =
-  process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000'
+export const SITE_URL = (
+  process.env.NEXT_PUBLIC_SITE_URL ||
+  (process.env.VERCEL_PROJECT_PRODUCTION_URL
+    ? `https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`
+    : '') ||
+  'http://localhost:3000'
+).replace(/\/$/, '')
 
 /**
  * Feeds sociales (fase 3). Todo esto vive SOLO en las variables de entorno de

@@ -26,7 +26,7 @@ export function ProbadorMuro() {
   const fuentes = useMemo(() => fuentesDeEjemplo(posts), [posts])
 
   return (
-    <div className="grid gap-6">
+    <div className="grid grid-cols-1 gap-6">
       <div className="flex flex-wrap items-center gap-3">
         <Insignia tono="rojo">Datos de ejemplo</Insignia>
         <div role="group" aria-label="Estado del muro" className="flex flex-wrap gap-2">

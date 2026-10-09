@@ -1,12 +1,13 @@
 'use client'
 
 import { X } from 'lucide-react'
-import { useRef } from 'react'
+import { useEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 
 import { IconoRed } from '@/components/icons'
 import { useModal } from '@/components/feed/use-modal'
 import { Boton } from '@/components/ui/button'
+import { registrar } from '@/lib/analitica'
 import { embedKick, urlCanalKick } from '@/lib/directo'
 
 /**
@@ -23,6 +24,10 @@ export function VisorDirecto({ slug, onCerrar }: { slug: string; onCerrar: () =>
   useModal(panel, onCerrar)
 
   const embed = embedKick(slug)
+
+  useEffect(() => {
+    if (embed) registrar({ nombre: 'cargar_kick' })
+  }, [embed])
 
   return createPortal(
     <div

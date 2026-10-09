@@ -14,6 +14,34 @@ function duracion(seg: number): string {
 }
 
 /**
+ * Póster diferido: el atributo `poster` del <video> no admite `loading="lazy"`,
+ * y nueve portadas (~300 KB) competían con el JS del primer pintado. Se asigna
+ * cuando la tarjeta está a menos de una pantalla de distancia.
+ */
+function usePosterCerca() {
+  const [cerca, setCerca] = useState<Set<number>>(new Set())
+  const io = useRef<IntersectionObserver | null>(null)
+
+  useEffect(() => {
+    io.current = new IntersectionObserver(
+      (entradas) => {
+        const nuevas = entradas.filter((e) => e.isIntersecting)
+        if (!nuevas.length) return
+        nuevas.forEach((e) => io.current?.unobserve(e.target))
+        setCerca((prev) => new Set([...prev, ...nuevas.map((e) => Number((e.target as HTMLElement).dataset.i))]))
+      },
+      { rootMargin: '100% 100%' },
+    )
+    return () => io.current?.disconnect()
+  }, [])
+
+  const observar = useCallback((el: Element | null) => {
+    if (el) io.current?.observe(el)
+  }, [])
+  return { cerca, observar }
+}
+
+/**
  * Carrusel horizontal de clips, con scroll por snap.
  *
  * Los videos van con `preload="none"` y póster: hasta que alguien interactúa,
@@ -28,6 +56,7 @@ export function Reels({ reels, pista }: { reels: Reel[]; pista?: Ref<HTMLDivElem
   const [activo, setActivo] = useState<number | null>(null)
   const videos = useRef<(HTMLVideoElement | null)[]>([])
   const fino = usePunteroFino()
+  const { cerca, observar } = usePosterCerca()
 
   const detener = useCallback((i: number) => {
     const v = videos.current[i]
@@ -79,6 +108,8 @@ export function Reels({ reels, pista }: { reels: Reel[]; pista?: Ref<HTMLDivElem
         return (
           <figure
             key={reel.src}
+            ref={observar}
+            data-i={i}
             onMouseEnter={() => {
               if (!fino || activo !== null) return
               const v = videos.current[i]
@@ -98,7 +129,7 @@ export function Reels({ reels, pista }: { reels: Reel[]; pista?: Ref<HTMLDivElem
                   videos.current[i] = el
                 }}
                 src={reel.src}
-                poster={reel.poster}
+                poster={cerca.has(i) ? reel.poster : undefined}
                 preload="none"
                 muted
                 playsInline

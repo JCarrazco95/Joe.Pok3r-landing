@@ -103,21 +103,24 @@ export function Hero() {
         </p>
       </div>
 
-      <dl className="absolute inset-x-0 bottom-0 z-[3] border-t border-fg/10 bg-canvas/60 backdrop-blur-[10px]">
-        <div className="mx-auto grid max-w-[1360px] grid-cols-2 px-[clamp(20px,4vw,56px)] sm:grid-cols-4">
+      <div className="absolute inset-x-0 bottom-0 z-[3] border-t border-fg/10 bg-canvas/60 backdrop-blur-[10px]">
+        <dl className="mx-auto grid max-w-[1360px] grid-cols-2 px-[clamp(20px,4vw,56px)] sm:grid-cols-4">
           {CIFRAS.map((c, i) => {
             const partes = partirCifra(c.valor)
             return (
               <div
                 key={c.etiqueta}
                 className={cn(
-                  'grid gap-0.5 py-5',
+                  'flex flex-col-reverse justify-end gap-0.5 py-5',
                   i % 2 === 1 && 'border-l border-fg/10 pl-6',
                   i > 0 && 'sm:border-l sm:border-fg/10 sm:pl-6',
                   i === 2 && 'max-sm:border-t max-sm:border-fg/10 max-sm:pl-0 max-sm:[border-left:0]',
                   i === 3 && 'max-sm:border-t max-sm:border-fg/10',
                 )}
               >
+                <dt className="text-[13px] text-fg-muted">
+                  {c.etiqueta} · {c.nota}
+                </dt>
                 <dd className={cn('font-display text-[48px] leading-[0.9]', COLOR_CIFRA[i])}>
                   {partes ? (
                     <>
@@ -129,14 +132,11 @@ export function Hero() {
                     c.valor
                   )}
                 </dd>
-                <dt className="text-[13px] text-fg-muted">
-                  {c.etiqueta} · {c.nota}
-                </dt>
               </div>
             )
           })}
-        </div>
-      </dl>
+        </dl>
+      </div>
     </header>
   )
 }

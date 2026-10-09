@@ -109,7 +109,7 @@ export function ProbadorDirecto() {
   if (!caso) return null
 
   return (
-    <div className="grid gap-6">
+    <div className="grid grid-cols-1 gap-6">
       <div className="flex flex-wrap items-center gap-3">
         <Insignia tono="rojo">Datos de ejemplo</Insignia>
         <div role="group" aria-label="Estado del directo" className="flex flex-wrap gap-2">
@@ -122,7 +122,7 @@ export function ProbadorDirecto() {
       </div>
 
       {caso.estado.enVivo ? (
-        <div className="grid justify-items-center rounded-card border border-dashed border-line-strong bg-canvas p-6">
+        <div className="grid grid-cols-[minmax(0,1fr)] justify-items-center rounded-card border border-dashed border-line-strong bg-canvas p-6">
           <p className="mb-3 text-xs font-bold uppercase tracking-[0.2em] text-fg-dim">
             Aviso bajo la nav
           </p>

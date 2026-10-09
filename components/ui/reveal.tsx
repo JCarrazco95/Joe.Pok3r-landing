@@ -47,7 +47,7 @@ export function Revelar({
       ref={ref}
       style={{ transitionDelay: `${retraso}ms` }}
       className={cn(
-        'transition-[opacity,transform] duration-[900ms] ease-[var(--ease-out)]',
+        'transition-[opacity,transform] duration-(--duration-lento) ease-[var(--ease-out)]',
         oculto && 'translate-y-12 opacity-0',
         className,
       )}
