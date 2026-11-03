@@ -6,7 +6,8 @@ import { Boton } from '@/components/ui/button'
 import { CuentaHasta } from '@/components/ui/count-up'
 import { Eyebrow } from '@/components/ui/eyebrow'
 import { partirCifra } from '@/lib/formato'
-import { joe } from '@/lib/joe-poker'
+import { BrilloPanama, LineaPanama, PildoraPanama } from '@/components/panama/hero-panama'
+import { joe, modoPanama } from '@/lib/joe-poker'
 import { cn } from '@/lib/utils'
 
 import { HeroEscena } from './hero-escena'
@@ -49,9 +50,13 @@ export function Hero() {
 
       <HeroFotos />
 
+      {modoPanama ? <BrilloPanama /> : null}
+
       <HeroEscena burst={burst} />
 
       <div className="pointer-events-none relative z-[2] mx-auto flex min-h-[max(100svh,720px)] max-w-[1360px] flex-col justify-center gap-[26px] px-[clamp(20px,4vw,56px)] pb-[290px] pt-[120px] sm:pb-[150px]">
+        {modoPanama ? <PildoraPanama /> : null}
+
         <Eyebrow vivo className="hero-sube [--i:0]">
           {joe.nombre} · {joe.rol} · {joe.ubicacion}
         </Eyebrow>
@@ -71,6 +76,8 @@ export function Hero() {
             </span>
           ))}
         </h1>
+
+        {modoPanama ? <LineaPanama /> : null}
 
         <p className="hero-sube max-w-[520px] text-pretty text-[clamp(17px,1.5vw,21px)] leading-[1.55] text-fg-2 [--i:1]">
           {joe.bio}
