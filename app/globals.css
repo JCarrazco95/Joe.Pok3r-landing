@@ -198,6 +198,45 @@
   animation-delay: calc(500ms + var(--i) * 110ms);
 }
 
+/*
+  Intro "Barajando". Si ya se vio en esta sesión (script del layout) no se pinta.
+  El respaldo la retira a los 4 s por si el JS nunca llega: una intro que tapa la
+  página para siempre es peor que no tenerla.
+*/
+.intro-barajando {
+  animation: intro-respaldo 0s linear 4s forwards;
+}
+
+html[data-intro-vista] .intro-barajando {
+  display: none;
+}
+
+@keyframes intro-respaldo {
+  to {
+    visibility: hidden;
+  }
+}
+
+/* Cursor ficha: con él montado se oculta el nativo (la clase la pone Puntero). */
+html.cursor-ficha,
+html.cursor-ficha * {
+  cursor: none !important;
+}
+
+/*
+  Botones magnéticos: el desplazamiento (`translate`) lo escribe Puntero. Va fuera
+  de toda capa para ganarle al `transition-[...]` de Tailwind y conservar, de paso,
+  las transiciones de color y sombra del botón.
+*/
+[data-magnet] {
+  transition:
+    background-color 200ms,
+    box-shadow 200ms,
+    border-color 200ms,
+    color 200ms,
+    translate 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
 @media (prefers-reduced-motion: reduce) {
   .joe-theme *,
   .joe-theme *::before,
