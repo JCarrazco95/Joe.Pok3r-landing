@@ -1,7 +1,7 @@
 'use client'
 
 import { ArrowLeft, ArrowRight } from 'lucide-react'
-import { useRef } from 'react'
+import { useState } from 'react'
 
 import { Reels } from '@/components/reels'
 import { Eyebrow } from '@/components/ui/eyebrow'
@@ -11,10 +11,10 @@ import { reels } from '@/lib/joe-poker'
 const BOTON =
   'grid size-14 place-items-center rounded-full border-2 border-line-strong text-fg transition-colors duration-200 hover:border-violet hover:bg-violet'
 
-/** Sección de reels: título, flechas de 56px (avanzan 520px) y el carrusel. */
+/** Sección de reels: título, flechas de 56px y el coverflow 3D. */
 export function ReelsSeccion() {
-  const pista = useRef<HTMLDivElement>(null)
-  const mover = (px: number) => pista.current?.scrollBy({ left: px })
+  const [actual, setActual] = useState(0)
+  const mover = (d: number) => setActual((a) => (a + d + reels.length) % reels.length)
 
   return (
     <section
@@ -29,16 +29,16 @@ export function ReelsSeccion() {
           </h2>
         </div>
         <div className="flex gap-2.5">
-          <button type="button" aria-label="Reels anteriores" onClick={() => mover(-520)} className={BOTON}>
+          <button type="button" aria-label="Reel anterior" onClick={() => mover(-1)} className={BOTON}>
             <ArrowLeft aria-hidden className="size-[22px]" />
           </button>
-          <button type="button" aria-label="Más reels" onClick={() => mover(520)} className={BOTON}>
+          <button type="button" aria-label="Reel siguiente" onClick={() => mover(1)} className={BOTON}>
             <ArrowRight aria-hidden className="size-[22px]" />
           </button>
         </div>
       </Revelar>
 
-      <Reels reels={reels} pista={pista} />
+      <Reels reels={reels} actual={actual} onElegir={setActual} />
     </section>
   )
 }

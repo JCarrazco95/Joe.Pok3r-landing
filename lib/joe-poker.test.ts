@@ -1,6 +1,23 @@
 import { describe, expect, it } from 'vitest'
 
-import { resultados, tablero } from './joe-poker'
+import { enlaces, frase, hitos, resultados, tablero } from './joe-poker'
+
+describe('frase', () => {
+  it('cada palabra resaltada está en el texto, con su puntuación', () => {
+    const palabras = frase.texto.split(' ')
+    for (const clave of Object.keys(frase.resaltes)) expect(palabras).toContain(clave)
+  })
+})
+
+describe('historia y redes', () => {
+  it('cada hito lleva su rótulo de riel', () => {
+    for (const h of hitos) expect(h.riel.length).toBeGreaterThan(0)
+  })
+
+  it('las fichas de redes sólo salen de enlaces con URL real', () => {
+    for (const e of enlaces) if (e.ficha) expect(e.url).toMatch(/^https:\/\//)
+  })
+})
 
 describe('tablero', () => {
   it('cada línea cabe en las 16 casillas', () => {

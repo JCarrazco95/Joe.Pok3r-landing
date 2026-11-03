@@ -1,7 +1,7 @@
 'use client'
 
 import { Play } from 'lucide-react'
-import { useCallback, useEffect, useRef, useState, type Ref } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { usePunteroFino } from '@/lib/motion'
 import type { Reel } from '@/lib/joe-poker'
@@ -13,21 +13,48 @@ function duracion(seg: number): string {
   return `${m}:${String(s).padStart(2, '0')}`
 }
 
+/** Distancia circular de la tarjeta `i` a la central: negativa a la izquierda. */
+function distancia(i: number, centro: number, total: number): number {
+  let d = (((i - centro) % total) + total) % total
+  if (d > total / 2) d -= total
+  return d
+}
+
+/** Cuánto se separa cada tarjeta de su vecina. */
+const SEPARACION = 'min(240px,30vw)'
+
 /**
- * Carrusel horizontal de clips, con scroll por snap.
+ * Coverflow 3D de clips. La tarjeta central va al frente; las vecinas se abren a
+ * los lados, giradas 38° y empujadas hacia atrás, y las lejanas se desvanecen.
+ * Un clic en una vecina la trae al centro; ←/→ del teclado, las flechas de la
+ * sección y el deslizamiento en táctil también.
  *
  * Los videos van con `preload="none"` y póster: hasta que alguien interactúa,
  * la página no baja un solo byte de los ~11 MB de video.
  *
- * Con mouse, pasar el cursor reproduce el clip en silencio (en bucle) y salir
- * lo pausa. Un clic (o un tap, en táctil) lo reproduce con sonido y controles.
- * Sólo uno suena a la vez, y se pausa solo al salir de pantalla.
+ * En la tarjeta central, pasar el mouse reproduce el clip en silencio (en
+ * bucle) y salir lo pausa. Un clic (o un tap) lo reproduce con sonido y
+ * controles. Sólo uno suena a la vez y se pausa solo al salir de pantalla o al
+ * cambiar de tarjeta.
+ *
+ * Los clips verticales usan tarjeta 9:16; los horizontales, 16:9. Así ninguno se
+ * recorta ni queda con barras.
  */
-export function Reels({ reels, pista }: { reels: Reel[]; pista?: Ref<HTMLDivElement> }) {
+export function Reels({
+  reels,
+  actual,
+  onElegir,
+}: {
+  reels: Reel[]
+  actual: number
+  onElegir: (i: number) => void
+}) {
   /** Clip con sonido y controles (por clic o tap). */
   const [activo, setActivo] = useState<number | null>(null)
   const videos = useRef<(HTMLVideoElement | null)[]>([])
+  const inicioToque = useRef(0)
   const fino = usePunteroFino()
+  const total = reels.length
 
   const detener = useCallback((i: number) => {
     const v = videos.current[i]
@@ -35,6 +62,12 @@ export function Reels({ reels, pista }: { reels: Reel[]; pista?: Ref<HTMLDivElem
     v.pause()
     v.currentTime = 0
   }, [])
+
+  // Al cambiar de tarjeta, todo lo que sonaba o se movía se detiene.
+  useEffect(() => {
+    videos.current.forEach((_, j) => detener(j))
+    setActivo(null)
+  }, [actual, detener])
 
   const reproducirConSonido = useCallback(
     (i: number) => {
@@ -67,20 +100,47 @@ export function Reels({ reels, pista }: { reels: Reel[]; pista?: Ref<HTMLDivElem
     return () => obs.disconnect()
   }, [activo])
 
+  const paso = (d: number) => onElegir((actual + d + total) % total)
+
   return (
     <div
-      ref={pista}
       tabIndex={0}
+      role="group"
+      aria-roledescription="carrusel"
       aria-label="Reels"
-      className="scrollbar-none flex snap-x snap-mandatory scroll-px-[clamp(20px,4vw,56px)] gap-5 overflow-x-auto scroll-smooth px-[clamp(20px,4vw,56px)] pb-3 pt-2"
+      onKeyDown={(e) => {
+        if (e.key === 'ArrowLeft') {
+          e.preventDefault()
+          paso(-1)
+        } else if (e.key === 'ArrowRight') {
+          e.preventDefault()
+          paso(1)
+        }
+      }}
+      onTouchStart={(e) => {
+        inicioToque.current = e.touches[0]?.clientX ?? 0
+      }}
+      onTouchEnd={(e) => {
+        const dx = (e.changedTouches[0]?.clientX ?? 0) - inicioToque.current
+        if (Math.abs(dx) > 40) paso(dx < 0 ? 1 : -1)
+      }}
+      className="relative h-[clamp(440px,52vw,560px)] overflow-hidden [perspective:1100px] focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-violet"
     >
       {reels.map((reel, i) => {
+        const d = distancia(i, actual, total)
+        const ad = Math.abs(d)
+        const central = d === 0
         const conSonido = activo === i
+        const ancho = reel.vertical ? 'clamp(220px,22vw,280px)' : 'clamp(300px,34vw,440px)'
+
         return (
           <figure
             key={reel.src}
+            // Las que quedan fuera de vista no se enfocan ni se leen.
+            inert={ad > 2}
+            aria-hidden={ad > 2 || undefined}
             onMouseEnter={() => {
-              if (!fino || activo !== null) return
+              if (!fino || !central || activo !== null) return
               const v = videos.current[i]
               if (!v) return
               v.muted = true
@@ -88,51 +148,57 @@ export function Reels({ reels, pista }: { reels: Reel[]; pista?: Ref<HTMLDivElem
               void v.play().catch(() => {})
             }}
             onMouseLeave={() => {
-              if (fino && activo !== i) detener(i)
+              if (fino && central && activo !== i) detener(i)
             }}
-            className="group w-[78vw] max-w-[24rem] shrink-0 snap-start transition-transform duration-300 hover:-translate-y-2 sm:w-[24rem]"
+            style={{
+              width: ancho,
+              marginLeft: `calc(${ancho} / -2)`,
+              zIndex: 10 - ad,
+              opacity: ad > 2 ? 0 : ad === 2 ? 0.4 : 1,
+              pointerEvents: ad > 2 ? 'none' : 'auto',
+              transform: `translateY(-50%) translateX(calc(${SEPARACION} * ${d})) translateZ(${
+                ad ? -140 * Math.min(ad, 2) : 40
+              }px) rotateY(${-Math.sign(d) * Math.min(ad, 1) * 38}deg)`,
+            }}
+            className={cn(
+              'group absolute left-1/2 top-1/2 overflow-hidden rounded-2xl border border-line-strong bg-surface-2 shadow-[0_30px_60px_rgb(0_0_0/0.6)]',
+              'transition-[transform,opacity] duration-700 ease-[cubic-bezier(0.3,1,0.4,1)] motion-reduce:duration-0',
+              reel.vertical ? 'aspect-[9/16]' : 'aspect-video',
+            )}
           >
-            <div className="relative aspect-video overflow-hidden rounded-2xl border border-line bg-surface-2">
-              <video
-                ref={(el) => {
-                  videos.current[i] = el
-                }}
-                src={reel.src}
-                poster={reel.poster}
-                preload="none"
-                muted
-                playsInline
-                controls={conSonido}
-                onEnded={() => setActivo(null)}
-                aria-label={reel.titulo}
-                className={cn(
-                  'size-full',
-                  // Un clip vertical se muestra completo con barras a los lados;
-                  // recortarlo a 16:9 le comería la mitad del encuadre.
-                  reel.vertical ? 'bg-black object-contain' : 'object-cover',
-                )}
-              />
+            <video
+              ref={(el) => {
+                videos.current[i] = el
+              }}
+              src={reel.src}
+              poster={reel.poster}
+              preload="none"
+              muted
+              playsInline
+              controls={conSonido}
+              onEnded={() => setActivo(null)}
+              aria-label={reel.titulo}
+              className="absolute inset-0 size-full bg-black object-cover"
+            />
 
-              {!conSonido ? (
-                <button
-                  type="button"
-                  onClick={() => reproducirConSonido(i)}
-                  className="absolute inset-0 grid place-items-center bg-gradient-to-b from-transparent from-55% to-canvas/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-violet"
-                >
-                  <span className="sr-only">Reproducir: {reel.titulo}</span>
-                  <span className="grid size-14 place-items-center rounded-full border border-violet/40 bg-canvas/60 backdrop-blur-sm transition-transform duration-200 group-hover:scale-105">
-                    <Play aria-hidden className="size-6 translate-x-px fill-violet-soft text-violet-soft" />
-                  </span>
-                  <span className="absolute right-3 top-3 rounded-full bg-canvas/70 px-2.5 py-1 text-xs font-bold tabular-nums">
-                    {duracion(reel.seg)}
-                  </span>
-                </button>
-              ) : null}
-            </div>
-
-            <figcaption className="mt-3 px-0.5 text-[15px] font-bold leading-[1.3]">
-              {reel.titulo}
-            </figcaption>
+            {!conSonido ? (
+              <button
+                type="button"
+                onClick={() => (central ? reproducirConSonido(i) : onElegir(i))}
+                className="absolute inset-0 grid place-items-center bg-gradient-to-b from-transparent from-55% to-canvas/90 focus-visible:outline-2 focus-visible:outline-offset-[-2px] focus-visible:outline-violet"
+              >
+                <span className="sr-only">
+                  {central ? 'Reproducir' : 'Ver'}: {reel.titulo}
+                </span>
+                <span className="absolute right-3 top-3 rounded-full bg-canvas/70 px-2.5 py-1 text-xs font-bold tabular-nums">
+                  {duracion(reel.seg)}
+                </span>
+                <span className="absolute inset-x-4 bottom-4 grid justify-items-start gap-1.5 text-left">
+                  <Play aria-hidden className="size-[22px] fill-violet-soft text-violet-soft" />
+                  <span className="text-[15px] font-bold leading-[1.3]">{reel.titulo}</span>
+                </span>
+              </button>
+            ) : null}
           </figure>
         )
       })}
