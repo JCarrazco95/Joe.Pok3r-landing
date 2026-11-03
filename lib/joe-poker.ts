@@ -1,5 +1,6 @@
 /**
  * Contenido de la landing pública de Joe.Pok3r.
+ * (Los medios en R2 viven en ./medios.ts y se suman a `reels` y `galeria`.)
  *
  * Este archivo es la ÚNICA fuente de verdad de la página: textos, enlaces,
  * estadísticas y galería. Para actualizar la landing no hace falta tocar JSX.
@@ -8,6 +9,8 @@
  * "Próximamente" porque todavía no tenemos la URL real. En cuanto la tengas,
  * pega la URL y el botón se activa solo.
  */
+
+import { galeriaR2, reelsR2 } from './medios'
 
 export type RedSocial =
   | 'instagram'
@@ -180,6 +183,7 @@ export const resultados: Resultado[] = [
 ]
 
 export const eventos = [
+  { id: 'houston-tch', corto: 'Houston', nombre: 'Single Day $100K · Texas Card House, Houston' },
   { id: 'wsop-circuit', corto: 'WSOP Circuit', nombre: 'WSOP Circuit CDMX · Big Bola Casinos' },
   { id: 'wsop-vegas', corto: 'WSOP Las Vegas', nombre: 'World Series of Poker · Las Vegas' },
   { id: 'high-roller', corto: 'High Roller', nombre: 'High Roller 2.5M GTD · Jubilee Poker Room' },
@@ -397,7 +401,7 @@ export const enlaces: Enlace[] = [
  * Los pósters se sacaron de un fotograma de cada video: sin ellos las tarjetas
  * se ven negras hasta que el navegador decide cargar metadata.
  */
-export const reels: Reel[] = [
+const reelsLocales: Reel[] = [
   {
     src: '/reels/reel-9.mp4',
     poster: '/reels/poster-9.webp',
@@ -456,13 +460,16 @@ export const reels: Reel[] = [
   },
 ]
 
+/** Primero los de R2 (Houston, Austin, CDMX), luego los que viven en `public/`. */
+export const reels: Reel[] = [...reelsR2, ...reelsLocales]
+
 /**
  * El orden NO es decorativo: `column-count` llena las columnas en secuencia, así
  * que esta secuencia es la que hace que el masonry cierre parejo con 2 columnas
  * (móvil) y con 3 (escritorio). Si agregas fotos, revisa cómo quedan los pies
  * de columna antes de dar por buena la mezcla.
  */
-export const galeria: Foto[] = [
+const galeriaLocal: Foto[] = [
   {
     src: '/quinto-lugar-296k.webp',
     alt: 'Conteo de fichas del Mini Main Event con Joe Vega quinto del field con 296,000',
@@ -688,6 +695,9 @@ export const galeria: Foto[] = [
     evento: 'wsop-circuit',
   },
 ]
+
+/** Las fotos de Houston y CDMX en R2 van al final: no alteran el cierre del masonry de arriba. */
+export const galeria: Foto[] = [...galeriaLocal, ...galeriaR2]
 
 /**
  * Tablero de resultados (estilo aeropuerto) de la sección Resultados: dos líneas
