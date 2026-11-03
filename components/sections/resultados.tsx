@@ -15,7 +15,8 @@ import {
   type PaloId,
 } from '@/components/ui/suit-badge'
 import { fechaCorta, ordinal, partirPremio, resultadoVisible } from '@/lib/formato'
-import { galeria, joe, resultados, type Resultado } from '@/lib/joe-poker'
+import { ProximoPanama } from '@/components/panama/proximo-panama'
+import { galeria, joe, modoPanama, resultados, type Resultado } from '@/lib/joe-poker'
 import { usePunteroFino, useReduceMotion } from '@/lib/motion'
 import { cn } from '@/lib/utils'
 
@@ -263,6 +264,12 @@ export function Resultados() {
           Pasa el mouse (o toca) cada torneo para ver el detalle. El historial se sigue armando.
         </p>
       </Revelar>
+
+      {modoPanama ? (
+        <Revelar>
+          <ProximoPanama />
+        </Revelar>
+      ) : null}
 
       <Revelar>
         <Tablero />

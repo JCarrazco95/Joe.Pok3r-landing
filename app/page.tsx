@@ -6,6 +6,7 @@ import { Contacto } from '@/components/sections/contacto'
 import { Galeria } from '@/components/sections/galeria'
 import { Historia } from '@/components/sections/historia'
 import { Nav } from '@/components/sections/nav'
+import { Panama } from '@/components/sections/panama'
 import { Numeros } from '@/components/sections/numeros'
 import { Pie } from '@/components/sections/pie'
 import { Redes } from '@/components/sections/redes'
@@ -14,7 +15,7 @@ import { Resultados } from '@/components/sections/resultados'
 import { TuMano } from '@/components/sections/tu-mano'
 import { estadoManual } from '@/lib/directo'
 import { KICK_CHANNEL_SLUG, SITE_URL } from '@/lib/env'
-import { enVivo, enlaces, joe } from '@/lib/joe-poker'
+import { enVivo, enlaces, joe, modoPanama } from '@/lib/joe-poker'
 
 /**
  * ISR: la página se regenera cada 30 min para refrescar el feed social. Debe ser
@@ -56,6 +57,7 @@ export default function JoePokerPage() {
               cuelga del hero. */}
           <Hero />
           <Marquesina />
+          {modoPanama ? <Panama /> : null}
           <Redes />
           <Galeria />
           <Resultados />

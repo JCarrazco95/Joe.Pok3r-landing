@@ -4,17 +4,26 @@ import { Menu, X } from 'lucide-react'
 import { useEffect, useRef, useState } from 'react'
 
 import { Boton } from '@/components/ui/button'
-import { joe } from '@/lib/joe-poker'
+import { joe, modoPanama } from '@/lib/joe-poker'
 import { cn } from '@/lib/utils'
 
-const ANCLAS = [
+type Ancla = { id: string; etiqueta: string; vivo?: boolean }
+
+const ANCLAS: Ancla[] = [
+  // Modo Panamá: el primer enlace, con el punto rojo parpadeante.
+  ...(modoPanama ? [{ id: 'panama', etiqueta: 'Panamá', vivo: true }] : []),
   { id: 'redes', etiqueta: 'Redes' },
   { id: 'galeria', etiqueta: 'Galería' },
   { id: 'resultados', etiqueta: 'Resultados' },
   { id: 'mano', etiqueta: 'Tu mano' },
   { id: 'historia', etiqueta: 'Historia' },
   { id: 'reels', etiqueta: 'Reels' },
-] as const
+]
+
+/** El punto rojo del enlace "Panamá". */
+const Punto = () => (
+  <i aria-hidden className="size-[7px] shrink-0 rounded-full bg-ruby motion-safe:animate-pulse" />
+)
 
 /** El alias en mayúsculas, partido en el 3 que va en violeta. */
 const logo = joe.alias.toUpperCase().split('3')
@@ -93,7 +102,14 @@ export function Nav() {
         <ul className="hidden flex-wrap justify-center gap-[clamp(14px,2.2vw,32px)] text-sm font-semibold text-fg-2 lg:flex">
           {ANCLAS.map((a) => (
             <li key={a.id}>
-              <a href={`#${a.id}`} className="transition-colors duration-200 hover:text-violet-soft">
+              <a
+                href={`#${a.id}`}
+                className={cn(
+                  'flex items-center gap-[7px] transition-colors duration-200',
+                  a.vivo ? 'text-fg hover:text-rose' : 'hover:text-violet-soft',
+                )}
+              >
+                {a.vivo ? <Punto /> : null}
                 {a.etiqueta}
               </a>
             </li>
@@ -127,8 +143,9 @@ export function Nav() {
               <a
                 href={`#${a.id}`}
                 onClick={() => setAbierto(false)}
-                className="block py-3 font-display text-3xl tracking-wide text-fg hover:text-violet-soft"
+                className="flex items-center gap-2.5 py-3 font-display text-3xl tracking-wide text-fg hover:text-violet-soft"
               >
+                {a.vivo ? <Punto /> : null}
                 {a.etiqueta}
               </a>
             </li>

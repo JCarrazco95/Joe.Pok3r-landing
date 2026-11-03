@@ -809,3 +809,53 @@ export const frase = {
     'Vegas.': '#d6334b',
   } as Record<string, string>,
 }
+
+/**
+ * Modo Panamá (v1.4 · WSOP Circuit Panamá, 5–15 nov 2026).
+ *
+ * `modoPanama` enciende o apaga todo de un golpe: enlace en la nav, píldora y
+ * cuenta regresiva en el hero, la sección #panama y la tarjeta "Próximo torneo"
+ * de Resultados. `panamaEstado` es el estado de Joe en el torneo y se cambia a
+ * mano (como `enVivo.activo`): empujar el commit basta, Vercel redespliega.
+ *
+ * Un campo vacío ('') sale como "—": significa que todavía no hay dato, nunca un
+ * cero ni un puesto inventado. Se llena con lo que mande Joe.
+ */
+export const modoPanama = true
+
+export type PanamaEstadoId = 'previa' | 'jugando' | 'itm' | 'eliminado' | 'campeon'
+
+export const panamaEstado: PanamaEstadoId = 'previa'
+
+export const PANAMA_ESTADOS: Record<
+  PanamaEstadoId,
+  { label: string; color: string; parpadea: boolean; pill: string }
+> = {
+  previa: { label: 'PREVIA', color: '#a1a1aa', parpadea: false, pill: 'RUMBO A PANAMÁ · WSOP CIRCUIT · 5–15 NOV' },
+  jugando: { label: 'JUGANDO', color: '#f08a99', parpadea: true, pill: 'JUGANDO AHORA EN PANAMÁ' },
+  itm: { label: 'EN EL DINERO', color: '#f08a99', parpadea: true, pill: 'EN EL DINERO EN PANAMÁ' },
+  eliminado: { label: 'ELIMINADO', color: '#71717a', parpadea: false, pill: 'PANAMÁ · ASÍ LE FUE A JOE' },
+  campeon: { label: 'CAMPEÓN', color: '#a78bfa', parpadea: true, pill: '¡JOE CAMPEÓN EN PANAMÁ!' },
+}
+
+export const PANAMA = {
+  evento: 'Mini Main #1',
+  dia: 'Flight A',
+  buyIn: '$500 · NLH',
+  stack: '',
+  field: '',
+  puesto: '',
+  premio: '',
+  /** Arranque del Mini Main · Flight A, con el huso de Panamá (UTC−5, sin horario de verano). */
+  inicio: '2026-11-05T11:00:00-05:00',
+  inicioLabel: 'el Mini Main · Flight A · 5 nov, 11:00 (hora de Panamá)',
+  serie: 'WSOP Circuit',
+  sede: 'Sortis Hotel, Spa & Casino',
+  ciudad: 'Ciudad de Panamá',
+  fechas: '5–15 nov 2026',
+  torneoProximo: 'WSOPC Event #1 · $500 NLH Mini Main Event',
+  anillo: { src: '/panama/wsop-anillo.webp', pie: '12 ANILLOS · MAIN EVENT $500K GTD' },
+  flyer: { src: '/panama/flyer-wsopc-panama.webp', alt: 'WSOP Circuit Panama City · 5–15 nov 2026' },
+  /** Fotos de "Desde la mesa". Vacío = el bloque no se muestra hasta que lleguen. */
+  fotos: [] as { src: string; alt: string; ancho: number; alto: number }[],
+}
