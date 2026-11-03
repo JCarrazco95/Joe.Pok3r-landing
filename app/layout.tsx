@@ -2,6 +2,9 @@ import type { Metadata, Viewport } from 'next'
 import { Bebas_Neue } from 'next/font/google'
 import localFont from 'next/font/local'
 
+import { CLAVE_INTRO, Intro } from '@/components/global/intro'
+import { Puntero } from '@/components/global/puntero'
+import { ScrollSuave } from '@/components/global/scroll-suave'
 import { SITE_URL } from '@/lib/env'
 import { joe } from '@/lib/joe-poker'
 
@@ -68,8 +71,19 @@ export default function RootLayout({
   children,
 }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="es-MX" className={`${body.variable} ${display.variable}`}>
+    // `data-intro-vista` lo pone el script de abajo antes del primer pintado,
+    // así que el servidor y el cliente no coinciden en ese atributo a propósito.
+    <html lang="es-MX" className={`${body.variable} ${display.variable}`} suppressHydrationWarning>
       <body className="joe-theme">
+        {/* Quien ya vio la intro (o pide menos movimiento) no la ve ni un instante. */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{if(sessionStorage.getItem('${CLAVE_INTRO}')||matchMedia('(prefers-reduced-motion: reduce)').matches)document.documentElement.dataset.introVista='1'}catch(e){}`,
+          }}
+        />
+        <Intro />
+        <Puntero />
+        <ScrollSuave />
         <a
           href="#contenido"
           className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded-md focus:bg-surface-2 focus:px-3 focus:py-2 focus:text-sm focus:outline-2 focus:outline-offset-2 focus:outline-violet"

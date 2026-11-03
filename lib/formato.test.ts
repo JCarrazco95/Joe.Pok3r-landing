@@ -1,6 +1,19 @@
 import { describe, expect, it } from 'vitest'
 
-import { cifraCompacta, fechaRelativa } from './formato'
+import { centrar, cifraCompacta, fechaRelativa } from './formato'
+
+describe('centrar', () => {
+  it('rellena a los dos lados hasta 16 casillas', () => {
+    const c = centrar('ABC')
+    expect(c).toHaveLength(16)
+    expect(c.join('').trim()).toBe('ABC')
+    expect(c.indexOf('A')).toBe(6)
+  })
+
+  it('no recorta un texto que ya llena el tablero', () => {
+    expect(centrar('HIGH ROLLER 2.5M').join('')).toBe('HIGH ROLLER 2.5M')
+  })
+})
 
 const AHORA = Date.parse('2026-10-06T12:00:00Z')
 

@@ -53,6 +53,8 @@
   /* Animaciones continuas. En el marcado van siempre con `motion-safe:`. */
   --animate-marquee: marquee 34s linear infinite;
   --animate-giro-lento: spin 40s linear infinite;
+  /* Marquesina de las filas de Redes: más rápida que la cinta roja. */
+  --animate-marquee-rapido: marquee 9s linear infinite;
 
   @keyframes marquee {
     to {
@@ -196,6 +198,77 @@
 .hero-sube {
   animation: sube-entra 900ms var(--ease-out) backwards;
   animation-delay: calc(500ms + var(--i) * 110ms);
+}
+
+/*
+  Intro "Barajando". Si ya se vio en esta sesión (script del layout) no se pinta.
+  El respaldo la retira a los 4 s por si el JS nunca llega: una intro que tapa la
+  página para siempre es peor que no tenerla.
+*/
+.intro-barajando {
+  animation: intro-respaldo 0s linear 4s forwards;
+}
+
+html[data-intro-vista] .intro-barajando {
+  display: none;
+}
+
+@keyframes intro-respaldo {
+  to {
+    visibility: hidden;
+  }
+}
+
+/*
+  Frase de Historia. Sin JS (y con reduced-motion) todas las palabras salen
+  encendidas; `.activa` las apaga y el scroll marca con `data-on` las que ya se
+  leyeron. `--c` es el color de las palabras resaltadas.
+*/
+.frase [data-w] {
+  color: var(--c, var(--color-fg));
+  transition: color 250ms;
+}
+
+.frase.activa [data-w]:not([data-on]) {
+  color: var(--color-line-strong);
+}
+
+/*
+  Nodos del riel de Historia: apagados hasta que la ficha los alcanza
+  (`data-on`, que pone el scroll). Sin JS salen todos encendidos.
+*/
+.riel-nodo[data-on='true'] > i {
+  border-color: var(--nodo);
+  box-shadow: 0 0 18px rgb(139 92 246 / 0.6);
+}
+
+.riel-nodo[data-on='true'] > span {
+  color: var(--color-fg);
+}
+
+.riel-nodo[data-on='false'] > i {
+  border-color: var(--color-line-strong);
+  box-shadow: none;
+}
+
+/* Cursor ficha: con él montado se oculta el nativo (la clase la pone Puntero). */
+html.cursor-ficha,
+html.cursor-ficha * {
+  cursor: none !important;
+}
+
+/*
+  Botones magnéticos: el desplazamiento (`translate`) lo escribe Puntero. Va fuera
+  de toda capa para ganarle al `transition-[...]` de Tailwind y conservar, de paso,
+  las transiciones de color y sombra del botón.
+*/
+[data-magnet] {
+  transition:
+    background-color 200ms,
+    box-shadow 200ms,
+    border-color 200ms,
+    color 200ms,
+    translate 350ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -30,6 +30,13 @@ export type Enlace = {
   url: string | null
   /** Resalta el enlace con el borde dorado. Máximo uno o dos. */
   destacado?: boolean
+  /** Ficha de la fila de fichas de Redes. Sin ella, el enlace sólo sale en la lista. */
+  ficha?: {
+    sigla: string
+    color: string
+    /** Lo que se lee bajo la ficha, si `etiqueta` es demasiado larga. */
+    nombre?: string
+  }
 }
 
 export type Reel = {
@@ -312,6 +319,7 @@ export const enlaces: Enlace[] = [
     icono: 'instagram',
     url: 'https://www.instagram.com/joe.pok3r/',
     destacado: true,
+    ficha: { sigla: 'IG', color: '#d6334b' },
   },
   {
     id: 'tiktok',
@@ -319,6 +327,7 @@ export const enlaces: Enlace[] = [
     detalle: 'Manos, bad beats y clips de mesa',
     icono: 'tiktok',
     url: 'https://www.tiktok.com/@joe.pok3r',
+    ficha: { sigla: 'TT', color: '#18181b' },
   },
   {
     id: 'youtube',
@@ -326,6 +335,7 @@ export const enlaces: Enlace[] = [
     detalle: 'Análisis de manos y vlogs de torneo',
     icono: 'youtube',
     url: 'https://www.youtube.com/@Joe.Pok3r',
+    ficha: { sigla: 'YT', color: '#b91c1c' },
   },
   {
     id: 'twitch',
@@ -333,6 +343,7 @@ export const enlaces: Enlace[] = [
     detalle: 'Sesiones en vivo',
     icono: 'twitch',
     url: 'https://www.twitch.tv/joe_pok3r',
+    ficha: { sigla: 'TW', color: '#7c3aed' },
   },
   {
     id: 'kick',
@@ -340,6 +351,7 @@ export const enlaces: Enlace[] = [
     detalle: 'Directos y clips',
     icono: 'kick',
     url: 'https://kick.com/joe-pok3r',
+    ficha: { sigla: 'KK', color: '#16a34a' },
   },
   {
     id: 'hendon-mob',
@@ -362,6 +374,7 @@ export const enlaces: Enlace[] = [
     detalle: 'Reportes del High Roller y del Main Event',
     icono: 'web',
     url: 'https://www.instagram.com/codigopokermx/',
+    ficha: { sigla: 'CP', color: '#1f8a5b', nombre: 'Código Poker' },
   },
   {
     id: 'contacto',
@@ -677,6 +690,24 @@ export const galeria: Foto[] = [
 ]
 
 /**
+ * Tablero de resultados (estilo aeropuerto) de la sección Resultados: dos líneas
+ * de hasta 16 caracteres, en mayúsculas. Son resúmenes de `resultados`; si un
+ * dato cambia allá, se corrige aquí. Un torneo sin puesto registrado dice lo que
+ * se sabe (el Day, el field), nunca un puesto.
+ */
+export const tablero: readonly (readonly [string, string])[] = [
+  ['HIGH ROLLER 2.5M', '6.º · $160K MXN'],
+  ['MINI MAIN EVENT', '5.º DAY1A · 296K'],
+  ['THE OPENER', 'DAY 1C · CIRCUIT'],
+  ['WSOP MAIN EVENT', '#76 · LAS VEGAS'],
+  ['JUBILEE CDMX', 'MESA FINAL 9/112'],
+  ['MAIN EVENT', '92.º · AUSTIN'],
+  ['MONSTER STACK', '43.º · AUSTIN'],
+  ['PLO CHAMPIONSHIP', '10.º · CDMX'],
+  ['TCH HOUSTON', '265 JUGADORES'],
+]
+
+/**
  * Banda "En números". Cada cifra sale de un dato que ya vive en este archivo
  * (bio, `resultados`, galería); si cambia el dato, cambia aquí también.
  */
@@ -722,22 +753,49 @@ export const numeros = [
 export const hitos = [
   {
     cuando: 'Hace más de 20 años',
+    /** Rótulo corto del riel que acompaña la lectura. */
+    riel: '+20 AÑOS',
     titulo: 'En casa, con amigos y familia',
     texto: joe.historia[0],
   },
   {
     cuando: 'Mayoría de edad',
+    riel: 'LAS VEGAS',
     titulo: 'Primera vez en Las Vegas',
     texto: joe.historia[1],
   },
   {
     cuando: 'Julio 2023',
+    riel: '2023',
     titulo: 'Main Event de la WSOP · Evento #76',
     texto: joe.historia[2],
   },
   {
     cuando: 'Agosto 2026',
+    riel: '2026',
     titulo: 'Mesa final del High Roller 2.5M GTD',
     texto: `6.º de 112 y $160,000 MXN. ${joe.historia[3]}`,
   },
 ] as const
+
+/**
+ * La frase de la sección Historia, que se enciende palabra por palabra al hacer
+ * scroll. Resume `joe.historia` con las mismas ideas, en primera persona.
+ * `resaltes` colorea las palabras que cuentan (clave: la palabra tal cual va en
+ * el texto, con su puntuación).
+ */
+export const frase = {
+  texto:
+    'Empecé en casa, con amigos y familia, antes de tener edad para entrar a un ' +
+    'casino. Hoy juego torneos y cash, del WSOP Circuit al Main Event de Las Vegas.',
+  resaltes: {
+    'casa,': '#a78bfa',
+    'familia,': '#a78bfa',
+    WSOP: '#f08a99',
+    Circuit: '#f08a99',
+    Main: '#d6334b',
+    Event: '#d6334b',
+    Las: '#d6334b',
+    'Vegas.': '#d6334b',
+  } as Record<string, string>,
+}
