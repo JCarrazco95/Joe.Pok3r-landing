@@ -1,6 +1,6 @@
 'use client'
 
-import { useSyncExternalStore } from 'react'
+import { useEffect, useState, useSyncExternalStore, type RefObject } from 'react'
 
 const REDUCIR = '(prefers-reduced-motion: reduce)'
 const FINO = '(pointer: fine)'
@@ -24,6 +24,24 @@ function useMedia(query: string): boolean {
  */
 export function useReduceMotion(): boolean {
   return useMedia(REDUCIR)
+}
+
+/**
+ * ¿Se ve el elemento? Un IntersectionObserver sobre `ref`, con el umbral dado.
+ * En el servidor y antes de montar devuelve `false`.
+ */
+export function useEnPantalla(ref: RefObject<Element | null>, umbral = 0.25): boolean {
+  const [visible, setVisible] = useState(false)
+  useEffect(() => {
+    const el = ref.current
+    if (!el) return
+    const io = new IntersectionObserver(([e]) => setVisible(!!e?.isIntersecting), {
+      threshold: umbral,
+    })
+    io.observe(el)
+    return () => io.disconnect()
+  }, [ref, umbral])
+  return visible
 }
 
 /** Puntero fino (mouse) vs. táctil: el cursor y el magnetismo sólo van con fino. */

@@ -5,6 +5,7 @@ import { useState } from 'react'
 
 import { Boton } from '@/components/ui/button'
 import { Insignia } from '@/components/ui/chip'
+import { Odometro } from '@/components/ui/odometro'
 import { Revelar } from '@/components/ui/reveal'
 import { Seccion, TituloSeccion } from '@/components/ui/section'
 import {
@@ -17,6 +18,8 @@ import { fechaCorta, ordinal, partirPremio, resultadoVisible } from '@/lib/forma
 import { galeria, joe, resultados, type Resultado } from '@/lib/joe-poker'
 import { usePunteroFino, useReduceMotion } from '@/lib/motion'
 import { cn } from '@/lib/utils'
+
+import { Tablero } from './tablero'
 
 /** Los cuatro torneos de las tarjetas y su palo, fijos según el handoff. */
 const TARJETAS: { fecha: string; palo: PaloId }[] = [
@@ -86,16 +89,19 @@ function Destacada({ r }: { r: Resultado }) {
 
           <dl className="grid grid-cols-3 gap-3 border-t border-fg/15 pt-[18px]">
             {r.puesto !== null ? (
-              <Mini valor={ordinal(r.puesto)} etiqueta="Lugar" />
+              <Mini valor={ordinal(r.puesto)} etiqueta="Lugar" desfase={0} />
             ) : null}
             {premio ? (
               <Mini
                 valor={premio.cifra}
                 etiqueta={premio.moneda ? `Premio ${premio.moneda}` : 'Premio'}
                 color="text-rose"
+                desfase={0.25}
               />
             ) : null}
-            {r.field ? <Mini valor={String(r.field)} etiqueta="Jugadores" /> : null}
+            {r.field ? (
+              <Mini valor={String(r.field)} etiqueta="Jugadores" desfase={0.5} />
+            ) : null}
           </dl>
         </div>
       </div>
@@ -103,10 +109,22 @@ function Destacada({ r }: { r: Resultado }) {
   )
 }
 
-function Mini({ valor, etiqueta, color }: { valor: string; etiqueta: string; color?: string }) {
+function Mini({
+  valor,
+  etiqueta,
+  color,
+  desfase,
+}: {
+  valor: string
+  etiqueta: string
+  color?: string
+  desfase: number
+}) {
   return (
     <div className="grid gap-0.5">
-      <dd className={cn('font-display text-[clamp(32px,3.4vw,44px)] leading-[0.9]', color)}>{valor}</dd>
+      <dd className={cn('font-display text-[clamp(32px,3.4vw,44px)] leading-none', color)}>
+        <Odometro texto={valor} desfase={desfase} />
+      </dd>
       <dt className="text-xs text-fg-muted">{etiqueta}</dt>
     </div>
   )
@@ -244,6 +262,10 @@ export function Resultados() {
         <p className="max-w-[380px] text-[15px] leading-[1.6] text-fg-muted">
           Pasa el mouse (o toca) cada torneo para ver el detalle. El historial se sigue armando.
         </p>
+      </Revelar>
+
+      <Revelar>
+        <Tablero />
       </Revelar>
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,520px),1fr))] gap-6">

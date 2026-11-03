@@ -36,7 +36,25 @@ export function esRoja(c: Carta): boolean {
   return c.s === '♥' || c.s === '♦'
 }
 
-export type Veredicto = { label: string; say: string; odds: string }
+export type Accion = 'ALL-IN' | 'RAISE' | 'CALL' | 'FOLD'
+
+/** Color del sello y del medidor para cada acción. */
+export const COLOR_ACCION: Record<Accion, string> = {
+  'ALL-IN': '#d6334b',
+  RAISE: '#a78bfa',
+  CALL: '#f08a99',
+  FOLD: '#a1a1aa',
+}
+
+export type Veredicto = {
+  label: string
+  say: string
+  odds: string
+  /** Lo que sale en el sello. */
+  accion: Accion
+  /** 0–100, para el medidor de fuerza. Es una escala de la landing, no un equity. */
+  fuerza: number
+}
 
 export function veredicto(mano: readonly [Carta, Carta]): Veredicto {
   const v = (c: Carta) => RANGOS.indexOf(c.r)
@@ -50,13 +68,35 @@ export function veredicto(mano: readonly [Carta, Carta]): Veredicto {
   const odds = pareja ? '0.45%' : mismoPalo ? '0.30%' : '0.90%'
 
   let say: string
-  if (pareja && ['A', 'K', 'Q', 'J'].includes(a.r)) say = '¡All-in sin pensarlo!'
-  else if (pareja) say = 'Pareja chica: a buscar el set en el flop.'
-  else if (BROADWAY.includes(a.r) && BROADWAY.includes(b.r))
+  let accion: Accion
+  if (pareja && ['A', 'K', 'Q', 'J'].includes(a.r)) {
+    say = '¡All-in sin pensarlo!'
+    accion = 'ALL-IN'
+  } else if (pareja) {
+    say = 'Pareja chica: a buscar el set en el flop.'
+    accion = 'CALL'
+  } else if (BROADWAY.includes(a.r) && BROADWAY.includes(b.r)) {
     say = mismoPalo ? 'Broadway del mismo palo. Subo.' : 'Broadway. Subo 3x.'
-  else if (mismoPalo && v(a) - v(b) === 1) say = 'Conectores del mismo palo: en posición, la juego.'
-  else if (a.r === 'A') say = 'As con kicker débil: depende de la posición.'
-  else say = 'Fold. Paciencia, la buena viene.'
+    accion = 'RAISE'
+  } else if (mismoPalo && v(a) - v(b) === 1) {
+    say = 'Conectores del mismo palo: en posición, la juego.'
+    accion = 'CALL'
+  } else if (a.r === 'A') {
+    say = 'As con kicker débil: depende de la posición.'
+    accion = 'CALL'
+  } else {
+    say = 'Fold. Paciencia, la buena viene.'
+    accion = 'FOLD'
+  }
 
-  return { label, say, odds }
+  const va = v(a)
+  const vb = v(b)
+  const fuerza = pareja
+    ? Math.round(52 + va * 3.4)
+    : Math.min(
+        80,
+        Math.round(8 + va * 3.4 + vb * 1.8 + (mismoPalo ? 6 : 0) + (va - vb === 1 ? 4 : 0)),
+      )
+
+  return { label, say, odds, accion, fuerza }
 }

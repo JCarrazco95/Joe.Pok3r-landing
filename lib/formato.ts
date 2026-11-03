@@ -61,7 +61,15 @@ export function resultadoVisible(r: Resultado): {
   return { principal: dia ?? r.buyIn ?? 'Sin registrar', sinRegistrar: true }
 }
 
-const RELATIVO = new Intl.RelativeTimeFormat('es', { numeric: 'auto', style: 'short' })
+/** Centra `texto` en `ancho` casillas, rellenando con espacios (tablero). */
+export function centrar(texto: string, ancho = 16): string[] {
+  const letras = [...texto]
+  const sobra = Math.max(0, ancho - letras.length)
+  const izq = Math.floor(sobra / 2)
+  return [...' '.repeat(izq), ...letras, ...' '.repeat(sobra - izq)]
+}
+
+const RELATIVO =new Intl.RelativeTimeFormat('es', { numeric: 'auto', style: 'short' })
 const COMPACTO = new Intl.NumberFormat('es', { notation: 'compact', maximumFractionDigits: 1 })
 
 /**

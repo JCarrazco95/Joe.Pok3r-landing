@@ -677,6 +677,24 @@ export const galeria: Foto[] = [
 ]
 
 /**
+ * Tablero de resultados (estilo aeropuerto) de la sección Resultados: dos líneas
+ * de hasta 16 caracteres, en mayúsculas. Son resúmenes de `resultados`; si un
+ * dato cambia allá, se corrige aquí. Un torneo sin puesto registrado dice lo que
+ * se sabe (el Day, el field), nunca un puesto.
+ */
+export const tablero: readonly (readonly [string, string])[] = [
+  ['HIGH ROLLER 2.5M', '6.º · $160K MXN'],
+  ['MINI MAIN EVENT', '5.º DAY1A · 296K'],
+  ['THE OPENER', 'DAY 1C · CIRCUIT'],
+  ['WSOP MAIN EVENT', '#76 · LAS VEGAS'],
+  ['JUBILEE CDMX', 'MESA FINAL 9/112'],
+  ['MAIN EVENT', '92.º · AUSTIN'],
+  ['MONSTER STACK', '43.º · AUSTIN'],
+  ['PLO CHAMPIONSHIP', '10.º · CDMX'],
+  ['TCH HOUSTON', '265 JUGADORES'],
+]
+
+/**
  * Banda "En números". Cada cifra sale de un dato que ya vive en este archivo
  * (bio, `resultados`, galería); si cambia el dato, cambia aquí también.
  */
