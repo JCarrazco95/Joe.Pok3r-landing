@@ -10,7 +10,7 @@ export function Galeria() {
       <Revelar>
         <Gallery fotos={galeria}>
           <div className="grid gap-3">
-            <Eyebrow>02 · Galería</Eyebrow>
+            <Eyebrow>03 · Galería</Eyebrow>
             <h2 className="font-display text-[clamp(64px,8vw,120px)] font-normal uppercase leading-[0.85]">
               En la mesa
             </h2>

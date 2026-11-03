@@ -152,7 +152,7 @@ export function TuMano() {
         className="relative mx-auto grid max-w-[1100px] grid-cols-[repeat(auto-fit,minmax(min(100%,420px),1fr))] items-center gap-14"
       >
         <Revelar className="grid gap-5">
-          <Eyebrow>04 · Tu turno</Eyebrow>
+          <Eyebrow>05 · Tu turno</Eyebrow>
           <h2 className="font-display text-[clamp(64px,8vw,120px)] font-normal uppercase leading-[0.85]">
             ¿Qué haría
             <br />
