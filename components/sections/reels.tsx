@@ -23,7 +23,7 @@ export function ReelsSeccion() {
     >
       <Revelar className="mx-auto flex w-full max-w-[1360px] flex-wrap items-end justify-between gap-6 px-[clamp(20px,4vw,56px)]">
         <div className="grid gap-3">
-          <Eyebrow>04 · Reels</Eyebrow>
+          <Eyebrow>06 · Reels</Eyebrow>
           <h2 className="font-display text-[clamp(64px,8vw,120px)] font-normal uppercase leading-[0.85]">
             Desde la sala
           </h2>

@@ -8,14 +8,12 @@ import { joe } from '@/lib/joe-poker'
 import { cn } from '@/lib/utils'
 
 const ANCLAS = [
+  { id: 'redes', etiqueta: 'Redes' },
+  { id: 'galeria', etiqueta: 'Galería' },
   { id: 'resultados', etiqueta: 'Resultados' },
   { id: 'mano', etiqueta: 'Tu mano' },
   { id: 'historia', etiqueta: 'Historia' },
   { id: 'reels', etiqueta: 'Reels' },
-  { id: 'galeria', etiqueta: 'Galería' },
-  { id: 'directo', etiqueta: 'Directo' },
-  { id: 'publicaciones', etiqueta: 'Publicaciones' },
-  { id: 'redes', etiqueta: 'Redes' },
 ] as const
 
 /** El alias en mayúsculas, partido en el 3 que va en violeta. */

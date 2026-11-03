@@ -15,3 +15,6 @@ npm-debug.log*
 
 .vercel
 .env*
+
+# Handoff de diseño con material pesado (videos, prototipo); no va al repo
+Diseño página de Kick/

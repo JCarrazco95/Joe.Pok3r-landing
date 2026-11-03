@@ -3,12 +3,11 @@ import { EnVivo } from '@/components/en-vivo'
 import { Hero } from '@/components/sections/hero'
 import { Marquesina } from '@/components/sections/marquesina'
 import { Contacto } from '@/components/sections/contacto'
-import { Directo } from '@/components/sections/directo'
 import { Galeria } from '@/components/sections/galeria'
 import { Historia } from '@/components/sections/historia'
 import { Nav } from '@/components/sections/nav'
+import { Numeros } from '@/components/sections/numeros'
 import { Pie } from '@/components/sections/pie'
-import { Publicaciones } from '@/components/sections/publicaciones'
 import { Redes } from '@/components/sections/redes'
 import { ReelsSeccion } from '@/components/sections/reels'
 import { Resultados } from '@/components/sections/resultados'
@@ -52,16 +51,18 @@ export default function JoePokerPage() {
               interruptor manual; el navegador lo corrige con Kick (/api/en-vivo). */}
           <EnVivo />
   
+          {/* Orden v1.3: Hero → Redes → Galería → Resultados → Tu mano →
+              Historia → En números → Reels → Contacto. La marquesina roja
+              cuelga del hero. */}
           <Hero />
           <Marquesina />
+          <Redes />
+          <Galeria />
           <Resultados />
           <TuMano />
           <Historia />
+          <Numeros />
           <ReelsSeccion />
-          <Galeria />
-          <Directo />
-          <Publicaciones />
-          <Redes />
           <Contacto />
         </main>
       </ProveedorEnVivo>

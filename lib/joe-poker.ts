@@ -62,6 +62,19 @@ export type Reel = {
  */
 export const resultados: Resultado[] = [
   {
+    // La fecha sale de las capturas del 24 oct 2026 (carpeta torneos/HOUSTON).
+    // El puesto no está en ninguna: las capturas son del reloj y de la tabla de
+    // premios en mitad del torneo, no del cierre. Se deja en null a propósito.
+    fecha: '2026-10-24',
+    torneo: '$400 NL Hold’em · Single Day $100K',
+    serie: 'Texas Card House',
+    sede: 'Texas Card House · Houston, Texas',
+    buyIn: '$400 USD',
+    puesto: null,
+    field: 265,
+    nota: 'Jugó el torneo de $100,000 GTD, con 265 entradas',
+  },
+  {
     fecha: '2026-09-17',
     torneo: 'Main Event · Ring Event #13',
     serie: 'WSOP Circuit Austin',
@@ -662,6 +675,41 @@ export const galeria: Foto[] = [
     evento: 'wsop-circuit',
   },
 ]
+
+/**
+ * Banda "En números". Cada cifra sale de un dato que ya vive en este archivo
+ * (bio, `resultados`, galería); si cambia el dato, cambia aquí también.
+ */
+export const numeros = [
+  {
+    hasta: 20,
+    prefijo: '',
+    sufijo: '+',
+    etiqueta: 'Años en las mesas',
+    detalle: 'De la mesa de la casa al Main Event de Las Vegas',
+  },
+  {
+    hasta: 160000,
+    prefijo: '$',
+    sufijo: '',
+    etiqueta: 'Premio · MXN',
+    detalle: '6.º lugar en el High Roller 2.5M GTD · Jubilee Poker Room',
+  },
+  {
+    hasta: 296000,
+    prefijo: '',
+    sufijo: '',
+    etiqueta: 'Fichas al cierre del Day 1A',
+    detalle: '5.º del field · Mini Main Event · 184 inscritos',
+  },
+  {
+    hasta: 10000,
+    prefijo: '$',
+    sufijo: '',
+    etiqueta: 'Buy-in · USD',
+    detalle: 'WSOP Main Event 2023 · Evento #76 · Las Vegas',
+  },
+] as const
 
 /**
  * Línea de tiempo de la sección "Historia".

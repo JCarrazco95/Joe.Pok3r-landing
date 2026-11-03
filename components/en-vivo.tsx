@@ -5,10 +5,11 @@ import { ArrowUpRight } from 'lucide-react'
 import { useEnVivo } from '@/components/directo/proveedor'
 import type { EstadoEnVivo } from '@/lib/directo'
 import { cifraCompacta } from '@/lib/formato'
+import { enlaces } from '@/lib/joe-poker'
 import { cn } from '@/lib/utils'
 
-/** Ancla de la sección del reproductor (`components/sections/directo.tsx`). */
-export const ANCLA_DIRECTO = '#directo'
+/** Sin sección de reproductor en la página, el aviso real lleva al canal de Kick. */
+const URL_KICK = enlaces.find((e) => e.id === 'kick')?.url ?? undefined
 
 const CLASES_PASTILLA =
   'pointer-events-auto flex w-full max-w-lg items-center gap-3 rounded-card border border-line-strong bg-surface-2/90 px-4 py-3 text-left backdrop-blur-md'
@@ -47,8 +48,8 @@ export function AvisoEnVivo({ estado }: { estado: EstadoEnVivo }) {
       ? `${cifraCompacta(estado.espectadores)} ${estado.espectadores === 1 ? 'espectador' : 'espectadores'}`
       : ''
     : (estado.detalle ?? '')
-  const enlace = real ? ANCLA_DIRECTO : estado.enlace
-  const externo = enlace !== undefined && enlace !== ANCLA_DIRECTO
+  const enlace = real ? URL_KICK : estado.enlace
+  const externo = enlace !== undefined
 
   const contenido = (
     <>

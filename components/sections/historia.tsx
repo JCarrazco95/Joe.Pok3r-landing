@@ -51,7 +51,7 @@ export function Historia() {
       className="mx-auto grid w-full max-w-[1100px] scroll-mt-[70px] gap-16 px-[clamp(20px,4vw,56px)] py-[clamp(72px,10vw,130px)]"
     >
       <Revelar className="grid gap-3">
-        <Eyebrow>03 · Cómo empecé</Eyebrow>
+        <Eyebrow>05 · Cómo empecé</Eyebrow>
         <h2 className="font-display text-[clamp(64px,8vw,120px)] font-normal uppercase leading-[0.85]">
           De la mesa de
           <br />
