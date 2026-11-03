@@ -52,19 +52,20 @@ export default function JoePokerPage() {
               interruptor manual; el navegador lo corrige con Kick (/api/en-vivo). */}
           <EnVivo />
   
-          {/* Orden v1.3: Hero → Redes → Galería → Resultados → Tu mano →
-              Historia → En números → Reels → Contacto. La marquesina roja
-              cuelga del hero. */}
+          {/* Orden: Hero → Panamá → Redes → Reels → Galería → Resultados →
+              Tu mano → Historia → En números → Contacto. (Reels subió de la
+              v1.3, que lo tenía antes de Contacto.) La marquesina roja cuelga
+              del hero. */}
           <Hero />
           <Marquesina />
           {modoPanama ? <Panama /> : null}
           <Redes />
+          <ReelsSeccion />
           <Galeria />
           <Resultados />
           <TuMano />
           <Historia />
           <Numeros />
-          <ReelsSeccion />
           <Contacto />
         </main>
       </ProveedorEnVivo>

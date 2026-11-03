@@ -13,11 +13,11 @@ const ANCLAS: Ancla[] = [
   // Modo Panamá: el primer enlace, con el punto rojo parpadeante.
   ...(modoPanama ? [{ id: 'panama', etiqueta: 'Panamá', vivo: true }] : []),
   { id: 'redes', etiqueta: 'Redes' },
+  { id: 'reels', etiqueta: 'Reels' },
   { id: 'galeria', etiqueta: 'Galería' },
   { id: 'resultados', etiqueta: 'Resultados' },
   { id: 'mano', etiqueta: 'Tu mano' },
   { id: 'historia', etiqueta: 'Historia' },
-  { id: 'reels', etiqueta: 'Reels' },
 ]
 
 /** El punto rojo del enlace "Panamá". */

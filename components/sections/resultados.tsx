@@ -255,7 +255,7 @@ export function Resultados() {
   return (
     <Seccion id="resultados" className="grid gap-12 pt-[clamp(96px,11vw,140px)]">
       <Revelar className="flex flex-wrap items-end justify-between gap-6">
-        <TituloSeccion eyebrow="03 · Resultados" className="mb-0">
+        <TituloSeccion eyebrow="04 · Resultados" className="mb-0">
           En la mesa
           <br />
           final
