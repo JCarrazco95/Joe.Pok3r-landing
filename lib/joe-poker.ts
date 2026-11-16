@@ -71,6 +71,28 @@ export type Reel = {
  * demás que dice la página.
  */
 export const resultados: Resultado[] = [
+  // Panamá y el online salen de la app de la WSOP (perfil de Joe Vega, captura
+  // del 16 nov 2026). Los premios van en USD, como los muestra la app.
+  {
+    fecha: '2026-11-09',
+    torneo: '#4 $600 Mystery Bounty',
+    serie: 'WSOP Circuit Panamá',
+    sede: 'Ciudad de Panamá',
+    buyIn: '$600 USD',
+    puesto: 5,
+    field: 376,
+    premio: '$4,220 USD',
+  },
+  {
+    fecha: '2026-11-07',
+    torneo: '#3 $1,700 No-Limit Hold’em Main Event',
+    serie: 'WSOP Circuit Panamá',
+    sede: 'Ciudad de Panamá',
+    buyIn: '$1,700 USD',
+    puesto: 32,
+    field: 596,
+    premio: '$7,690 USD',
+  },
   {
     // La fecha sale de las capturas del 24 oct 2026 (carpeta torneos/HOUSTON).
     // El puesto no está en ninguna: las capturas son del reloj y de la tabla de
@@ -91,6 +113,7 @@ export const resultados: Resultado[] = [
     sede: 'Austin, Texas',
     buyIn: '$1,700 USD',
     puesto: 92,
+    field: 2090,
     premio: '$4,780 USD',
   },
   {
@@ -100,6 +123,7 @@ export const resultados: Resultado[] = [
     sede: 'Austin, Texas',
     buyIn: '$400 USD',
     puesto: 43,
+    field: 1702,
     premio: '$1,950 USD',
   },
   {
@@ -109,6 +133,7 @@ export const resultados: Resultado[] = [
     sede: 'Big Bola Casinos · CDMX',
     buyIn: '$12,800 MXN',
     puesto: 10,
+    field: 166,
     premio: '$30,900 MXN',
   },
   {
@@ -118,7 +143,8 @@ export const resultados: Resultado[] = [
     sede: 'Big Bola Casinos · CDMX',
     buyIn: '$8,000 MXN',
     puesto: 138,
-    field: 184,
+    // 1,190 es el total de entradas (app de la WSOP); 184 fue sólo el Day 1A.
+    field: 1190,
     premio: '$16,000 MXN',
     nota: 'Cerró el Day 1A 5.º del field con 296,000 en fichas',
   },
@@ -138,6 +164,16 @@ export const resultados: Resultado[] = [
     field: 112,
     premio: '$160,000 MXN',
     nota: 'Llegó a la mesa final con 615,000 en fichas',
+  },
+  {
+    fecha: '2026-08-10',
+    torneo: '#2 $300 Gladiators of Poker $3M GTD',
+    serie: 'WSOP Online',
+    sede: 'En línea',
+    buyIn: '$300 USD',
+    puesto: 486,
+    field: 17077,
+    premio: '$1,136.32 USD',
   },
   {
     fecha: '2023-07-03',
@@ -825,7 +861,7 @@ export const modoPanama = true
 
 export type PanamaEstadoId = 'previa' | 'jugando' | 'itm' | 'eliminado' | 'campeon'
 
-export const panamaEstado: PanamaEstadoId = 'previa'
+export const panamaEstado: PanamaEstadoId = 'eliminado'
 
 export const PANAMA_ESTADOS: Record<
   PanamaEstadoId,

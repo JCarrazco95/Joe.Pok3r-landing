@@ -16,6 +16,7 @@ const ANCLAS: Ancla[] = [
   { id: 'reels', etiqueta: 'Reels' },
   { id: 'galeria', etiqueta: 'Galería' },
   { id: 'resultados', etiqueta: 'Resultados' },
+  { id: 'circuito', etiqueta: 'Circuito' },
   { id: 'mano', etiqueta: 'Tu mano' },
   { id: 'historia', etiqueta: 'Historia' },
 ]

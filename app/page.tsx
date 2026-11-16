@@ -2,6 +2,7 @@ import { ProveedorEnVivo } from '@/components/directo/proveedor'
 import { EnVivo } from '@/components/en-vivo'
 import { Hero } from '@/components/sections/hero'
 import { Marquesina } from '@/components/sections/marquesina'
+import { Circuito } from '@/components/sections/circuito'
 import { Contacto } from '@/components/sections/contacto'
 import { Galeria } from '@/components/sections/galeria'
 import { Historia } from '@/components/sections/historia'
@@ -53,7 +54,7 @@ export default function JoePokerPage() {
           <EnVivo />
   
           {/* Orden: Hero → Panamá → Redes → Reels → Galería → Resultados →
-              Tu mano → Historia → En números → Contacto. (Reels subió de la
+              Circuito → Tu mano → Historia → En números → Contacto. (Reels subió de la
               v1.3, que lo tenía antes de Contacto.) La marquesina roja cuelga
               del hero. */}
           <Hero />
@@ -63,6 +64,7 @@ export default function JoePokerPage() {
           <ReelsSeccion />
           <Galeria />
           <Resultados />
+          <Circuito />
           <TuMano />
           <Historia />
           <Numeros />
