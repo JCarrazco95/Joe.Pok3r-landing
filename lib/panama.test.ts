@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest'
 
 import { PANAMA, PANAMA_ESTADOS, panamaEstado } from './joe-poker'
-import { cuentaRegresiva, dato } from './panama'
+import { cuentaRegresiva, dato, totalUSD } from './panama'
 
 describe('cuentaRegresiva', () => {
   const inicio = '2026-11-05T11:00:00-05:00'
@@ -34,5 +34,18 @@ describe('panama', () => {
 
   it('los datos por confirmar no traen números inventados', () => {
     expect(PANAMA.puesto).toBe('')
+  })
+})
+
+describe('totalUSD', () => {
+  it('suma premios en dólares', () => {
+    expect(totalUSD(['$4,220 USD', '$7,690 USD'])).toBe(11910)
+    expect(totalUSD(['$1,136.32 USD'])).toBe(1136.32)
+  })
+
+  it('no mezcla monedas ni inventa un total', () => {
+    expect(totalUSD(['$4,220 USD', '$30,900 MXN'])).toBeNull()
+    expect(totalUSD(['$4,220 USD', undefined])).toBeNull()
+    expect(totalUSD([])).toBeNull()
   })
 })

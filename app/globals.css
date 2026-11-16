@@ -55,6 +55,8 @@
   --animate-giro-lento: spin 40s linear infinite;
   /* Marquesina de las filas de Redes: más rápida que la cinta roja. */
   --animate-marquee-rapido: marquee 9s linear infinite;
+  /* Cinta de gráficas de Panamá: lenta, porque son tarjetas grandes. */
+  --animate-marquee-lento: marquee 70s linear infinite;
 
   @keyframes marquee {
     to {
