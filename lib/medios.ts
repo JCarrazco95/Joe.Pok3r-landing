@@ -14,6 +14,22 @@ export const MEDIA_URL = (process.env.NEXT_PUBLIC_MEDIA_URL ?? 'https://pub-254d
 const medio = (ruta: string) => `${MEDIA_URL}/web/${ruta}`
 
 export const reelsR2: Reel[] = [
+  { src: medio("panama/all-in-77-reel-ig.mp4"), poster: medio("panama/all-in-77-reel-ig.jpg"), titulo: "Panamá · All in con 77", seg: 167, vertical: true },
+  { src: medio("panama/bubble-reel.mp4"), poster: medio("panama/bubble-reel.jpg"), titulo: "Panamá · La burbuja", seg: 22, vertical: true },
+  { src: medio("panama/casinopanama-story-ig-30fps.mp4"), poster: medio("panama/casinopanama-story-ig-30fps.jpg"), titulo: "Panamá · El casino", seg: 57, vertical: true },
+  { src: medio("panama/cierremainevent-reel.mp4"), poster: medio("panama/cierremainevent-reel.jpg"), titulo: "Panamá · Cierre del Main Event", seg: 18, vertical: true },
+  { src: medio("panama/hijosmesafinal-reel.mp4"), poster: medio("panama/hijosmesafinal-reel.jpg"), titulo: "Panamá · Hijos de la mesa final", seg: 47, vertical: true },
+  { src: medio("panama/llegadabitacora-story-ig-30fps.mp4"), poster: medio("panama/llegadabitacora-story-ig-30fps.jpg"), titulo: "Panamá · Bitácora de llegada", seg: 28, vertical: true },
+  { src: medio("panama/llegadapanama-story-ig-30fps.mp4"), poster: medio("panama/llegadapanama-story-ig-30fps.jpg"), titulo: "Panamá · Llegada a Panamá", seg: 29, vertical: true },
+  { src: medio("panama/mesafinal-dia2-reel.mp4"), poster: medio("panama/mesafinal-dia2-reel.jpg"), titulo: "Panamá · Mesa final, día 2", seg: 24, vertical: true },
+  { src: medio("panama/mesafinal-finalday-reel.mp4"), poster: medio("panama/mesafinal-finalday-reel.jpg"), titulo: "Panamá · Mesa final, día final", seg: 23, vertical: true },
+  { src: medio("panama/mystery-final-day-reel.mp4"), poster: medio("panama/mystery-final-day-reel.jpg"), titulo: "Panamá · Mystery, día final", seg: 42, vertical: true },
+  { src: medio("panama/par-de-6-instagram.mp4"), poster: medio("panama/par-de-6-instagram.jpg"), titulo: "Panamá · Par de 6", seg: 72, vertical: true },
+  { src: medio("panama/puesto12-b-reel.mp4"), poster: medio("panama/puesto12-b-reel.jpg"), titulo: "Panamá · Puesto 12", seg: 18, vertical: true },
+  { src: medio("panama/rumbopanama-story-v2-60fps-ig.mp4"), poster: medio("panama/rumbopanama-story-v2-60fps-ig.jpg"), titulo: "Panamá · Rumbo a Panamá", seg: 30, vertical: true },
+  { src: medio("panama/stackpanama-reel-dia2.mp4"), poster: medio("panama/stackpanama-reel-dia2.jpg"), titulo: "Panamá · Stack, día 2", seg: 21, vertical: true },
+  { src: medio("panama/stackpanama-reel.mp4"), poster: medio("panama/stackpanama-reel.jpg"), titulo: "Panamá · Stack", seg: 21, vertical: true },
+  { src: medio("panama/stackpanama-story-itm.mp4"), poster: medio("panama/stackpanama-story-itm.jpg"), titulo: "Panamá · Stack en el ITM", seg: 9, vertical: true },
   { src: medio("houston/joe-houston-1-editado.mp4"), poster: medio("houston/joe-houston-1-editado.jpg"), titulo: "Houston · Arranque del torneo", seg: 27, vertical: true },
   { src: medio("houston/joe-houston-chip-count.mp4"), poster: medio("houston/joe-houston-chip-count.jpg"), titulo: "Houston · Chip count", seg: 32, vertical: true },
   { src: medio("houston/joe-houston-cobramos.mp4"), poster: medio("houston/joe-houston-cobramos.jpg"), titulo: "Houston · Cobramos", seg: 18, vertical: true },
