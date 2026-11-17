@@ -4,7 +4,7 @@ import { Tarjeta } from '@/components/ui/card'
 import { enlaces } from '@/lib/joe-poker'
 
 /** Redes donde se publica: las que se ofrecen cuando no hay nada que mostrar. */
-const REDES_QUE_SE_SIGUEN = new Set(['instagram', 'tiktok', 'youtube', 'kick', 'twitch'])
+const REDES_QUE_SE_SIGUEN = new Set(['instagram', 'tiktok', 'youtube', 'facebook', 'kick', 'twitch'])
 
 /**
  * Esqueleto del muro mientras llegan los datos. Mantiene la forma de las

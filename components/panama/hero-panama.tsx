@@ -1,6 +1,6 @@
 'use client'
 
-import { PANAMA } from '@/lib/joe-poker'
+import { PANAMA, panamaEstado, resultados } from '@/lib/joe-poker'
 
 import { CeldasCuenta, ESTADO, SelloPanama, useCuentaRegresiva } from './panama-ui'
 
@@ -33,6 +33,9 @@ export function PildoraPanama() {
 /** Línea "En Panamá" con el sello y la cuenta regresiva (o el estado, ya en juego). */
 export function LineaPanama() {
   const cuenta = useCuentaRegresiva()
+  // Torneo cerrado y con cobros registrados: se cuenta lo que pasó, no el Flight A.
+  const cobros = resultados.filter((r) => r.serie === 'WSOP Circuit Panamá' && r.premio).length
+  const cerrado = (panamaEstado === 'eliminado' || panamaEstado === 'campeon') && cobros > 0
   return (
     <div className="hero-sube pointer-events-auto -mt-1.5 flex flex-wrap items-center gap-[clamp(18px,3vw,40px)] [--i:1]">
       <div className="flex items-center gap-4">
@@ -43,9 +46,17 @@ export function LineaPanama() {
       </div>
       <div className="grid gap-2">
         <span className="text-xs font-bold tracking-[0.2em] text-fg-2 [text-shadow:0_1px_8px_#0b0b0d]">
-          {cuenta?.vivo ? 'MINI MAIN · FLIGHT A' : 'MINI MAIN · FLIGHT A ARRANCA EN'}
+          {cerrado
+            ? `${PANAMA.serie.toUpperCase()} · ${PANAMA.fechas.toUpperCase()}`
+            : cuenta?.vivo
+              ? 'MINI MAIN · FLIGHT A'
+              : 'MINI MAIN · FLIGHT A ARRANCA EN'}
         </span>
-        {cuenta === null ? (
+        {cerrado ? (
+          <span className="font-display text-[clamp(40px,4vw,56px)] leading-[0.9] text-fg">
+            {cobros} {cobros === 1 ? 'cobro' : 'cobros'}
+          </span>
+        ) : cuenta === null ? (
           <div aria-hidden className="h-[84px]" />
         ) : cuenta.vivo ? (
           <span
