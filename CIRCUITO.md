@@ -48,6 +48,11 @@ Fuente: app de la WSOP (perfil de Joe Vega, captura del 16 nov 2026). Premios en
   `cierremainevent-reel`, `mystery-final-day-reel`) no coinciden claramente con los puestos
   de arriba (5.º y 32.º). Falta definir cuál es de Joe y cuál es cobertura.
 
+**Imágenes:** 160 en WebP en R2 (`web/panama/img/<grupo>/`), indexadas en
+`lib/panama-imagenes.ts`: 19 publicaciones, 9 felicitaciones, 10 gráficas de reels e
+historias, y 122 cuadros de secuencias (patrocinadores 85, logos 32, fotogramas 5). Se
+regeneran con `node scripts/imagenes.mjs panama` y se suben con `npm run medios`.
+
 **Medios:** 16 reels en `panama/` (llegada, bitácora, stack día 1 y 2, ITM, burbuja, casino,
 all-in con 77, par de 6, mesa final, cierre).
 

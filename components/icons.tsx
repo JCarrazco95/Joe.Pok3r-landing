@@ -50,6 +50,14 @@ function YouTube(props: Props) {
   )
 }
 
+function Facebook(props: Props) {
+  return (
+    <svg {...base} {...props}>
+      <path d="M14.5 21v-7.5H17l.5-3h-3V8.7c0-.9.3-1.5 1.6-1.5h1.5V4.5c-.3 0-1.2-.1-2.3-.1-2.3 0-3.8 1.4-3.8 3.9v2.2H9v3h2.5V21" />
+    </svg>
+  )
+}
+
 function Equis(props: Props) {
   return (
     <svg {...base} {...props} strokeWidth={1.9}>
@@ -113,6 +121,7 @@ const iconos: Record<RedSocial, (props: Props) => React.ReactElement> = {
   instagram: Instagram,
   tiktok: TikTok,
   youtube: YouTube,
+  facebook: Facebook,
   x: Equis,
   twitch: Twitch,
   kick: Kick,

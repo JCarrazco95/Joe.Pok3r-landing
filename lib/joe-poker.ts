@@ -16,6 +16,7 @@ export type RedSocial =
   | 'instagram'
   | 'tiktok'
   | 'youtube'
+  | 'facebook'
   | 'x'
   | 'twitch'
   | 'kick'
@@ -376,6 +377,14 @@ export const enlaces: Enlace[] = [
     icono: 'youtube',
     url: 'https://www.youtube.com/@Joe.Pok3r',
     ficha: { sigla: 'YT', color: '#b91c1c' },
+  },
+  {
+    id: 'facebook',
+    etiqueta: 'Facebook',
+    detalle: 'Publicaciones y novedades',
+    icono: 'facebook',
+    url: 'https://www.facebook.com/joe.pok3r',
+    ficha: { sigla: 'FB', color: '#3b6fe0' },
   },
   {
     id: 'twitch',

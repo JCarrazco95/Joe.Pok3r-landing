@@ -5,17 +5,39 @@ import Image from 'next/image'
 import { CeldasCuenta, ESTADO, EstadoPanama, SelloPanama, useCuentaRegresiva } from '@/components/panama/panama-ui'
 import { Eyebrow } from '@/components/ui/eyebrow'
 import { Revelar } from '@/components/ui/reveal'
-import { PANAMA, panamaEstado } from '@/lib/joe-poker'
-import { dato } from '@/lib/panama'
+import { GaleriaPanama } from '@/components/panama/galeria-panama'
+import { fechaCorta, ordinal, resultadoVisible } from '@/lib/formato'
+import { PANAMA, panamaEstado, resultados } from '@/lib/joe-poker'
+import { dato, totalUSD } from '@/lib/panama'
 import { cn } from '@/lib/utils'
 
+/** Lo que Joe jugó en Panamá, del más reciente al más viejo (así ya viene `resultados`). */
+const delTorneo = resultados.filter((r) => r.serie === 'WSOP Circuit Panamá')
+/** Con el torneo cerrado y resultados registrados, la sección cuenta lo que pasó en vez de la cuenta regresiva. */
+const terminado = (panamaEstado === 'eliminado' || panamaEstado === 'campeon') && delTorneo.length > 0
+const mejor = delTorneo
+  .filter((r) => r.puesto !== null)
+  .sort((a, b) => (a.puesto as number) - (b.puesto as number))[0]
+const total = totalUSD(delTorneo.map((r) => r.premio))
+
 /** Las cuatro cifras de la sección. Sin dato salen en gris, con "—". */
-const CELDAS = [
-  { k: 'EVENTO', v: PANAMA.evento, sub: `Buy-in ${PANAMA.buyIn}` },
-  { k: 'VUELO', v: PANAMA.dia, sub: '5 nov · 11:00' },
-  { k: 'STACK', v: PANAMA.stack, sub: PANAMA.field ? `${PANAMA.field} inscritos` : 'Se actualiza en los breaks' },
-  { k: 'PUESTO', v: PANAMA.puesto, sub: PANAMA.premio || 'Al cierre del día' },
-]
+const CELDAS = terminado
+  ? [
+      { k: 'TORNEOS', v: String(delTorneo.length), sub: PANAMA.serie },
+      { k: 'COBROS', v: String(delTorneo.filter((r) => r.premio).length), sub: `de ${delTorneo.length} torneos` },
+      {
+        k: 'MEJOR PUESTO',
+        v: mejor ? ordinal(mejor.puesto as number) : '',
+        sub: mejor ? `${mejor.torneo}${mejor.field ? ` · de ${mejor.field}` : ''}` : '',
+      },
+      { k: 'PREMIOS', v: total === null ? '' : `$${total.toLocaleString('en-US')}`, sub: 'USD · suma de los cobros' },
+    ]
+  : [
+      { k: 'EVENTO', v: PANAMA.evento, sub: `Buy-in ${PANAMA.buyIn}` },
+      { k: 'VUELO', v: PANAMA.dia, sub: '5 nov · 11:00' },
+      { k: 'STACK', v: PANAMA.stack, sub: PANAMA.field ? `${PANAMA.field} inscritos` : 'Se actualiza en los breaks' },
+      { k: 'PUESTO', v: PANAMA.puesto, sub: PANAMA.premio || 'Al cierre del día' },
+    ]
 
 /**
  * Sección #panama (modo Panamá): título con el sello de la bandera, cuenta
@@ -35,7 +57,7 @@ export function Panama() {
         <Revelar className="grid gap-[22px]">
           <div className="flex flex-wrap items-center gap-3.5">
             <Eyebrow className="tracking-[0.3em] text-rose">
-              {enJuego ? 'En vivo · Ciudad de Panamá' : PANAMA.ciudad}
+              {terminado ? `${PANAMA.ciudad} · Así le fue` : enJuego ? 'En vivo · Ciudad de Panamá' : PANAMA.ciudad}
             </Eyebrow>
             <EstadoPanama className="px-3 py-1.5" />
           </div>
@@ -51,6 +73,41 @@ export function Panama() {
         </Revelar>
 
         <Revelar className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,460px),1fr))] gap-6">
+          {terminado ? (
+            <div className="grid content-between gap-7 rounded-3xl border border-line bg-surface p-[clamp(28px,3.4vw,44px)]">
+              <div className="grid gap-2">
+                <span className="text-xs font-bold tracking-[0.24em] text-rose">RESULTADOS EN PANAMÁ</span>
+                <span className="text-[15px] text-fg-muted">{PANAMA.sede} · {PANAMA.fechas}</span>
+              </div>
+              <ul className="grid">
+                {delTorneo.map((r) => {
+                  const { principal, sinRegistrar } = resultadoVisible(r)
+                  return (
+                    <li
+                      key={`${r.fecha}-${r.torneo}`}
+                      className="grid grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-t border-line py-4"
+                    >
+                      <span className="grid gap-0.5">
+                        <span className="text-[13px] font-semibold text-fg-dim">{fechaCorta(r.fecha)}</span>
+                        <span className="font-bold">{r.torneo}</span>
+                      </span>
+                      <span className="grid justify-items-end gap-0.5 text-right">
+                        <span
+                          className={cn(
+                            'font-display text-[clamp(32px,3.4vw,44px)] leading-none',
+                            sinRegistrar ? 'text-fg-muted' : 'text-violet-soft',
+                          )}
+                        >
+                          {sinRegistrar ? 'Sin registrar' : principal}
+                        </span>
+                        {r.premio ? <span className="text-[13px] text-rose">{r.premio}</span> : null}
+                      </span>
+                    </li>
+                  )
+                })}
+              </ul>
+            </div>
+          ) : (
           <div className="grid content-between gap-7 rounded-3xl border border-line bg-surface p-[clamp(28px,3.4vw,44px)]">
             <div className="grid gap-2">
               <span className="text-xs font-bold tracking-[0.24em] text-rose">
@@ -71,6 +128,7 @@ export function Panama() {
               <CeldasCuenta cuenta={cuenta} grande />
             )}
           </div>
+          )}
 
           <div className="relative min-h-[360px] overflow-hidden rounded-3xl border border-line bg-surface">
             <Image
@@ -106,6 +164,11 @@ export function Panama() {
               </div>
             ))}
           </dl>
+        </Revelar>
+
+        <Revelar className="grid gap-5">
+          <Eyebrow>Desde la mesa</Eyebrow>
+          <GaleriaPanama />
         </Revelar>
 
         {PANAMA.fotos.length > 0 ? (
