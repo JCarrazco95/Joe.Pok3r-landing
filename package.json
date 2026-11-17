@@ -10,7 +10,8 @@
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
     "check": "npm run typecheck && npm run lint",
-    "test": "vitest run"
+    "test": "vitest run",
+    "medios": "node scripts/medios.mjs"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",

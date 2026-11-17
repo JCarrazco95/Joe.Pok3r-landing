@@ -24,3 +24,6 @@ media-web/
 
 # Medios comprimidos para subir a R2 (no van al repo)
 media-web/
+
+# Originales sin comprimir (videos de Instagram, graficos)
+media-origen/
